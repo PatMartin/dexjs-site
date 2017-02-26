@@ -1,0 +1,10 @@
+<div>
+    <ul class="nav nav-pills">
+        <li><img src="/images/dexjs_logo_small.png"></li>
+        {{ range .Site.Menus.main }}
+        <li role="navigation" {{ if or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }} class="active"{{ end }}>
+          <a href="{{ .URL }}">{{ .Name }}</a>
+        </li>
+        {{ end }}
+    </ul>
+</div>
