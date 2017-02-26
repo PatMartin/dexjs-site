@@ -1,0 +1,59 @@
+languageCode = "en-us"
+license = "APL 2"
+title = "dex.js"
+baseurl = "/"
+theme = "dexjs-theme"
+features = [ "disqus", "google analytics", "share" ]
+disqusShortName = "http-dexjs-net"
+sectionPagesMenu = "main"
+
+enableRobotsTXT = true
+googleAnalytics = "UA-89686420-1"
+
+[author]
+  name = "Patrick Martin"
+  homepage = "https://dexjs.net/"
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    pre = ""
+    identifier = "home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "Introduction"
+    pre = ""
+    identifier = "intro"
+    url = "/intro.html"
+    weight = 2
+  [[menu.main]]
+    name = "Posts"
+    pre = ""
+    identifier = "posts"
+    url = "/posts.html"
+    weight = 3
+  [[menu.main]]
+    name = "User Guide"
+    pre = ""
+    identifier = "userguide"
+    url = "/userguide.html"
+    weight = 4
+  [[menu.main]]
+    name = "JSDocs"
+    pre = ""
+    identifier = "jsdocs"
+    url = "/jsdocs/module-dex.html"
+    weight = 5
+  [[menu.main]]
+    name = "About"
+    pre = ""
+    identifier = "about"
+    url = "/about.html"
+    weight = 6
+  [[menu.main]]
+    name = "Github"
+    pre = ""
+    identifier = "github"
+    url = "https://github.com/PatMartin/dexjs"
+    weight = 7
