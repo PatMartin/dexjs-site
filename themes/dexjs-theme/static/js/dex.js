@@ -575,6 +575,7 @@ var areachart = function (userConfig) {
         var c3config = {
             'bindto' : config.parent,
             'data': {
+                'x': columns.header[0],
                 'columns': columns.data,
                 'types': types,
                 color : d3.scale.category20()
@@ -696,6 +697,7 @@ var barchart = function (userConfig) {
         var c3config = {
             'bindto' : config.parent,
             'data': {
+                'x': columns.header[0],
                 'columns': columns.data,
                 'type': 'bar',
                 color : d3.scale.category20()
@@ -1102,6 +1104,7 @@ var stackedareachart = function (userConfig) {
         var c3config = {
             'bindto' : config.parent,
             'data': {
+                'x': columns.header[0],
                 'columns': columns.data,
                 'types': types,
                 'groups' : [ columns.header ],
@@ -1229,6 +1232,7 @@ var stackedbarchart = function (userConfig) {
     var c3config = {
       'bindto': config.parent,
       'data': {
+        'x' : columns.header[0],
         'columns': columns.data,
         'type': 'bar',
         color: d3.scale.category20(),

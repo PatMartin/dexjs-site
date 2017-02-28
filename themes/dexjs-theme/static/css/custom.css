@@ -29,30 +29,27 @@
 }
 
 h1 {
-    color: steelblue;
-    font-size: 1.6em;
-    font-family: "Arial Rounded MT Bold";
-    font-weight: bold;
+    color: black;
+    font-size: 2em;
+    font-family: "Segoe UI";
 }
 
 h2 {
     color: steelblue;
-    font-size: 1.4em;
-    font-family: "Arial Rounded MT Bold";
-    font-weight: bold;
+    font-size: 1.6em;
+    font-family: "Segoe UI";
 }
 
 h3 {
-    color: steelblue;
-    font-size: 1.2em;
-    font-family: "Arial Rounded MT Bold";
-    font-weight: bold;
+    color: darkgreen;
+    font-size: 1.4em;
+    font-family: "Segoe UI";
 }
 
 h4 {
-    color: steelblue;
+    color: darkorange;
     font-size: 1.0em;
-    font-family: "Arial Rounded MT Bold";
+    font-family: "Segoe UI";
 }
 
 body {
