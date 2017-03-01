@@ -2,15 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e69578c6-b58e-4ccd-bc1d-778de6579747" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/themes/dexjs-theme/static/css/TreemapBarChart.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.toml" afterPath="$PROJECT_DIR$/config.toml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/_index.md" afterPath="$PROJECT_DIR$/content/_index.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/about.md" afterPath="$PROJECT_DIR$/content/about.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/intro.md" afterPath="$PROJECT_DIR$/content/intro.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/list.html" afterPath="$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/themes/dexjs-theme/static/css/custom.css" afterPath="$PROJECT_DIR$/themes/dexjs-theme/static/css/custom.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/themes/dexjs-theme/static/js/dex.js" afterPath="$PROJECT_DIR$/themes/dexjs-theme/static/js/dex.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/themes/dexjs-theme/static/js/dex.min.js" afterPath="$PROJECT_DIR$/themes/dexjs-theme/static/js/dex.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/posts/Treemap.md" afterPath="$PROJECT_DIR$/content/posts/Treemap.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/content/posts/TreemapBarChart.md" afterPath="$PROJECT_DIR$/content/posts/TreemapBarChart.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/header.html" afterPath="$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/header.html" />
     </list>
     <ignored path="dexjs.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,88 +29,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="_index.md" pinned="false" current-in-tab="true">
+      <file leaf-file-name="_index.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/content/_index.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="244">
-                <caret line="132" column="2" lean-forward="false" selection-start-line="132" selection-start-column="2" selection-end-line="132" selection-end-column="2" />
+              <first_editor relative-caret-position="409">
+                <caret line="137" column="44" lean-forward="false" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
                 <folding />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="presidents.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/data/presidents.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" column="10" lean-forward="false" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gdp.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/data/gdp.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="4" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="custom.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/css/custom.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="697">
-              <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-              <folding>
-                <element signature="e#1476#2009#2" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="intro.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/content/intro.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="FIRST">
-              <first_editor relative-caret-position="-574">
-                <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
-                <folding>
-                  <marker date="1488253388000" expanded="true" signature="2330:2358" ph="{...}" />
-                  <marker date="1488253388000" expanded="true" signature="2413:2582" ph="{...}" />
-                  <marker date="1488253388000" expanded="true" signature="2467:2578" ph="[...]" />
-                  <marker date="1488253388000" expanded="true" signature="2668:2696" ph="{...}" />
-                  <marker date="1488253388000" expanded="true" signature="2789:2845" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
-                  <marker date="1488253388000" expanded="true" signature="3245:3475" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
-                  <marker date="1488253388000" expanded="true" signature="3294:3474" ph="{...}" />
-                  <marker date="1488253388000" expanded="true" signature="3352:3473" ph="[...]" />
-                  <marker date="1488253388000" expanded="true" signature="7151:7778" ph="{...}" />
-                  <marker date="1488253388000" expanded="true" signature="7169:7644" ph="[...]" />
-                  <marker date="1488253388000" expanded="true" signature="7175:7417" ph="{&quot;name&quot;: &quot;PC&quot;...}" />
-                  <marker date="1488253388000" expanded="true" signature="7265:7411" ph="{&quot;parent&quot;: &quot;##ParallelCoordinatesParent&quot;...}" />
-                  <marker date="1488253388000" expanded="true" signature="7423:7640" ph="{&quot;name&quot;: &quot;Chord&quot;...}" />
-                  <marker date="1488253388000" expanded="true" signature="7502:7634" ph="{&quot;parent&quot;: &quot;##ChordParent&quot;...}" />
-                  <marker date="1488253388000" expanded="true" signature="7664:7776" ph="[...]" />
-                  <marker date="1488253388000" expanded="true" signature="7665:7775" ph="{&quot;event&quot;: &quot;select&quot;...}" />
-                  <marker date="1488253388000" expanded="true" signature="8941:8996" ph="{&quot;parent&quot;: &quot;##ChartTalk1&quot;...}" />
-                  <marker date="1488253388000" expanded="true" signature="9062:9185" ph="{&quot;parent&quot;: &quot;##ChartTalk2&quot;...}" />
-                  <marker date="1488253388000" expanded="true" signature="9507:9559" ph="{...}" />
-                </folding>
               </first_editor>
               <second_editor />
             </state>
@@ -122,8 +46,24 @@
         <entry file="file://$PROJECT_DIR$/content/posts/TreemapBarChart.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="85">
-                <caret line="5" column="9" lean-forward="false" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
+              <first_editor relative-caret-position="590">
+                <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+                <folding>
+                  <marker date="1488322488849" expanded="true" signature="1791:3017" ph="{...}" />
+                  <marker date="1488322488849" expanded="true" signature="1867:3015" ph="[...]" />
+                </folding>
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CreatingAChart.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/content/posts/CreatingAChart.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="231">
+                <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="22" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -131,15 +71,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="about.md" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/content/about.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="1836">
-                <caret line="108" column="29" lean-forward="false" selection-start-line="108" selection-start-column="29" selection-end-line="108" selection-end-column="29" />
-                <folding />
-              </first_editor>
-              <second_editor />
+      <file leaf-file-name="Treemap.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/css/Treemap.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="462">
+              <caret line="14" column="19" lean-forward="false" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -147,9 +84,32 @@
       <file leaf-file-name="header.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/header.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="36" column="13" lean-forward="false" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
+            <state relative-caret-position="198">
+              <caret line="6" column="59" lean-forward="false" selection-start-line="6" selection-start-column="59" selection-end-line="6" selection-end-column="59" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.toml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config.toml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="924">
+              <caret line="34" column="14" lean-forward="false" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Treemap.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/content/posts/Treemap.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="561">
+                <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+                <folding />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -158,7 +118,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Murder</find>
       <find>index.di</find>
       <find>WideChart</find>
       <find>Chart Comm</find>
@@ -188,6 +147,7 @@
       <find>you should see</find>
       <find>ChordDiagram</find>
       <find>presidents</find>
+      <find>&amp;gt;</find>
     </findStrings>
     <replaceStrings>
       <replace>&amp;gt;</replace>
@@ -195,9 +155,9 @@
       <replace>Murder</replace>
       <replace>div</replace>
       <replace>navigation</replace>
+      <replace>&quot;</replace>
       <replace>&lt;</replace>
       <replace>&gt;</replace>
-      <replace>&quot;</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -206,9 +166,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/base/scripts.html" />
-        <option value="$PROJECT_DIR$/themes/dexjs-theme/theme.toml" />
-        <option value="$PROJECT_DIR$/content/docs/index.md" />
         <option value="$PROJECT_DIR$/content/docs/docs.md" />
         <option value="$PROJECT_DIR$/content/helloworld.md" />
         <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/index.md" />
@@ -232,11 +189,8 @@
         <option value="$PROJECT_DIR$/content/posts/TopoJsonMap.md" />
         <option value="$PROJECT_DIR$/content/userguide.md" />
         <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/navbar.html" />
-        <option value="$PROJECT_DIR$/config.toml" />
         <option value="$PROJECT_DIR$/themes/dexjs-theme/archetypes/post.md" />
         <option value="$PROJECT_DIR$/content/posts/helloworld.md" />
-        <option value="$PROJECT_DIR$/content/posts/Treemap.md" />
-        <option value="$PROJECT_DIR$/content/posts/TreemapBarChart.md" />
         <option value="$PROJECT_DIR$/content/posts/update.2016.12.md" />
         <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/post/single.html" />
         <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/post/list.html" />
@@ -253,10 +207,16 @@
         <option value="$PROJECT_DIR$/themes/dexjs-theme/static/data/crime.json" />
         <option value="$PROJECT_DIR$/content/about.md" />
         <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/list.html" />
-        <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/header.html" />
         <option value="$PROJECT_DIR$/themes/dexjs-theme/static/css/custom.css" />
-        <option value="$PROJECT_DIR$/content/intro.md" />
         <option value="$PROJECT_DIR$/content/_index.md" />
+        <option value="$PROJECT_DIR$/content/intro.md" />
+        <option value="$PROJECT_DIR$/themes/dexjs-theme/static/css/TreemapBarChart.css" />
+        <option value="$PROJECT_DIR$/config.toml" />
+        <option value="$PROJECT_DIR$/themes/dexjs-theme/static/css/Treemap.css" />
+        <option value="$PROJECT_DIR$/content/posts/Treemap.md" />
+        <option value="$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/header.html" />
+        <option value="$PROJECT_DIR$/content/posts/TreemapBarChart.md" />
+        <option value="$PROJECT_DIR$/content/posts/Crossroads.md" />
       </list>
     </option>
   </component>
@@ -267,10 +227,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="784" />
+    <option name="x" value="945" />
+    <option name="y" value="185" />
+    <option name="width" value="2112" />
+    <option name="height" value="1681" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -362,6 +322,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dexjs-site" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dexjs-site" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="themes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dexjs-theme" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -495,8 +481,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -544,6 +530,13 @@
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="JsTestDriver-test-runner" factoryName="JsTestDriver">
+      <setting name="configLocationType" value="CONFIG_FILE" />
+      <setting name="settingsFile" value="" />
+      <setting name="serverType" value="INTERNAL" />
+      <setting name="preferredDebugBrowser" value="Chrome" />
       <method />
     </configuration>
     <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
@@ -620,32 +613,33 @@
       <workItem from="1486092082685" duration="3886000" />
       <workItem from="1488055365791" duration="31273000" />
       <workItem from="1488257765313" duration="1882000" />
+      <workItem from="1488305440357" duration="8013000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="199380000" />
+    <option name="totallyTimeSpent" value="207393000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="7" />
+    <frame x="945" y="185" width="2112" height="1681" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15519765" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17096466" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25519288" sideWeight="0.50367826" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Tool Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10796915" sideWeight="0.50367826" order="11" side_tool="true" content_ui="tabs" />
+      <window_info id="ANTLR Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Tool Output" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2559055" sideWeight="0.49632174" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="ANTLR Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -669,21 +663,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/exampleSite/config.toml" />
-    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/theme.toml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="10" column="24" lean-forward="false" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/css/bootstrap-theme.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/content/helloworld.md" />
     <entry file="file://$PROJECT_DIR$/images/dexjs.png" />
     <entry file="file://$PROJECT_DIR$/content/pages/about.md" />
@@ -765,13 +744,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/posts.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2086">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/public/posts.html" />
     <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/navbar.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -791,23 +764,6 @@
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.toml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/content/posts/Treemap.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="165">
-            <caret line="5" column="22" lean-forward="false" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
-          </first_editor>
-          <second_editor />
         </state>
       </provider>
     </entry>
@@ -844,16 +800,6 @@
     <entry file="file://$PROJECT_DIR$/content/posts.md" />
     <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/posts/single.html" />
     <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/posts/list.html" />
-    <entry file="file://$PROJECT_DIR$/content/posts/CreatingAChart.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="132">
-            <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/content/posts/D3v3v4Cohab.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -871,13 +817,6 @@
             <caret line="4" column="22" lean-forward="false" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/single.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -920,7 +859,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/data/gdp.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
+        <state relative-caret-position="165">
           <caret line="5" column="4" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
           <folding />
         </state>
@@ -928,7 +867,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/data/presidents.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="33">
           <caret line="1" column="10" lean-forward="false" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
           <folding />
         </state>
@@ -944,7 +883,7 @@
     <entry file="file://$PROJECT_DIR$/content/about.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="1836">
+          <first_editor relative-caret-position="3564">
             <caret line="108" column="29" lean-forward="false" selection-start-line="108" selection-start-column="29" selection-end-line="108" selection-end-column="29" />
             <folding />
           </first_editor>
@@ -957,36 +896,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/content/posts/TreemapBarChart.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="85">
-            <caret line="5" column="9" lean-forward="false" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="9" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/header.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="36" column="13" lean-forward="false" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/css/custom.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
+        <state relative-caret-position="1353">
           <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
             <element signature="e#1476#2009#2" expanded="true" />
@@ -994,31 +906,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/_default/single.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/content/intro.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="-574">
-            <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+          <first_editor relative-caret-position="330">
+            <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
             <folding>
-              <marker date="1488253388000" expanded="true" signature="2330:2358" ph="{...}" />
-              <marker date="1488253388000" expanded="true" signature="2413:2582" ph="{...}" />
-              <marker date="1488253388000" expanded="true" signature="2467:2578" ph="[...]" />
-              <marker date="1488253388000" expanded="true" signature="2668:2696" ph="{...}" />
-              <marker date="1488253388000" expanded="true" signature="2789:2845" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
-              <marker date="1488253388000" expanded="true" signature="3245:3475" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
-              <marker date="1488253388000" expanded="true" signature="3294:3474" ph="{...}" />
-              <marker date="1488253388000" expanded="true" signature="3352:3473" ph="[...]" />
-              <marker date="1488253388000" expanded="true" signature="7151:7778" ph="{...}" />
-              <marker date="1488253388000" expanded="true" signature="7169:7644" ph="[...]" />
-              <marker date="1488253388000" expanded="true" signature="7175:7417" ph="{&quot;name&quot;: &quot;PC&quot;...}" />
-              <marker date="1488253388000" expanded="true" signature="7265:7411" ph="{&quot;parent&quot;: &quot;##ParallelCoordinatesParent&quot;...}" />
-              <marker date="1488253388000" expanded="true" signature="7423:7640" ph="{&quot;name&quot;: &quot;Chord&quot;...}" />
-              <marker date="1488253388000" expanded="true" signature="7502:7634" ph="{&quot;parent&quot;: &quot;##ChordParent&quot;...}" />
-              <marker date="1488253388000" expanded="true" signature="7664:7776" ph="[...]" />
-              <marker date="1488253388000" expanded="true" signature="7665:7775" ph="{&quot;event&quot;: &quot;select&quot;...}" />
-              <marker date="1488253388000" expanded="true" signature="8941:8996" ph="{&quot;parent&quot;: &quot;##ChartTalk1&quot;...}" />
-              <marker date="1488253388000" expanded="true" signature="9062:9185" ph="{&quot;parent&quot;: &quot;##ChartTalk2&quot;...}" />
-              <marker date="1488253388000" expanded="true" signature="9507:9559" ph="{...}" />
+              <marker date="1488306189314" expanded="true" signature="2388:2416" ph="{...}" />
+              <marker date="1488306189314" expanded="true" signature="2471:2640" ph="{...}" />
+              <marker date="1488306189314" expanded="true" signature="2525:2636" ph="[...]" />
+              <marker date="1488306189314" expanded="true" signature="2726:2754" ph="{...}" />
+              <marker date="1488306189314" expanded="true" signature="2931:2987" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
+              <marker date="1488306189314" expanded="true" signature="3422:3652" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
+              <marker date="1488306189314" expanded="true" signature="3471:3651" ph="{...}" />
+              <marker date="1488306189314" expanded="true" signature="3529:3650" ph="[...]" />
+              <marker date="1488306189314" expanded="true" signature="7402:8029" ph="{...}" />
+              <marker date="1488306189314" expanded="true" signature="7420:7895" ph="[...]" />
+              <marker date="1488306189314" expanded="true" signature="7426:7668" ph="{&quot;name&quot;: &quot;PC&quot;...}" />
+              <marker date="1488306189314" expanded="true" signature="7516:7662" ph="{&quot;parent&quot;: &quot;##ParallelCoordinatesParent&quot;...}" />
+              <marker date="1488306189314" expanded="true" signature="7674:7891" ph="{&quot;name&quot;: &quot;Chord&quot;...}" />
+              <marker date="1488306189314" expanded="true" signature="7753:7885" ph="{&quot;parent&quot;: &quot;##ChordParent&quot;...}" />
+              <marker date="1488306189314" expanded="true" signature="7915:8027" ph="[...]" />
+              <marker date="1488306189314" expanded="true" signature="7916:8026" ph="{&quot;event&quot;: &quot;select&quot;...}" />
+              <marker date="1488306189314" expanded="true" signature="9959:10014" ph="{&quot;parent&quot;: &quot;##ChartTalk1&quot;...}" />
+              <marker date="1488306189314" expanded="true" signature="10064:10187" ph="{&quot;parent&quot;: &quot;##ChartTalk2&quot;...}" />
+              <marker date="1488306189314" expanded="true" signature="10596:10648" ph="{...}" />
             </folding>
           </first_editor>
           <second_editor />
@@ -1028,25 +956,25 @@
         <state relative-caret-position="150">
           <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
           <folding>
-            <marker date="1488253388000" expanded="true" signature="2330:2358" ph="{...}" />
-            <marker date="1488253388000" expanded="true" signature="2413:2582" ph="{...}" />
-            <marker date="1488253388000" expanded="true" signature="2467:2578" ph="[...]" />
-            <marker date="1488253388000" expanded="true" signature="2668:2696" ph="{...}" />
-            <marker date="1488253388000" expanded="true" signature="2789:2845" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
-            <marker date="1488253388000" expanded="true" signature="3245:3475" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
-            <marker date="1488253388000" expanded="true" signature="3294:3474" ph="{...}" />
-            <marker date="1488253388000" expanded="true" signature="3352:3473" ph="[...]" />
-            <marker date="1488253388000" expanded="true" signature="7151:7778" ph="{...}" />
-            <marker date="1488253388000" expanded="true" signature="7169:7644" ph="[...]" />
-            <marker date="1488253388000" expanded="true" signature="7175:7417" ph="{&quot;name&quot;: &quot;PC&quot;...}" />
-            <marker date="1488253388000" expanded="true" signature="7265:7411" ph="{&quot;parent&quot;: &quot;##ParallelCoordinatesParent&quot;...}" />
-            <marker date="1488253388000" expanded="true" signature="7423:7640" ph="{&quot;name&quot;: &quot;Chord&quot;...}" />
-            <marker date="1488253388000" expanded="true" signature="7502:7634" ph="{&quot;parent&quot;: &quot;##ChordParent&quot;...}" />
-            <marker date="1488253388000" expanded="true" signature="7664:7776" ph="[...]" />
-            <marker date="1488253388000" expanded="true" signature="7665:7775" ph="{&quot;event&quot;: &quot;select&quot;...}" />
-            <marker date="1488253388000" expanded="true" signature="8941:8996" ph="{&quot;parent&quot;: &quot;##ChartTalk1&quot;...}" />
-            <marker date="1488253388000" expanded="true" signature="9062:9185" ph="{&quot;parent&quot;: &quot;##ChartTalk2&quot;...}" />
-            <marker date="1488253388000" expanded="true" signature="9507:9559" ph="{...}" />
+            <marker date="1488306189314" expanded="true" signature="2388:2416" ph="{...}" />
+            <marker date="1488306189314" expanded="true" signature="2471:2640" ph="{...}" />
+            <marker date="1488306189314" expanded="true" signature="2525:2636" ph="[...]" />
+            <marker date="1488306189314" expanded="true" signature="2726:2754" ph="{...}" />
+            <marker date="1488306189314" expanded="true" signature="2931:2987" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
+            <marker date="1488306189314" expanded="true" signature="3422:3652" ph="{&quot;parent&quot;: '##ChordDiagram'...}" />
+            <marker date="1488306189314" expanded="true" signature="3471:3651" ph="{...}" />
+            <marker date="1488306189314" expanded="true" signature="3529:3650" ph="[...]" />
+            <marker date="1488306189314" expanded="true" signature="7402:8029" ph="{...}" />
+            <marker date="1488306189314" expanded="true" signature="7420:7895" ph="[...]" />
+            <marker date="1488306189314" expanded="true" signature="7426:7668" ph="{&quot;name&quot;: &quot;PC&quot;...}" />
+            <marker date="1488306189314" expanded="true" signature="7516:7662" ph="{&quot;parent&quot;: &quot;##ParallelCoordinatesParent&quot;...}" />
+            <marker date="1488306189314" expanded="true" signature="7674:7891" ph="{&quot;name&quot;: &quot;Chord&quot;...}" />
+            <marker date="1488306189314" expanded="true" signature="7753:7885" ph="{&quot;parent&quot;: &quot;##ChordParent&quot;...}" />
+            <marker date="1488306189314" expanded="true" signature="7915:8027" ph="[...]" />
+            <marker date="1488306189314" expanded="true" signature="7916:8026" ph="{&quot;event&quot;: &quot;select&quot;...}" />
+            <marker date="1488306189314" expanded="true" signature="9959:10014" ph="{&quot;parent&quot;: &quot;##ChartTalk1&quot;...}" />
+            <marker date="1488306189314" expanded="true" signature="10064:10187" ph="{&quot;parent&quot;: &quot;##ChartTalk2&quot;...}" />
+            <marker date="1488306189314" expanded="true" signature="10596:10648" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1054,8 +982,8 @@
     <entry file="file://$PROJECT_DIR$/content/_index.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="244">
-            <caret line="132" column="2" lean-forward="false" selection-start-line="132" selection-start-column="2" selection-end-line="132" selection-end-column="2" />
+          <first_editor relative-caret-position="409">
+            <caret line="137" column="44" lean-forward="false" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
             <folding />
           </first_editor>
           <second_editor />
@@ -1065,6 +993,85 @@
         <state relative-caret-position="1419">
           <caret line="43" column="0" lean-forward="true" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.toml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="924">
+          <caret line="34" column="14" lean-forward="false" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/css/Treemap.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="14" column="19" lean-forward="false" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/layouts/partials/header.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="6" column="59" lean-forward="false" selection-start-line="6" selection-start-column="59" selection-end-line="6" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/content/posts/Crossroads.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="462">
+            <caret line="14" column="35" lean-forward="false" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/content/posts/TreemapBarChart.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="590">
+            <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+            <folding>
+              <marker date="1488322488849" expanded="true" signature="1791:3017" ph="{...}" />
+              <marker date="1488322488849" expanded="true" signature="1867:3015" ph="[...]" />
+            </folding>
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/themes/dexjs-theme/static/css/TreemapBarChart.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="17" column="21" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/content/posts/CreatingAChart.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="231">
+            <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="22" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/content/posts/Treemap.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="561">
+            <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>

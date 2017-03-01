@@ -1,0 +1,38 @@
+.TreemapClass text {
+    pointer-events: none;
+}
+
+.TreemapClass .grandparent text {
+    font-weight: bold;
+}
+
+.TreemapClass rect {
+    fill: none;
+    stroke: #fff;
+}
+
+.TreemapClass rect.parent,
+.grandparent rect {
+    stroke-width: 2px;
+}
+
+.TreemapClass .grandparent rect {
+    fill: steelblue;
+}
+
+.grandparent:hover rect {
+    fill: #ee9700;
+}
+
+.TreemapClass .children rect.parent,
+.grandparent rect {
+    cursor: pointer;
+}
+
+.TreemapClass .children rect.parent {
+    fill-opacity: .1;
+}
+
+.TreemapClass .children:hover rect.child {
+    fill-opacity: .8;
+}

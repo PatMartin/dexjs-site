@@ -14,6 +14,12 @@ googleAnalytics = "UA-89686420-1"
   name = "Patrick Martin"
   homepage = "https://dexjs.net/"
 
+[params]
+  custom_css = ["css/custom.css"]
+
+[page]
+  css = []
+
 [menu]
   [[menu.main]]
     name = "Home"

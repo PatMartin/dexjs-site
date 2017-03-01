@@ -4,6 +4,8 @@ title = "Introducing the new Treemap"
 type = "post"
 [menu.main]
   identifier = "posts"
+[params]
+  custom_css = ["css/Treemap.css"]
 +++
 
 # Treemaps

@@ -144,6 +144,11 @@ concentric rings and sized proportional to an associated sizing parameter.
 <div id="D3Sunburst" class="WideChart"></div>
 
 ### Treemap Bar Chart
+The Treemap Bar Chart, as its name implies, is a hybrid of both a Treemap and a
+Bar Chart.
+
+
+
 <div id="TreemapBarChart" class="WideChart"></div>
 
 ### Ring Network

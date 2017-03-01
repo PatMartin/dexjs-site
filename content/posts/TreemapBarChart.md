@@ -4,39 +4,12 @@ date = "2017-01-02T13:09:16-05:00"
 title = "Introducing the Treemap Bar Chart"
 type = "post"
 d4 = true
+[params]
+  custom_css = ["css/TreemapBarchart.css"]
+  
 [menu.main]
   identifier = "posts"
 +++
-
-<style>
-    label {
-        font-family: sans-serif;
-        font-size: 14px;
-        position: absolute;
-        left: 92px;
-        top: 26px;
-    }
-
-    .axis .domain {
-        display: none;
-    }
-
-    .axis line {
-        stroke: #ccc;
-    }
-
-    .axis.x0 text {
-        font-weight: 700;
-    }
-
-    .hover-active rect {
-        opacity: .75;
-    }
-
-    .hover-active rect.hover {
-        opacity: 1;
-    }
-</style>
 
 # Overview
 
@@ -74,24 +47,29 @@ a view of just the data which matches the selected divider dimension.
 
 Here is an excerpt from a dataset of US crime data:
 
-<pre><code class="language-javascript">var csv = {
+```javascript
+var csv = {
   'header' : ["State","Crime","Type of Crime","Year","Count"],
-  'data' : [["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2000","329"],
-  ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2001","379"],
-  ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2002","303"],
-  ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2003","299"],
-  ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2004","254"],
-  ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2005","374"],
-  ["Alabama","Forcible rape","Violent Crime","2000","1482"],
-  ["Alabama","Forcible rape","Violent Crime","2001","1369"],
-  ["Alabama","Forcible rape","Violent Crime","2002","1664"],
-  // It goes on for miles...
-  ["Wyoming","Motor vehicle theft","Property Crime","2000","573"],
-  ["Wyoming","Motor vehicle theft","Property Crime","2001","696"],
-  ["Wyoming","Motor vehicle theft","Property Crime","2002","743"],
-  ["Wyoming","Motor vehicle theft","Property Crime","2003","798"],
-  ["Wyoming","Motor vehicle theft","Property Crime","2004","799"],
-  ["Wyoming","Motor vehicle theft","Property Crime","2005","739"]] };</code></pre>
+  'data' : [
+    ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2000","329"],
+    ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2001","379"],
+    ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2002","303"],
+    ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2003","299"],
+    ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2004","254"],
+    ["Alabama","Murder and nonnegligent Manslaughter","Violent Crime","2005","374"],
+    ["Alabama","Forcible rape","Violent Crime","2000","1482"],
+    ["Alabama","Forcible rape","Violent Crime","2001","1369"],
+    ["Alabama","Forcible rape","Violent Crime","2002","1664"],
+    // It goes on for miles...
+    ["Wyoming","Motor vehicle theft","Property Crime","2000","573"],
+    ["Wyoming","Motor vehicle theft","Property Crime","2001","696"],
+    ["Wyoming","Motor vehicle theft","Property Crime","2002","743"],
+    ["Wyoming","Motor vehicle theft","Property Crime","2003","798"],
+    ["Wyoming","Motor vehicle theft","Property Crime","2004","799"],
+    ["Wyoming","Motor vehicle theft","Property Crime","2005","739"]
+  ]
+};
+```
 
 By default, the chart assumes that the data comes in the order of:
 
