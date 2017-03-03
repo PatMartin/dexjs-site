@@ -6,3 +6,8 @@ title = "dex.js User Guide"
 +++
 
 # User Guide
+
+  * [Introduction](/guide/Intro.html)
+  * [Charts](/guide/Charts.html)
+    * [C3 Charts](/guide/c3/)
+      * [Line Chart](/guide/charts/c3/LineChart.html)

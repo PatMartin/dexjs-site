@@ -547,7 +547,6 @@ var areachart = function (userConfig) {
         if (chart.config.resizable) {
             var width = d3.select(chart.config.parent).property("clientWidth");
             var height = d3.select(chart.config.parent).property("clientHeight");
-            dex.console.log(chart.config.id + ": resize(" + width + "," + height + ")");
             chart.attr("width", width).attr("height", height).update();
         }
         else {
@@ -673,7 +672,6 @@ var barchart = function (userConfig) {
         if (chart.config.resizable) {
             var width = d3.select(chart.config.parent).property("clientWidth");
             var height = d3.select(chart.config.parent).property("clientHeight");
-            dex.console.log(chart.config.id + ": resize(" + width + "," + height + ")");
             chart.attr("width", width).attr("height", height).update();
         }
         else {
@@ -792,7 +790,6 @@ var c3hart = function (userConfig) {
     var config = chart.config;
     var csv = config.csv;
 
-    dex.console.log("c3 config", config.options);
     internalChart.load(config.options);
     return chart;
   };
@@ -858,11 +855,9 @@ var linechart = function (userConfig) {
   var selectedColumns = [];
 
   chart.resize = function resize() {
-    dex.console.log("PARENT: '" + chart.config.parent + "'");
     if (chart.config.resizable) {
       var width = $("" + chart.config.parent).width();
       var height = $("" + chart.config.parent).height();
-      dex.console.log("RESIZE: " + width + "x" + height);
       chart.attr("width", width)
         .attr("height", height)
         .update();
@@ -978,6 +973,7 @@ var piechart = function (userConfig) {
       'header': [],
       'data': []
     },
+    'type' : 'pie',
     'width': "100%",
     'height': "100%",
     'legend' : 'right'
@@ -997,7 +993,7 @@ var piechart = function (userConfig) {
       'bindto': config.parent,
       'data': {
         'columns': csv.data,
-        'type': 'pie'
+        'type': config.type
       },
       'legend' : { 'position' : config.legend }
     };
@@ -1076,7 +1072,6 @@ var stackedareachart = function (userConfig) {
         if (chart.config.resizable) {
             var width = d3.select(chart.config.parent).property("clientWidth");
             var height = d3.select(chart.config.parent).property("clientHeight");
-            dex.console.log(chart.config.id + ": resize(" + width + "," + height + ")");
             chart.attr("width", width).attr("height", height).update();
         }
         else {
@@ -1208,7 +1203,7 @@ var stackedbarchart = function (userConfig) {
     if (chart.config.resizable) {
       var width = d3.select(chart.config.parent).property("clientWidth");
       var height = d3.select(chart.config.parent).property("clientHeight");
-      dex.console.log(chart.config.id + ": resize(" + width + "," + height + ")");
+
       chart.attr("width", width).attr("height", height).update();
     }
     else {
@@ -1430,7 +1425,7 @@ var bumpchart = function (userConfig) {
     var xKey = dex.csv.getColumnName(csv, config.key.x);
     var yKey = dex.csv.getColumnName(csv, config.key.y);
 
-    dex.console.log("cat", categoryKey, "x", xKey, "y", yKey);
+    //dex.console.log("cat", categoryKey, "x", xKey, "y", yKey);
 
     d3.selectAll(config.parent).selectAll("*").remove();
 
@@ -1457,8 +1452,6 @@ var bumpchart = function (userConfig) {
       .entries(data);
 
     data = dataNest;
-
-    dex.console.log("DATA", data);
 
     var speed = 100;
 
@@ -3996,7 +3989,7 @@ var radarchart = function (userConfig) {
       'font.size': '16px',
       'anchor': function (d, i) {
         var degreesPerSection = 360 / (chart.attr('csv').header.length - 1);
-        dex.console.log("Degrees Per Section", degreesPerSection, degreesPerSection * (i-1));
+        //dex.console.log("Degrees Per Section", degreesPerSection, degreesPerSection * (i-1));
         if (degreesPerSection * i < 10) {
           return "middle";
         }
@@ -4006,7 +3999,7 @@ var radarchart = function (userConfig) {
         else if (degreesPerSection * i < 185) {
           return "middle";
         }
-        dex.console.log("D", d, i);
+
         return "end";
       },
       'dy' : function(d, i) {
@@ -6546,7 +6539,7 @@ var treemap = function (userConfig) {
     }
 
     function name(d) {
-      dex.console.log("NAME", d);
+      //dex.console.log("NAME", d);
       return d.parent
         ? name(d.parent) + " > " + d.name + " (" +
         formatNumber(d.size) + ")"
@@ -8378,7 +8371,7 @@ var network = function (userConfig) {
   var chart = new dex.component(userConfig, defaults);
 
   chart.resize = function resize() {
-    dex.console.log("PARENT: '" + chart.config.parent + "'");
+    //dex.console.log("PARENT: '" + chart.config.parent + "'");
     if (chart.config.resizable) {
       var width = $("" + chart.config.parent).width();
       var height = $("" + chart.config.parent).height();
@@ -8524,7 +8517,7 @@ var network = function (userConfig) {
         'font'  : {'align': 'middle'} });
     }
 
-    dex.console.log("NODES", nodes, "EDGES", edges);
+    //dex.console.log("NODES", nodes, "EDGES", edges);
 
     return {
       nodes: nodes,
@@ -10887,7 +10880,7 @@ module.exports = function csv(dex) {
         // 0 : number
         // [0] : object
         // '0' : string
-        dex.console.log("TYPE", typeof(keyIndex));
+        dex.console.log("UNKNOWN-TYPE", typeof(keyIndex));
       }
       return {};
     },
@@ -11235,7 +11228,6 @@ module.exports = function csv(dex) {
       for (var i = 0; i < types.length; i++) {
         if (types[i] == 'date') {
           csv.data.forEach(function (row, ri) {
-            dex.console.log("row[" + ri + "]=" + row[ri]);
             csv.data[ri][i] = new Date(csv.data[ri][i]);
           })
         }
@@ -13568,7 +13560,7 @@ var player = function (userConfig) {
     frames = dex.csv.getFramesByIndex(config.csv, config.frameIndex);
     chart.attr("frames", frames);
 
-    dex.console.log("FRAMES:", frames);
+    dex.console.debug("FRAMES:", frames);
 
     $(config.parent)
       .append('<div><label>Frame:</label>' +
@@ -13606,7 +13598,6 @@ var player = function (userConfig) {
           "ui-slider": "highlight"
         },
         'slide': function (event, ui) {
-          dex.console.log("VALUE", ui.value);
           $("#frameNumber").html(ui.value + "foobar")
           gotoFrame(ui.value - 1);
 
