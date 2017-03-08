@@ -28,33 +28,84 @@
     list-style-type: lower-roman;
 }
 
+html {
+    font-size: 18px !important;
+}
+
+.nav-pills > li > a{
+    padding-left:20px !important;
+    padding-right:20px !important;
+}
+
+@media (max-width: 1000px) {
+    html {
+        font-size: 14px !important;
+    }
+    .nav-pills > li > a{
+        padding-left:10px !important;
+        padding-right:10px !important;
+    }
+}
+
+@media (max-width: 800px) {
+    html {
+        font-size: 12px !important;
+    }
+}
+@media (max-width: 600px) {
+    html {
+        font-size: 10px !important;
+    }
+
+    .nav-pills > li > a{
+        padding-left:5px !important;
+        padding-right:5px !important;
+    }
+}
+@media (max-width: 400px) {
+    html {
+        font-size: 8px !important;
+    }
+
+    .nav-pills > li > a{
+        padding-left:2px !important;
+        padding-right:2px !important;
+    }
+}
+
 h1 {
     color: black;
-    font-size: 2em;
+    font-size: 2.5em;
     font-family: "Segoe UI";
 }
 
 h2 {
     color: steelblue;
-    font-size: 1.6em;
+    font-size: 2em;
     font-family: "Segoe UI";
 }
 
 h3 {
     color: darkgreen;
-    font-size: 1.4em;
+    font-size: 1.6em;
     font-family: "Segoe UI";
 }
 
 h4 {
     color: darkorange;
-    font-size: 1.0em;
+    font-size: 1.3em;
+    font-family: "Segoe UI";
+}
+
+h5 {
+    color: firebrick;
+    font-size: 1em;
     font-family: "Segoe UI";
 }
 
 body {
-    font-size: 1.8em;
-    font-family: "Lucida Sans";
+    font-size: 1em;
+    font-family: "Segoe UI";
     color: #767676;
 }
 
@@ -77,7 +128,7 @@ thead {
 }
 
 thead th {
-    font-family: 'Patua One', cursive;
+    font-family: 'Segoe UI';
     font-weight: bold;
     color: #fff;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
@@ -139,7 +190,6 @@ tbody:hover > tr td {
 tbody:hover > tr:hover td {
     text-shadow: none;
     color: #2d2d2d;
-    filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
     opacity: 1;
 }
 
