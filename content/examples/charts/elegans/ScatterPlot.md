@@ -24,7 +24,7 @@ Select from the interactive examples below:
   </button>
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
-    <li><a id="splom" href="#">SPLOM</a></li>
+    <li><a id="multiple-series" href="#">Multiple Series</a></li>
   </ul>
 </div>
 

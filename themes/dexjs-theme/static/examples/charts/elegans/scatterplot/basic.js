@@ -1,4 +1,3 @@
-// Testing
 dex.charts.elegans.ScatterPlot({
   "parent": "#ScatterPlot",
   "csv": {

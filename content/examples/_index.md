@@ -59,3 +59,13 @@ will not display on iOS devices such as iPhones and iPads.
 |---------|-------------|
 | [ScatterPlots](/examples/charts/elegans/ScatterPlot.html) | Ring Network examples. |
 
+## NVD3 Charts
+
+NVD provides a number of useful charts.
+
+| EXAMPLE | DESCRIPTION |
+|---------|-------------|
+| [BubbleChart](/examples/charts/nvd3/BubbleChart.html) | The NVD3 BubbleChart provides a bubble/scatterplot view. |
+| [StackedAreaChart](/examples/charts/nvd3/StackedAreaChart.html) | The NVD StackedArea chart provides 3 useful stacked area views in one chart. |
+
+
