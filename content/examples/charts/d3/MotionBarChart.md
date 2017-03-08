@@ -1,6 +1,6 @@
 +++
 date = "2016-12-28T02:38:25-05:00"
-title = "dex.js D3 Dendrogram Examples"
+title = "dex.js D3 Motion Bar Chart"
 [menu.main]
   identifier = "examples"
 
@@ -14,7 +14,7 @@ title = "dex.js D3 Dendrogram Examples"
   css = [ "/css/ace-example.css" ]
 +++
 
-# D3 Dendrogram
+# D3 Motion Bar Chart
 
 Select from the interactive examples below:
 <div class="btn-group">
@@ -23,13 +23,14 @@ Select from the interactive examples below:
   </button>
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
-    <li><a id="presidents" href="#">Presidents</a></li>
+    <li><a id="deaths" href="#">Deaths per 1000 People</a></li>
+    <li><a id="population" href="#">Population</a></li>
   </ul>
 </div>
 
 <div class="alert alert-danger" role="alert" id="ace-error"></div>
 
-<div id="Dendrogram" class="WideChart"></div>
+<div id="MotionBarChart" class="WideChart"></div>
 <div id="ace-editor"></div>
 
 <script>
@@ -38,7 +39,7 @@ Select from the interactive examples below:
     "errorParent"   : "ace-error",
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
-    "contentDir"    : "/examples/charts/d3/dendrogram",
-    "initialContent": "/examples/charts/d3/dendrogram/basic.js"
+    "contentDir"    : "/examples/charts/d3/motionbarchart",
+    "initialContent": "/examples/charts/d3/motionbarchart/basic.js"
   });
 </script>
