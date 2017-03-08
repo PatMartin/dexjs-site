@@ -6230,7 +6230,7 @@ var treemapBarChart = function (userConfig) {
     'margin': {
       'top': 25,
       'right': 15,
-      'bottom': 50,
+      'bottom': 100,
       'left': 60
     },
     // <text fill="#000" y="3" x="0.5" dy="0.71em">2000</text>
@@ -7289,11 +7289,13 @@ var scatterplot = function (userConfig) {
       }
       else {
         groups = [series];
+        groups[0].csv = csv;
       }
 
       //dex.console.log("GROUPS", csv, groups);
 
       groups.forEach(function (group) {
+        //dex.console.log("GROUP", group);
         data = {
           'x': dex.csv.getColumnData(group.csv, series.coordinates.x),
           'y': dex.csv.getColumnData(group.csv, series.coordinates.y),

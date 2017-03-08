@@ -39,3 +39,23 @@ These examples are based upon [D3.js](http://d3js.org)
 | [Sunburst](/examples/charts/d3/Sunburst.html) | Sunburst examples. |
 | [Treemap](/examples/charts/d3/Treemap.html) | Treemap examples. |
 | [Treemap BarChart](/examples/charts/d3/TreemapBarChart.html) | Treemap BarChart examples. |
+
+
+## D3 Plus Charts
+
+These examples are based upon [D3 Plus](https://d3plus.org/)
+
+| EXAMPLE | DESCRIPTION |
+|---------|-------------|
+| [Ring Network](/examples/charts/d3plus/RingNetwork.html) | Ring Network examples. |
+
+## Elegans 3D Charts
+
+These examples are based upon a version of Elegans that I have
+extended for my own purposes.  These examples require WebGL and
+will not display on iOS devices such as iPhones and iPads.
+
+| EXAMPLE | DESCRIPTION |
+|---------|-------------|
+| [ScatterPlots](/examples/charts/elegans/ScatterPlot.html) | Ring Network examples. |
+
