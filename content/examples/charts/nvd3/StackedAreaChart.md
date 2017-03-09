@@ -29,9 +29,10 @@ Select from the interactive examples below:
   </ul>
 </div>
 
+<div id="StackedAreaChart" class="WideChart"></div>
+
 <div class="alert alert-danger" role="alert" id="ace-error"></div>
 
-<div id="StackedAreaChart" class="WideChart"></div>
 <div id="ace-editor"></div>
 
 <script>
