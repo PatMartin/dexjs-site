@@ -358,13 +358,13 @@ otherwise be overwhelming when displayed all at once.
       'max'     : 100
     })};
 
-  var mathCsv = {
+  var sincos = {
     'header' : [ 'angle', 'sin', 'cos' ],
     'data' : []
   };
 
   for (var angle = -360; angle<=360; angle += 10) {
-    mathCsv.data.push([angle, Math.sin(angle * (Math.PI/180)),
+    sincos.data.push([angle, Math.sin(angle * (Math.PI/180)),
       Math.cos(angle * (Math.PI/180))]);
   }
 
@@ -384,25 +384,25 @@ otherwise be overwhelming when displayed all at once.
 
   var c3AreaChart = new dex.charts.c3.AreaChart({
     'parent' : '#C3AreaChart',
-    'csv'    : mathCsv});
+    'csv'    : sincos});
   c3AreaChart.render();
 
   var c3BarChart = new dex.charts.c3.BarChart({
     'parent' : '#C3BarChart',
-    'csv'    : mathCsv});
+    'csv'    : sincos});
   c3BarChart.render();
 
   var c3LineChart = new dex.charts.c3.LineChart({
     'parent' : '#C3LineChart',
-    'csv'    : mathCsv}).render();
+    'csv'    : sincos}).render();
 
   var c3StackedAreaChart = new dex.charts.c3.StackedAreaChart({
     'parent' : '#C3StackedAreaChart',
-    'csv'    : mathCsv}).render();
+    'csv'    : sincos}).render();
 
   var c3StackedBarChart = new dex.charts.c3.StackedBarChart({
     'parent' : '#C3StackedBarChart',
-    'csv'    : mathCsv}).render();
+    'csv'    : sincos}).render();
 
   var salesData = {
     'header' : ["NAME", "SALE", ],
@@ -424,46 +424,17 @@ otherwise be overwhelming when displayed all at once.
           }
   ).render();
 
-  var donutChart = new dex.charts.c3.PieChart({
+  var donutChart = new dex.charts.c3.DonutChart({
             'parent'      : '#C3DonutChartParent',
             'csv'         : salesData,
             'type'        : "donut"
           }
   ).render();
 
-  var scatterPlotOptions = {
-    data: {
-      xs: {
-        setosa: 'setosa_x',
-        versicolor: 'versicolor_x',
-      },
-      // iris data from R
-      columns: [
-        ["setosa_x", 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3.7, 3.4, 3.0, 3.0, 4.0, 4.4, 3.9, 3.5, 3.8, 3.8, 3.4, 3.7, 3.6, 3.3, 3.4, 3.0, 3.4, 3.5, 3.4, 3.2, 3.1, 3.4, 4.1, 4.2, 3.1, 3.2, 3.5, 3.6, 3.0, 3.4, 3.5, 2.3, 3.2, 3.5, 3.8, 3.0, 3.8, 3.2, 3.7, 3.3],
-        ["versicolor_x", 3.2, 3.2, 3.1, 2.3, 2.8, 2.8, 3.3, 2.4, 2.9, 2.7, 2.0, 3.0, 2.2, 2.9, 2.9, 3.1, 3.0, 2.7, 2.2, 2.5, 3.2, 2.8, 2.5, 2.8, 2.9, 3.0, 2.8, 3.0, 2.9, 2.6, 2.4, 2.4, 2.7, 2.7, 3.0, 3.4, 3.1, 2.3, 3.0, 2.5, 2.6, 3.0, 2.6, 2.3, 2.7, 3.0, 2.9, 2.9, 2.5, 2.8],
-        ["setosa", 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0.2, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.4, 0.2, 0.5, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.2, 0.4, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.3, 0.2, 0.6, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2],
-        ["versicolor", 1.4, 1.5, 1.5, 1.3, 1.5, 1.3, 1.6, 1.0, 1.3, 1.4, 1.0, 1.5, 1.0, 1.4, 1.3, 1.4, 1.5, 1.0, 1.5, 1.1, 1.8, 1.3, 1.5, 1.2, 1.3, 1.4, 1.4, 1.7, 1.5, 1.0, 1.1, 1.0, 1.2, 1.6, 1.5, 1.6, 1.5, 1.3, 1.3, 1.3, 1.2, 1.4, 1.2, 1.0, 1.3, 1.2, 1.3, 1.3, 1.1, 1.3],
-      ],
-      type: 'scatter'
-    },
-    axis: {
-      x: {
-        label: 'Sepal.Width',
-        tick: {
-          fit: false
-        }
-      },
-      y: {
-        label: 'Petal.Width'
-      }
-    }
-  };
-
-  var scatterplot = dex.charts.c3.C3Chart({
+  var scatterplot = dex.charts.c3.ScatterPlot({
             'parent'  : '#C3ScatterPlotParent',
-            'options' : scatterPlotOptions
-          }
-  ).render();
+            'csv' : sincos
+  }).render();
 
   d3.json("/data/gdp.json", function(error, bumpChartData) {
     var bumpChart = dex.charts.d3.BumpChart({

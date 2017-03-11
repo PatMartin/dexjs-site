@@ -37,12 +37,11 @@ These examples are based upon [D3.js](http://d3js.org)
 [![Sunburst](/images/charts/d3_sunburst.png)](/examples/charts/d3/Sunburst.html)
 [![Treemap](/images/charts/d3_treemap.png)](/examples/charts/d3/Treemap.html)
 [![Treemap BarChart](/images/charts/d3_treemap_barchart.png)](/examples/charts/d3/TreemapBarChart.html)
-
+[![TopoJSON Map](/images/charts/d3_topojsonmap.png)](/examples/charts/d3/TopoJSONMap.html)
 
 ## D3 Plus Charts
 
 These examples are based upon [D3 Plus](https://d3plus.org/)
-
 
 [![Ring Network](/images/charts/d3plus_ring_network.png)](/examples/charts/d3plus/RingNetwork.html)
 
