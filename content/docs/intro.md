@@ -3,14 +3,8 @@
 date = "2016-12-28T02:38:25-05:00"
 title = "dex.js Introduction"
 
-d3plus = true
-c3 = true
-googlecharts = true
-dygraph = true
-visjs = true
-
 [menu.main]
-  identifier = "intro"
+  identifier = "docs"
   
 +++
 

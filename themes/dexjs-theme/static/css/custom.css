@@ -109,6 +109,23 @@ body {
     color: #767676;
 }
 
+table tr:first-child th {
+    background: #ffffff;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjMwJSIgc3RvcC1jb2xvcj0iI2Y2ZjZmNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjMwJSIgc3RvcC1jb2xvcj0iI2Y2ZjZmNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU1ZTUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 30%, #f6f6f6 30%, #e5e5e5 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(30%,#f6f6f6), color-stop(30%,#f6f6f6), color-stop(100%,#e5e5e5));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 30%,#f6f6f6 30%,#e5e5e5 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 30%,#f6f6f6 30%,#e5e5e5 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 30%,#f6f6f6 30%,#e5e5e5 100%);
+    background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 30%,#f6f6f6 30%,#e5e5e5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+
+    padding: 8px 10px;
+    color: #000;
+    border-top: 1px solid #cecece;
+    border-bottom: 1px solid #E6E6E6;
+}
+/*
 table {
     border-collapse: separate;
     background: #fff;
@@ -120,6 +137,7 @@ table {
     -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
+*/
 
 thead {
     -moz-border-radius: 2px;
@@ -128,7 +146,7 @@ thead {
 }
 
 thead th {
-    font-family: 'Segoe UI';
+    font-family: 'Calibri Light';
     font-weight: bold;
     color: #fff;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
@@ -181,7 +199,7 @@ tbody tr:last-child td:last-child {
 
 tbody:hover > tr td {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
-    opacity: 0.2;
+    opacity: 0.5;
     /* uncomment for blur effect */
     /* color:transparent;
     @include text-shadow(0px 0px 2px rgba(0,0,0,0.8));*/
@@ -189,55 +207,6 @@ tbody:hover > tr td {
 
 tbody:hover > tr:hover td {
     text-shadow: none;
-    color: #2d2d2d;
-    opacity: 1;
-}
-
-/** dex.js general css **/
-
-.Treemap text {
-    pointer-events: none;
-}
-
-.Treemap .grandparent text {
-    font-weight: bold;
-}
-
-.Treemap rect {
-    fill: none;
-    stroke: #fff;
-}
-
-.Treemap rect.parent,
-.grandparent rect {
-    stroke-width: 1px;
-}
-
-.Treemap .grandparent rect {
-    fill: steelblue;
-}
-
-.grandparent:hover rect {
-    fill: #ee9700;
-}
-
-.Treemap .children rect.parent,
-.grandparent rect {
-    cursor: pointer;
-}
-
-.Treemap .children rect.parent {
-    fill-opacity: .1;
-}
-
-.Treemap .children:hover rect.child {
-    fill-opacity: .7;
-}
-
-.hover-active rect {
-    opacity: .50;
-}
-
-.hover-active rect.hover {
+    color: #2e6da4;
     opacity: 1;
 }

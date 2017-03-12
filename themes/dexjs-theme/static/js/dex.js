@@ -1379,7 +1379,7 @@ var chord = function (userConfig) {
     'label': dex.config.text()
   };
 
-  var chart = new dex.component(userConfig, defaults);
+  chart = new dex.component(userConfig, defaults);
 
   chart.render = function render() {
     d3 = dex.charts.d3.d3v3;
@@ -1826,6 +1826,8 @@ module.exports = clusteredforce;
 },{}],19:[function(require,module,exports){
 var dendrogram = function Dendrogram(userConfig) {
   d3 = dex.charts.d3.d3v3;
+  var chart;
+
   var defaults =
   {
     // The parent container of this chart.
@@ -1918,7 +1920,7 @@ var dendrogram = function Dendrogram(userConfig) {
     })
   };
 
-  var chart = new dex.component(userConfig, defaults);
+  chart = new dex.component(userConfig, defaults);
 
   chart.render = function render() {
     d3 = dex.charts.d3.d3v3;
@@ -5582,7 +5584,7 @@ module.exports = sunburst;
 },{}],29:[function(require,module,exports){
 var topojsonmap = function (userConfig) {
   d3 = dex.charts.d3.d3v3;
-  var chart = null;
+  var chart;
 
   var defaults = {
     'parent': '#TopoJsonMap',
@@ -5612,9 +5614,9 @@ var topojsonmap = function (userConfig) {
     "unselectedColor": "lightgrey",
   };
 
-  chart = new dex.component(userConfig, defaults);
-
   var selected = {};
+
+  chart = new dex.component(userConfig, defaults);
 
   chart.render = function render() {
     d3 = dex.charts.d3.d3v3;
@@ -9208,17 +9210,16 @@ module.exports = function config(dex) {
      *
      */
     'font': function font(custom) {
-      var defaults =
-        {
-          'decoration': 'none',
-          'family': 'sans-serif',
-          'letterSpacing': 'normal',
-          'size': 14,
-          'style': 'normal',
-          'weight': 'normal',
-          'wordSpacing': 'normal',
-          'variant': 'normal'
-        };
+      var defaults = {
+        'decoration': 'none',
+        'family': 'sans-serif',
+        'letterSpacing': 'normal',
+        'size': 14,
+        'style': 'normal',
+        'weight': 'normal',
+        'wordSpacing': 'normal',
+        'variant': 'normal'
+      };
 
       var fontSpec = dex.config.expandAndOverlay(custom, defaults);
       return fontSpec;

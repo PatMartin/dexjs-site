@@ -5,7 +5,7 @@ type = "post"
 [menu.main]
   identifier = "posts"
 [params]
-  css = ["css/Treemap.css"]
+  css = ["/css/Treemap.css"]
 +++
 
 # Treemaps

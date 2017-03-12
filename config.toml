@@ -28,12 +28,6 @@ googleAnalytics = "UA-89686420-1"
     url = "/"
     weight = 1
   [[menu.main]]
-    name = "Introduction"
-    pre = ""
-    identifier = "intro"
-    url = "/intro.html"
-    weight = 2
-  [[menu.main]]
     name = "Examples"
     pre = ""
     identifier = "examples"
@@ -46,10 +40,10 @@ googleAnalytics = "UA-89686420-1"
     url = "/posts.html"
     weight = 4
   [[menu.main]]
-    name = "JSDocs"
+    name = "Docs"
     pre = ""
-    identifier = "jsdocs"
-    url = "/jsdocs/module-dex.html"
+    identifier = "docs"
+    url = "/docs.html"
     weight = 5
   [[menu.main]]
     name = "About"

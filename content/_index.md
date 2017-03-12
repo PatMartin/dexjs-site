@@ -17,7 +17,8 @@ visjs = true
     "https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"
   ]
   css = [
-    "https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.5/nv.d3.min.css"
+    "https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.5/nv.d3.min.css",
+    "/css/Treemap.css"
   ]
 
 [menu.main]
@@ -303,7 +304,7 @@ similarly grouped nodes.
 
 Treemaps are also great at comparing the proportions between categories via their size.
 
-<div id="D3Treemap" class="WideChart"></div>
+<div id="D3Treemap" class="TreemapClass WideChart"></div>
 
 ### Sunburst
 The Sunburst diagram is another way of viewing hierarchy.  Nodes are laid out into
