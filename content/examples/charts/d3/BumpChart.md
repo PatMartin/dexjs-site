@@ -23,10 +23,13 @@ Select from the interactive examples below:
   </button>
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
+    <li><a id="gdp" href="#">GDP Rankings</a></li>
+    <li><a id="universities" href="#">Universities</a></li>
+    <li><a id="loud" href="#">Loud and Proud</a></li>
   </ul>
 </div>
 
-<div id="BumpChart"></div>
+<div id="BumpChart" class="WideChart"></div>
 <div class="alert alert-danger" role="alert" id="ace-error"></div>
 <div id="ace-editor"></div>
 
@@ -43,34 +46,28 @@ Select from the interactive examples below:
 
 ## Overview
 
+  * [BumpChart Reference](/docs/chart_reference.html#bumpchart)
+
 A Bump Chart is used to compare two discrete and distinct dimensions against
 each other.  For example, they are useful for exploring the rank of a value
 over a time dimension such as team ranking over the weeks of a season.
 
-Bump Charts are similar to Parallel Coordinates.
+Bump Charts are similar to Parallel Coordinates only that they are a more
+constrained interpretation.  The initial y-axis
+locations of the categorical elements (For example, NFL teams) are ordered typically by descending
+rank as one moves from the top to bottom axis vertically.  As the path
+of the category moves from left to right through a typically ascending
+sequence (typically time), the y-axis location changes according to the
+rank of that categorical entry at that particular point in the sequence
+(typically a point in time such as Week 1 of the NFL season).
 
-## Options
+If a category's line has a downward slope, that category is falling in rank
+(ex: The NFL team moved down in the rankings).
+If the category's line has an ascending slope, that category is increasing
+in rank (The NFL team moved up in the rankings). If the category's line
+is horizontal, that category is unchanging in rank (ie: the NFL team stayed
+the same in the rankings).
 
-| OPTION    | DEFAULT VALUE | DESCRIPTION |
-|-----------|---------------|-------------|
-| parent    | #BumpChartParent | A selector pointing to the div container of the chart. |
-| id        | BumpChartId | The identifier for this chart. |
-| class     | BumpChartClass | The class for this chart. |
-| height    | 100% | The height, expressed in absolute pixels, or as a percentage of the parent container. |
-| width     | 100% | The width, expressed in absolute pixels, or as a percentage of the parent container. |
-| resizable | true | When true, the chart will resize itself to fit the parent container.  When false, it will remain at the specified height and width. |
-| csv       |      | The CSV data for this chart.  The chart expects a CSV consisting of a category, a sequence and a ranking column. |
-| margin    |      | The margins for this chart. |
-| margin.left | 140 | The left margin for this chart. |
-| margin.right | 160 | The right margin for this chart. |
-| margin.top | 50 | The top margin for this chart. |
-| margin.bottom | 50 | The bottom margin for this chart. |
-| transform | | An SVG transform to be applied to this chart. |
-| color | d3.scale.category10() | A color scheme for this chart. |
-| format | d3.format("d") | A format to be applied to the tick labels. |
-| xAxisLabel | | The configuration for the x-axis label. |
-| xAxisLabel.text | "X AxisTitle" | The title of the x axis. |
-| xAxisLabel.x | | The x location of the X axis label. |
-| xAxisLabel.y | | The y location of the X axis label. |
-| xAxisLabel.font.size | 32px | The size of the X axis label. |
-| xAxis |
+Trust me, the bumpchart is easy to understand visually.  Technically correct
+descriptions always make things sound more complex than they really are.
+If you don't believe me, pick up any math textbook on the planet.
