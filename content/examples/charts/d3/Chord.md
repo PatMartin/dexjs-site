@@ -32,8 +32,8 @@ Select from the interactive examples below:
 
 <div id="example-info"></div>
 <div id="Chord" class="WideChart"></div>
-<div id="ace-error"></div>
 <div id="ace-editor"></div>
+<div id="ace-error"></div>
 
 <script>
   var editor = createEditor({
@@ -49,4 +49,4 @@ Select from the interactive examples below:
 
 ## Chord Diagram
 
-The Chord Diagram visualizes
+The chord diagram is useful for visualizing the relationships between entities.
