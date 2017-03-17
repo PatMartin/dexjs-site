@@ -270,7 +270,7 @@ var chartSpec = {
       "class": "dex.charts.d3.Chord",
       "config": {
         "parent": "#ChordParent",
-        "margin": {"top": 10, "bottom": 20, "left": 10, "right": 10},
+        "margin": {"top": 100, "bottom": 100, "left": 100, "right": 100},
         "csv": csv
       }
     }
@@ -462,7 +462,7 @@ types of charts will also be superior.
                 "height" : 400,
                 "resizable" : false,
                 "parent": "#FromDataChordParent",
-                'margin': {'top': 10, 'bottom': 20, 'left': 10, 'right': 10},
+                'margin': {'top': 100, 'bottom': 100, 'left': 100, 'right': 100},
                 "csv": presidents
               }
             }

@@ -26,12 +26,13 @@ Select from the interactive examples below:
     <li><a id="presidents" href="#">Presidents</a></li>
     <li><a id="colormap" href="#">Colormap</a></li>
     <li><a id="transform" href="#">Transform</a></li>
+    <li><a id="playground" href="#">Playground</a></li>
   </ul>
 </div>
 
-<div class="alert alert-danger" role="alert" id="ace-error"></div>
-
+<div id="example-info"></div>
 <div id="Chord" class="WideChart"></div>
+<div id="ace-error"></div>
 <div id="ace-editor"></div>
 
 <script>
@@ -41,6 +42,11 @@ Select from the interactive examples below:
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
     "contentDir"    : "/examples/charts/d3/chord",
-    "initialContent": "/examples/charts/d3/chord/basic.js"
+    "initialContent": "/examples/charts/d3/chord/basic.js",
+    "initialInfo"   : "/examples/charts/d3/chord/basic.html"
   });
 </script>
+
+## Chord Diagram
+
+The Chord Diagram visualizes
