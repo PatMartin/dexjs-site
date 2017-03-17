@@ -36,7 +36,7 @@ function createEditor(options) {
       error.innerHTML = '';
     }
     catch (e) {
-      error.innerHTML = e;
+      error.innerHTML = "<div class='bs-callout bs-callout-danger'><h4>Error:</h4>"  + e + "</div>";
     }
   });
 
