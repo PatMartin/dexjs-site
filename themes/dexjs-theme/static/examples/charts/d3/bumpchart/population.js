@@ -1,6 +1,7 @@
-d3.json("/data/gdp.json", function(error, gdp) {
+d3.json("/data/WorldBirthsAndDeaths.json", function(error, world) {
   // Creates a new csv with an added ranking field based on GDP Per Capita.
-  var rankings = dex.csv.getRankedCsv(gdp, "Country", "Year", "GDP Per Capita");
+  var rankings = dex.csv.getRankedCsv(world, "Country", "Year", "Population");
+  dex.console.log("RANKINGS", rankings);
 
   dex.charts.d3.BumpChart({
     "parent": "#BumpChart",
@@ -13,7 +14,7 @@ d3.json("/data/gdp.json", function(error, gdp) {
     'margin.top': 15,
     'margin.left': 40,
     'margin.right': 170,
-    'xAxisLabel.text': 'GDP Ranking Per Capita / Year',
-    "key" : { "category" : "Country", "sequence" : "Year", "rank" : "rank" }
+    'xAxisLabel.text': 'Country Population',
+    "key" : { "category" : "Country", "sequence" : "Year", "rank" : "Population" }
   }).render();
 });

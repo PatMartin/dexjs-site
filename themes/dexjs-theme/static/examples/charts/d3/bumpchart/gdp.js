@@ -1,16 +1,20 @@
-// Create data
-var rankings = {
-  "header" : [ "Team", "Week", "Rank" ],
-  "data" : [
-    ["Tornadoes", 1, 1 ], ["Cougars", 1, 2 ], ["Lizard Kings", 1, 3 ],
-    ["Tornadoes", 2, 2 ], ["Cougars", 2, 1 ], ["Lizard Kings", 2, 3 ],
-    ["Tornadoes", 3, 3 ], ["Cougars", 3, 1 ], ["Lizard Kings", 3, 2 ],
-    ["Tornadoes", 4, 2 ], ["Cougars", 4, 3 ], ["Lizard Kings", 4, 1 ]
-  ]
-};
+d3.json("/data/gdp.json", function(error, gdp) {
+  // Creates a new csv with an added ranking field based on GDP Per Capita.
+  var rankings = dex.csv.getRankedCsv(gdp, "Country", "Year", "GDP Per Capita", {"descending" : true });
 
-// Configure and render the chart.
-dex.charts.d3.BumpChart({
-  "parent" : "#BumpChart",
-  "csv" : rankings
-}).render();
+  dex.charts.d3.BumpChart({
+    "parent": "#BumpChart",
+    "csv": rankings,
+    'color': dex.color.getColormap("crayola120"),
+    'line.stroke.width': 2,
+    'circle.r': 3,
+    'circle.stroke.width': 2,
+    'categoryLabel.font.size': 8,
+    'sequenceLabel.font.size' : 18,
+    'margin.top': 15,
+    'margin.left': 40,
+    'margin.right': 170,
+    'chartLabel.text': 'GDP Ranking Per Capita / Year',
+    "key" : { "category" : "Country", "sequence" : "Year", "rank" : "rank" }
+  }).render();
+});

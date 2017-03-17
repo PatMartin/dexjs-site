@@ -10,5 +10,5 @@ var csv = {
 dex.charts.d3.Chord({
   "parent": "#Chord",
   "csv": csv,
-  "transform": "skew(10, 100)"
+  "transform": "skewY(30)"
 }).render();
