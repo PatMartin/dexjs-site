@@ -26,6 +26,7 @@ Select from the interactive examples below:
     <li><a id="presidents" href="#">Presidents</a></li>
     <li><a id="colormap" href="#">Colormap</a></li>
     <li><a id="transform" href="#">Transform</a></li>
+    <li><a id="style" href="#">Dynamic Styling</a></li>
     <li><a id="playground" href="#">Playground</a></li>
   </ul>
 </div>

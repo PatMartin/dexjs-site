@@ -32,11 +32,10 @@ Select from the interactive examples below:
   </ul>
 </div>
 
-<div class="alert alert-danger" role="alert" id="ace-error">
-</div>
-
-<div id="BarChart"></div>
+<div id="example-info"></div>
+<div id="BarChart" class="WideChart"></div>
 <div id="ace-editor"></div>
+<div id="ace-error"></div>
 
 <script>
   var editor = createEditor({
@@ -45,6 +44,7 @@ Select from the interactive examples below:
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
     "contentDir"    : "/examples/charts/c3/barchart",
-    "initialContent": "/examples/charts/c3/barchart/basic.js"
+    "initialContent": "/examples/charts/c3/barchart/basic.js",
+    "initialInfo"   : "/examples/charts/c3/barchart/basic.html"
   });
 </script>

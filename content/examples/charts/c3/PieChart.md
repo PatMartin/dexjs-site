@@ -23,14 +23,14 @@ Select from the interactive examples below:
   </button>
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
+    <li><a id="style" href="#">Dynamic Style</a></li>
   </ul>
 </div>
 
-<div class="alert alert-danger" role="alert" id="ace-error">
-</div>
-
-<div id="PieChart"></div>
+<div id="example-info"></div>
+<div id="PieChart" class="WideChart"></div>
 <div id="ace-editor"></div>
+<div id="ace-error"></div>
 
 <script>
   var editor = createEditor({
@@ -39,6 +39,7 @@ Select from the interactive examples below:
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
     "contentDir"    : "/examples/charts/c3/piechart",
-    "initialContent": "/examples/charts/c3/piechart/basic.js"
+    "initialContent": "/examples/charts/c3/piechart/basic.js",
+    "initialInfo"   : "/examples/charts/c3/piechart/basic.html"
   });
 </script>

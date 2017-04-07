@@ -545,7 +545,7 @@ var barchart = function (userConfig) {
 
 module.exports = barchart;
 },{}],7:[function(require,module,exports){
-var c3hart = function (userConfig) {
+var c3chart = function (userConfig) {
   var chart;
   var internalChart;
 
@@ -594,9 +594,11 @@ var c3hart = function (userConfig) {
     config.options =
       dex.config.expandAndOverlay(config.options,
         getDataOptions(csv));
-    dex.console.log("OPTIONS", JSON.stringify(config.options));
+    //dex.console.log("C3OPTIONS", JSON.stringify(config.options));
     internalChart = c3.generate(config.options);
-    return chart.resize();
+    chart.resize();
+    dex.config.apply(chart);
+    return chart;
   };
 
   function getDataOptions(csv) {
@@ -693,6 +695,7 @@ var c3hart = function (userConfig) {
       dex.config.expandAndOverlay(config.options,
         getDataOptions(config.csv));
     internalChart.load(config.options);
+    dex.config.apply(chart);
     return chart;
   };
 
@@ -705,7 +708,7 @@ var c3hart = function (userConfig) {
   return chart;
 };
 
-module.exports = c3hart;
+module.exports = c3chart;
 },{}],8:[function(require,module,exports){
 /**
  *
@@ -1024,11 +1027,13 @@ var bumpchart = function (userConfig) {
     })
   };
 
-  var chart = new dex.component(userConfig, defaults);
+  chart = new dex.component(userConfig, defaults);
 
   chart.render = function render() {
     d3 = dex.charts.d3.d3v3;
-    return chart.resize();
+    chart.resize();
+    dex.config.apply(chart);
+    return chart;
   };
 
   chart.update = function () {
@@ -1222,7 +1227,6 @@ var bumpchart = function (userConfig) {
         key.style("opacity", 1);
       });
 
-
     // text label for the chart
     rootG.append("text")
       .call(dex.config.configureText, config.chartLabel);
@@ -1384,7 +1388,7 @@ var chord = function (userConfig) {
         "fill.fillOpacity": 1,
         "fill.fill": "none",
         "d": d3.svg.chord()
-      })
+      }),
     },
     "color": d3.scale.category20c(),
     "innerRadius": "auto",
@@ -1406,7 +1410,9 @@ var chord = function (userConfig) {
 
   chart.render = function render() {
     d3 = dex.charts.d3.d3v3;
-    return chart.resize();
+    chart.resize();
+    dex.config.apply(chart);
+    return chart;
   };
 
   chart.update = function () {
@@ -1554,6 +1560,8 @@ var chord = function (userConfig) {
         };
       });
     }
+
+    dex.config.apply(chart);
 
     // Allow method chaining
     return chart;
@@ -9164,30 +9172,28 @@ module.exports = function config(dex) {
         dex.config.expand(bottom));
     },
 
-    'configuration': function configuration(defaults, user) {
-      if (user) {
-        return expandAndOverlay(user, defaults);
-      }
+    'apply': function apply(chart) {
+      var config = chart.config;
 
-      return defaults;
-    },
+      var node = d3.select(config.parent).select("svg");
+      //dex.console.log("APPLYING STYLE TO NODE:", node);
+      if (node && config && config.apply) {
+        config.apply.forEach(function(applyConfig) {
+          var affectedNodes = node.selectAll(applyConfig["select"]);
 
-    'configure': function configureFont(node, config, i) {
-      if (config) {
-        if (config.styles) {
-          for (style in config.styles) {
-            dex.config.setStyle(node, style, config.styles[style], i);
+          if (applyConfig && applyConfig.styles) {
+            for (styleName in applyConfig.styles) {
+              affectedNodes.style(styleName, applyConfig.styles[styleName]);
+            }
           }
-        }
-        if (config.attributes) {
-          for (attribute in config.attributes) {
-            dex.config.setAttr(node, attribute, config.attributes[attribute], i);
-          }
-        }
-      }
 
-      // Return the configured node.
-      return node;
+          if (applyConfig && applyConfig.attributes) {
+            for (attributeName in applyConfig.attributes) {
+              affectedNodes.attr(attributeName, applyConfig.attributes[attributeName]);
+            }
+          }
+        });
+      }
     },
 
     /**

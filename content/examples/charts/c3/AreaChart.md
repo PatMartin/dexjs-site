@@ -23,6 +23,7 @@ Select from the interactive examples below:
   </button>
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
+    <li><a id="style" href="#">Dynamic Style</a></li>
     <li><a id="subchart" href="#">Sub-Chart</a></li>
     <li><a id="rotated" href="#">Rotated</a></li>
     <li><a id="categorical" href="#">Categorical Data</a></li>
@@ -32,11 +33,10 @@ Select from the interactive examples below:
   </ul>
 </div>
 
-<div class="alert alert-danger" role="alert" id="ace-error">
-</div>
-
-<div id="AreaChart"></div>
+<div id="example-info"></div>
+<div id="AreaChart" class="WideChart"></div>
 <div id="ace-editor"></div>
+<div id="ace-error"></div>
 
 <script>
   var editor = createEditor({
@@ -45,6 +45,7 @@ Select from the interactive examples below:
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
     "contentDir"    : "/examples/charts/c3/areachart",
-    "initialContent": "/examples/charts/c3/areachart/basic.js"
+    "initialContent": "/examples/charts/c3/areachart/basic.js",
+    "initialInfo"   : "/examples/charts/c3/areachart/basic.html"
   });
 </script>

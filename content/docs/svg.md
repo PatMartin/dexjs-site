@@ -52,7 +52,24 @@ This element is used to specify the content and appearance of text.
 
 | Name | Type | Examples | Description |
 |------|------|----------|-------------|
-| [font](#font) | attribute-group | All of the styles and attributes associated with fonts may be associated with a text element. |
+| x    | attribute | 100 | The x coordinate of the text, or a whitespace or comma separated list of the x location of each character. |
+| y    | attribute | 200 | The y coordinate of the text, or a whitespace or comma separated list of the y location of each character. |
+| dx   | attribute | | |
+| dy   | attribute | | |
+| rotate | attribute | | |
+| textLength | attribute | | |
+| lengthAdjust | attribute | | |
+| [font](#font) | attribute-set | | |
+| direction | attribute | attribute | | This property specifies the base writing direction of blocks and the direction of embeddings and overrides (see 'unicode-bidi') for the Unicode bidirectional algorithm. In addition, it specifies the direction of table column layout, the direction of horizontal overflow, and the position of an incomplete last line in a block in case of 'text-align: justify'. <hr>Values:<br><br>ltr &#124; rtl &#124; inherit |
+| unicode-bidi | | |
+| letter-spacing | attribute | | This property specifies spacing behavior between text characters supplemental to any spacing due to the ‘kerning’ property. <hr>Values:<br><br>normal &#124; (length) &#124; inherit |
+| text-decoration | attribute | | This property describes decorations that are added to the text of an element. Conforming SVG Viewers are not required to support the blink value.<hr>Values:<br><br>none &#124; [underline &#124;&#124; overline &#124;&#124; line-through &#124;&#124; blink] &#124; inherit |
+| word-spacing | attribute | | This property specifies spacing behavior between words. For SVG, if a <length> is provided without a unit identifier (e.g., an unqualified number such as 128), the SVG user agent processes the (length) as a width value in the current user coordinate system. <hr>Values:<br><br>normal &#124; (length) &#124; inherit |
+| text-anchor | attribute | start | The ‘text-anchor’ property is used to align (start-, middle- or end-alignment) a string of text relative to a given point. <hr>Values:<br><br>start &#124; middle &#124; end &#124; inherit |
+| <span style="white-space:nowrap;">dominant-baseline</span> | attribute | | The "dominant-baseline" property is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with three components: a baseline-identifier for the dominant-baseline, a baseline-table and a baseline-table font-size. Some values of the property re-determine all three values; other only re-establish the baseline-table font-size. When the initial value, auto, would give an undesired result, this property can be used to explicitly set the desire scaled-baseline-table. <hr>Values:<br><br>auto &#124; use-script &#124; &#124; no-change &#124; reset-size &#124; ideographic &#124; alphabetic &#124; hanging &#124; mathematical &#124; central &#124; middle &#124; text-after-edge &#124; text-before-edge &#124; inherit |
+| kerning | attribute | | Indicates whether the user agent should adjust inter-glyph spacing based on kerning tables that are included in the relevant font (i.e., enable auto-kerning) or instead disable auto-kerning and instead set inter-character spacing to a specific length (typically, zero).<hr>Values:<br><br>auto &#124; (length) &#124; inherit |
+| writing-mode | style | | <hr>Values:<br><br>start &#124; rl-tb <hr>Values:<br><br>start &#124; lr <hr>Values:<br><br>start &#124; lr <hr>Values:<br><br>start &#124; inherit |
+| glyph-orientation-vertical | style | |  |
 
 ## STYLES & ATTRIBUTES
 
@@ -80,24 +97,6 @@ Colors may be specified in a number of different ways:
 | font-style | attribute | | This property specifies whether the text is to be rendered using a normal, italic or oblique face. <hr>Values:<br><br> normal &#124; italic &#124; oblique &#124; inherit |
 | font-variant | attribute | | This property indicates whether the text is to be rendered using the normal glyphs for lowercase characters or using small-caps glyphs for lowercase characters. <hr>Values:<br><br>normal &#124; small-caps &#124; inherit |
 | font-weight | style | bold |  This property refers to the boldness or lightness of the glyphs used to render the text, relative to other fonts in the same font family.  <hr>Values:<br><br>normal &#124; bold &#124; bolder &#124; lighter &#124; 100 &#124; 200 &#124; 300 &#124; 400 &#124; 500 &#124; 600 &#124; 700 &#124; 800 &#124; 900 &#124; inherit |
-
-### Text 
-
-<hr>Values:<br><br>start &#124;
-
-| Name | Type | Examples | Description |
-|------|------|----------|-------------|
-| direction | attribute | attribute | | This property specifies the base writing direction of blocks and the direction of embeddings and overrides (see 'unicode-bidi') for the Unicode bidirectional algorithm. In addition, it specifies the direction of table column layout, the direction of horizontal overflow, and the position of an incomplete last line in a block in case of 'text-align: justify'. <hr>Values:<br><br>ltr &#124; rtl &#124; inherit |
-| unicode-bidi | | |
-| letter-spacing | attribute | | This property specifies spacing behavior between text characters supplemental to any spacing due to the ‘kerning’ property. <hr>Values:<br><br>normal &#124; (length) &#124; inherit |
-| text-decoration | attribute | | This property describes decorations that are added to the text of an element. Conforming SVG Viewers are not required to support the blink value.<hr>Values:<br><br>none &#124; [underline &#124;&#124; overline &#124;&#124; line-through &#124;&#124; blink] &#124; inherit |
-| word-spacing | attribute | | This property specifies spacing behavior between words. For SVG, if a <length> is provided without a unit identifier (e.g., an unqualified number such as 128), the SVG user agent processes the (length) as a width value in the current user coordinate system. <hr>Values:<br><br>normal &#124; (length) &#124; inherit |
-| text-anchor | attribute | start | The ‘text-anchor’ property is used to align (start-, middle- or end-alignment) a string of text relative to a given point. <hr>Values:<br><br>start &#124; middle &#124; end &#124; inherit |
-| <span style="white-space:nowrap;">dominant-baseline</span> | attribute | | The "dominant-baseline" property is used to determine or re-determine a scaled-baseline-table. A scaled-baseline-table is a compound value with three components: a baseline-identifier for the dominant-baseline, a baseline-table and a baseline-table font-size. Some values of the property re-determine all three values; other only re-establish the baseline-table font-size. When the initial value, auto, would give an undesired result, this property can be used to explicitly set the desire scaled-baseline-table. <hr>Values:<br><br>auto &#124; use-script &#124; &#124; no-change &#124; reset-size &#124; ideographic &#124; alphabetic &#124; hanging &#124; mathematical &#124; central &#124; middle &#124; text-after-edge &#124; text-before-edge &#124; inherit |
-| [font](#font) | attribute-set | | |
-| kerning | attribute | | Indicates whether the user agent should adjust inter-glyph spacing based on kerning tables that are included in the relevant font (i.e., enable auto-kerning) or instead disable auto-kerning and instead set inter-character spacing to a specific length (typically, zero).<hr>Values:<br><br>auto &#124; (length) &#124; inherit |
-| writing-mode | style | | <hr>Values:<br><br>start &#124; rl-tb <hr>Values:<br><br>start &#124; lr <hr>Values:<br><br>start &#124; lr <hr>Values:<br><br>start &#124; inherit |
-| glyph-orientation-vertical | style | |  |
 
 ### Fill
 
