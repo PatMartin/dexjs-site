@@ -8,9 +8,6 @@ d3.csv("/data/universities.csv", function (error, data) {
     });
   });
 
-  // world_rank,university_name,national_rank,total_score,
-  // alumni,award,hici,ns,pub,pcp,year
-
   var rankings = dex.csv.getRankedCsv(schools, "university_name",
     "year", "world_rank");
 

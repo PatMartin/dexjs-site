@@ -3,11 +3,15 @@ var csv = {
   "data"   : [
     [ "Bob", "Male", "Truck" ],
     [ "Jennifer", "Female", "Car" ],
-    [ "Pat", "Male", "Car" ]
+    [ "Pat", "Male", "Car" ],
+    [ "Jim", "Male", "Truck" ],
+    [ "Mike", "Male", "Car" ],
+    [ "Sally", "Female", "Car" ]
   ]
-}
+};
 
 dex.charts.d3.ParallelCoordinates({
   "parent": "#ParallelCoordinates",
-  "csv": csv
+  "csv": csv,
+  "margin.top" : 60
 }).render();

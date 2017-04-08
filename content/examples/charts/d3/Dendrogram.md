@@ -24,13 +24,15 @@ Select from the interactive examples below:
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
     <li><a id="presidents" href="#">Presidents</a></li>
+    <li><a id="options" href="#">Options</a></li>
+    <li><a id="style" href="#">Dynamic Style</a></li>
   </ul>
 </div>
 
-<div class="alert alert-danger" role="alert" id="ace-error"></div>
-
+<div id="example-info"></div>
 <div id="Dendrogram" class="WideChart"></div>
 <div id="ace-editor"></div>
+<div id="ace-error"></div>
 
 <script>
   var editor = createEditor({
@@ -39,6 +41,7 @@ Select from the interactive examples below:
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
     "contentDir"    : "/examples/charts/d3/dendrogram",
-    "initialContent": "/examples/charts/d3/dendrogram/basic.js"
+    "initialContent": "/examples/charts/d3/dendrogram/basic.js",
+    "initialInfo"   : "/examples/charts/d3/dendrogram/basic.html"
   });
 </script>

@@ -26,6 +26,7 @@ Select from the interactive examples below:
     <li><a id="gdp" href="#">GDP Rankings</a></li>
     <li><a id="universities" href="#">Universities</a></li>
     <li><a id="loud" href="#">Loud and Proud</a></li>
+    <li><a id="style" href="#">Dynamic Style</a></li>
   </ul>
 </div>
 
@@ -45,31 +46,3 @@ Select from the interactive examples below:
     "initialInfo"   : "/examples/charts/d3/bumpchart/basic.html"
   });
 </script>
-
-## Overview
-
-  * [BumpChart Reference](/docs/chart_reference.html#bumpchart)
-
-A Bump Chart is used to compare two discrete and distinct dimensions against
-each other.  For example, they are useful for exploring the rank of a value
-over a time dimension such as team ranking over the weeks of a season.
-
-Bump Charts are similar to Parallel Coordinates only that they are a more
-constrained interpretation.  The initial y-axis
-locations of the categorical elements (For example, NFL teams) are ordered typically by descending
-rank as one moves from the top to bottom axis vertically.  As the path
-of the category moves from left to right through a typically ascending
-sequence (typically time), the y-axis location changes according to the
-rank of that categorical entry at that particular point in the sequence
-(typically a point in time such as Week 1 of the NFL season).
-
-If a category's line has a downward slope, that category is falling in rank
-(ex: The NFL team moved down in the rankings).
-If the category's line has an ascending slope, that category is increasing
-in rank (The NFL team moved up in the rankings). If the category's line
-is horizontal, that category is unchanging in rank (ie: the NFL team stayed
-the same in the rankings).
-
-Trust me, the bumpchart is easy to understand visually.  Technically correct
-descriptions always make things sound more complex than they really are.
-If you don't believe me, pick up any math textbook on the planet.

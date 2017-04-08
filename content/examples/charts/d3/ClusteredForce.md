@@ -23,16 +23,17 @@ Select from the interactive examples below:
   </button>
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
-    <li><a id="presidents" href="#">Presidents</a></li>
-    <li><a id="colormap" href="#">Colormap</a></li>
-    <li><a id="transform" href="#">Transform</a></li>
+    <li><a id="twenty" href="#">Twenty Items</a></li>
+    <li><a id="one-hundred" href="#">100 Items</a></li>
+    <li><a id="one-thousand" href="#">1,000 Items</a></li>
+    <li><a id="physics" href="#">Physics</a></li>
   </ul>
 </div>
 
-<div class="alert alert-danger" role="alert" id="ace-error"></div>
-
+<div id="example-info"></div>
 <div id="ClusteredForce" class="WideChart"></div>
 <div id="ace-editor"></div>
+<div id="ace-error"></div>
 
 <script>
   var editor = createEditor({
@@ -41,6 +42,8 @@ Select from the interactive examples below:
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
     "contentDir"    : "/examples/charts/d3/clusteredforce",
-    "initialContent": "/examples/charts/d3/clusteredforce/basic.js"
+    "initialContent": "/examples/charts/d3/clusteredforce/basic.js",
+    "initialInfo"   : "/examples/charts/d3/clusteredforce/basic.html"
+
   });
 </script>

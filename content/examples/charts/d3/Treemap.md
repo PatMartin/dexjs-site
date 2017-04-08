@@ -27,10 +27,10 @@ Select from the interactive examples below:
   </ul>
 </div>
 
-<div class="alert alert-danger" role="alert" id="ace-error"></div>
-
+<div id="example-info"></div>
 <div id="Treemap" class="WideChart"></div>
 <div id="ace-editor"></div>
+<div id="ace-error"></div>
 
 <script>
   var editor = createEditor({
@@ -39,6 +39,7 @@ Select from the interactive examples below:
     "theme"         : "ace/theme/monokai",
     "mode"          : "ace/mode/javascript",
     "contentDir"    : "/examples/charts/d3/treemap",
-    "initialContent": "/examples/charts/d3/treemap/basic.js"
+    "initialContent": "/examples/charts/d3/treemap/basic.js",
+    "initialInfo"   : "/examples/charts/d3/treemap/basic.html"
   });
 </script>
