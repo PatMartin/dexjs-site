@@ -4,7 +4,7 @@ title = "dex.js"
 baseurl = "/"
 theme = "dexjs-theme"
 features = [ "disqus", "google analytics", "share" ]
-disqusShortName = "http-dexjs-net"
+disqusShortName = "dexjs"
 sectionPagesMenu = "main"
 
 enableRobotsTXT = true
