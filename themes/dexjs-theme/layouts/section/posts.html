@@ -2,16 +2,15 @@
 {{ partial "navbar.html" . }}
 
 <div class="container">
-    <!--h1><a href="{{ .Permalink }}">{{ .Title }}</a></h1-->
-    <!--span class="lead">{{ .Date.Format "Mon, Jan 2, 2006" }}</span-->
-    <div class="post">
-        {{ .Content }}
+    {{ range .Data.Pages }}
+    <div>
+        <h1><a href="{{ .Permalink }}">{{ .Title }}</a> <small>Posted on {{ .Date.Format "Mon, Jan 2, 2006" }}</small></h1>
+        <p>{{ .Summary }}</p>
     </div>
+    {{ end }}
 
     {{ partial "container-footer.html" . }}
 
 </div>
 
-{{ partial "share.html" . }}
-{{ partial "disqus.html" . }}
 {{ partial "footer.html" . }}
