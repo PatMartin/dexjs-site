@@ -1,7 +1,8 @@
 +++
 date = "2016-12-31T12:46:08-05:00"
 title = "December 2016 Update"
-class = "post"
+type = "posts"
+class = "posts"
 [menu.main]
   identifier = "posts"
 +++
