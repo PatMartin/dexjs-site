@@ -1,6 +1,6 @@
 languageCode = "en-us"
 license = "APL 2"
-title = "dex.js"
+title = "dex.js : Javascript Data Visualization"
 baseurl = "/"
 theme = "dexjs-theme"
 features = [ "disqus", "google analytics", "share" ]
@@ -46,14 +46,20 @@ googleAnalytics = "UA-89686420-1"
     url = "/docs.html"
     weight = 5
   [[menu.main]]
+    name = "Links"
+    pre = ""
+    identifier = "links"
+    url = "/links.html"
+    weight = 6
+  [[menu.main]]
     name = "About"
     pre = ""
     identifier = "about"
     url = "/about.html"
-    weight = 6
+    weight = 7
   [[menu.main]]
     name = "Github"
     pre = ""
     identifier = "github"
     url = "https://github.com/PatMartin/dexjs"
-    weight = 7
+    weight = 8
