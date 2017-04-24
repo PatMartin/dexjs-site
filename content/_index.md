@@ -1,5 +1,5 @@
 +++
-title = "_index"
+title = "dex.js : javascript data visualization"
 date = "2016-12-29T03:56:37-05:00"
 
 [params]
@@ -36,7 +36,7 @@ and visualizations without the need for programming.
 
 ## Examples
 
-[![Blocks](/images/home/blocks.png)](https://bl.ocks.org/PatMartin)
+[![Data Visualization Examples](/images/home/blocks.png)](https://bl.ocks.org/PatMartin)
 
 # Design Goals
 

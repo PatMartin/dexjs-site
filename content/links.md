@@ -2,116 +2,70 @@
 date = "2016-12-28T13:37:53-05:00"
 title = "about"
 [menu.main]
-  identifier = "about"
+  identifier = "links"
 +++
 
-# About dex.js
+# Data
 
-dex.js was primarily developed to provide visualization support for
-it's parent project [Dex](https://dexvis.net).  Dex is a much larger
- effort which provides a GUI for creating, transforming, outputting
- and visualizing data while dex.js provides some of the visualization
- capabilities and is a pretty solid offering in its own right.
+This section contains links to things related to data analysis.
 
-## Design Philosophy
+## Data Preparation
 
-dex.js is designed to provide a framework for the unification of a wide
- variety of different other javascript visualization frameworks in a way
- that allows for consistent usage and reuse; in particular for other tools
- such as Dex which require easily consumable visualization capabilities.
- 
-While it is not possible to hide and abstract away all the differences of
-the many disparate frameworks consumed by Dex, in general it does a pretty
-good job.
+### Tools
 
-### Consistency
+| Name | Description |
+|---|---|
+| [Data Wrangler](http://vis.stanford.edu/wrangler/) | Wrangler is an interactive tool for data cleaning and transformation.  Wrangler allows users to spend less time formatting and more time analyzing your data. |
+| [Open Refine](http://openrefine.org/) | OpenRefine (formerly Google Refine) is a powerful tool for working with messy data: cleaning it; transforming it from one format into another; and extending it with web services and external data. |
 
-All charts are expressed as consistently as possible.  Underlying differences 
-are, in general, handled by the charting framework itself.
+## Visualization
 
-#### Consistent Data
+### Tools
 
-Each an every dex.js visualization expects a JSON form of CSV.  This allows 
-us to easily interchange charts and also allows them to communicate data
-changes to each other in a very consistent fashion.
+| Name | Description |
+|---|---|
+| [Dex](http://dexvis.net/) | A data visualization tool written in Java. |
 
-Here is an example JSON/CSV representation:
+### Frameworks
 
-```json
-var csv = {
-  "header" : [ "NAME", "AGE", "GENDER"],
-  "data" : [
-    [ "Bob", 42, "Male"],
-    [ "Alice", 25, "Female"]
-  ]
-};
-```
+| Name | Description |
+|---|---|
+| [Bonsai](http://bonsaijs.org/) | A lightweight graphics library with an intuitive graphics API and an SVG renderer. |
+| [C3.js](https://c3js.org) | A re-usable charting library based up on d3.js. |
+| [Cytoscape.js](http://js.cytoscape.org/) | A graph theory library for Javascript. |
+| [D3.js](https://d3js.org) | d3.js is the premiere visualization framework for Javascript.  It is very powerful, but with a significant learning curve. |
+| [D4](http://visible.io/) | D4 is a friendly charting DSL for D3. The goal of D4 is to allow developers to quickly build data-driven charts with little knowledge of the internals of D3. |
+| [Dimple](http://dimplejs.org/index.html) | An object-oriented API for business analytics powered by d3. |
+| [dygraphs](https://dygraphs.com) |  dygraphs is a fast, flexible open source JavaScript charting library. |
+| [echarts](http://echarts.baidu.com/) | ECharts is Javascript chart library, which runs smoothly on PCs and mobile with an amazing variety of visualizations. |
+| [InfoVis](http://philogb.github.io/jit/) | The InfoVis toolkit provides a wide variety of useful and visually stunning visualizations. |
+| [jsPhyloSvg](http://www.jsphylosvg.com/) | A phylogram (tree) library for Javascript. |
+| [js-sequence-diagrams](http://bramp.github.io/js-sequence-diagrams/) | UML Sequence diagrams for javascript. |
+| [morris.js](http://morrisjs.github.io/morris.js/) | Easy and attractive charts. |
+| [NVD3](https://nvd3.org) |  A re-usable charting library based up on d3.js. |
+| [Processing.js](http://processingjs.org/) | Processing.js is a javascript implementation of the powerful Processing visual programming language. |
+| [RGraph](https://www.rgraph.net/) | RGraph is a free library that creates charts dynamically with JavaScript and both the canvas and svg tags. |
+| [Superconductor](http://jster.net/library/superconductor) | Superconductor is a web framework for creating data visualizations that scale to real-time interactions with up to 1,000,000 data points. It compiles to WebCL, WebGL, and web workers to unleash the power of parallel hardware for fast and cross-platform data visualization. |
+| [TauCharts](https://www.taucharts.com/) | TauCharts is a flexible charting library for data exploration.  It's an interesting implementation based upon the Grammar of Graphics. |
+| [Timesheet.js](https://sbstjn.com/timesheet.js/) | Create simple time sheets with JavaScript. Style them with CSS -- mobile friendly. |
+| [Vis.js](http://visjs.org/) | A dynamic, browser based visualization library. The library is designed to be easy to use, to handle large amounts of dynamic data, and to enable manipulation of and interaction with the data. |
+| [Visual Sedimentation](http://www.visualsedimentation.org/) | VisualSedimentation.js is a JavaScript library for visualizing streaming data, inspired by the process of physical sedimentation.  |
+| [VivaGraph](https://github.com/anvaka/VivaGraphJS) | WebGL based, highly scalable network diagrams. |
+| [xCharts](http://tenxer.github.io/xcharts/) | Basic D3 based charts. |
 
-##### Why CSV?
+# Design
 
-  * CSV is common and well understood.
-  * CSV is succinct and generates a smaller memory footprint which is important for browser based visualization.
-  * CSV is a great representation of tabular data stored in RDBMS.
-  * It is generally simple to translate both to and from other opinionated data formats.
+## Color
 
-#### Configuration
+| Name | Description |
+|---|---|
+| [colorbrewer](https://colorbrewer2.org) | Color brewer; color advice on maps. |
+| [i want hue](http://tools.medialab.sciences-po.fr/iwanthue/) | I Want Hue is used to create colors for data scientists. It allows for the generation and refining of palettes of optimally distinct colors based on color theory. |
 
-The common aspects of charts are handled in a common way.  For example, here is
-an example of two very different charts whose use is normalized when using dex.
+# Machine Learning
 
-```javascript
-var barchart = dex.charts.c3.BarChart({
-  "parent" : "#BarChartParent",
-  "csv" : csv
-});
+| Name | Description |
+|---|---|
+| [Machine Learning in Javascript](https://www.burakkanber.com/tag/ml-in-js/) | This is a series of articles covering machine learning implemented in Javascript. |
 
-var pcChart = dex.charts.d3.ParallelCoordinates({
-  "parent" : "#PCChartParent",
-  "csv" : csv
-});
-```
-
-### Ease of use
-
-Since all of the charts are expressed with a high degree of consistency,
- this translates into a much lower learning curve.
-
-### Data Driven
-
-All charts can be created from generic JSON data specifications.
-
-### Embeddable
-
-Charts are designed to be embeddable into other tools.  Dex, for instance
-is a Java framework which is able to communicate back and forth with dex.js
-components.
-
-# Credits
-
-This is my favorite part; giving credit to the myriad of folks who have
-influenced and inspired me.
-
-They deserve credit where credit is due.  Any omission is certainly
-inadvertant.
-
-
-
-  * [Mike Bostock](https://bost.ocks.org/mike/) - For opening my eyes
-  into the untapped potential of data visualization.  I truly think
-  Mike is a genius and his inspiration to me cannot be understated.
-  Mike's contributions to data visualization are IMHO, as substantial
-  as anyone on the planet.  You can see the ramifications of his work
-  throughout the web and throughout so many of the visualization tools
-  on the market today.  If I owe the folks in this list a or pitcher
-  of beer for their efforts then I owe Mike at least a few kegs of the
-  finest ale.
-  * [Jeffery Heer](https://homes.cs.washington.edu/~jheer/) - For opening
-  Mike's eyes into the untapped potential of data visualization and for
-  his pioneering visualization frameworks such as Prefuse.
-  * [Elijah Meeks](https://bl.ocks.org/emeeks) - For his many interesting
-  examples and for [D3.js in Action](https://www.manning.com/books/d3-js-in-action).
-  * [Micah Stubs](http://bl.ocks.org/micahstubbs/) - For his many examples, and
-  for allowing me to use them.
-  * [James Curley](http://jalapic.github.io/) - Author of the bump chart
-  implementation I lifted.  James is a Psychology Professor who is also
-  a really talented designer and coder of data visualizations.
+# Programming
