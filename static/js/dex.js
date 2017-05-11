@@ -699,6 +699,10 @@ var c3chart = function (userConfig) {
     return chart;
   };
 
+    chart.clone = function clone(override) {
+        return c3chart(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   $(document).ready(function () {
     if (chart.config.draggable) {
       $("#" + chart.config.id).draggable();
@@ -861,6 +865,8 @@ module.exports = stackedareachart;
  * @returns StackedBarChart
  */
 var stackedbarchart = function (userConfig) {
+  var chart;
+
   var defaults = {
     'parent': '#C3_StackedBarChart',
     'id': 'C3_StackedBarChart',
@@ -875,7 +881,9 @@ var stackedbarchart = function (userConfig) {
   };
 
   var combinedConfig = dex.config.expandAndOverlay(userConfig, defaults);
-  return dex.charts.c3.C3Chart(combinedConfig);
+  chart = dex.charts.c3.C3Chart(combinedConfig);
+
+  return chart;
 };
 
 module.exports = stackedbarchart;
@@ -916,17 +924,18 @@ module.exports = c3;
  */
 module.exports = function charts() {
   return {
-    'c3'      : require("./c3/c3"),
-    'd3'      : require("./d3/d3"),
-    'd3plus'  : require("./d3plus/d3plus"),
-    'echarts' : require("./echarts/echarts"),
-    'elegans' : require("./elegans/elegans"),
-    'nvd3'    : require("./nvd3/nvd3"),
-    'threejs' : require("./threejs/threejs"),
-    'vis'     : require("./vis/vis")
+    'c3'       : require("./c3/c3"),
+    'd3'       : require("./d3/d3"),
+    'd3plus'   : require("./d3plus/d3plus"),
+    'echarts'  : require("./echarts/echarts"),
+    'elegans'  : require("./elegans/elegans"),
+    'multiples' : require("./multiples/multiples"),
+    'nvd3'     : require("./nvd3/nvd3"),
+    'threejs'  : require("./threejs/threejs"),
+    'vis'      : require("./vis/vis")
   };
 };
-},{"./c3/c3":14,"./d3/d3":33,"./d3plus/d3plus":35,"./echarts/echarts":38,"./elegans/elegans":40,"./nvd3/nvd3":43,"./threejs/threejs":45,"./vis/vis":47}],16:[function(require,module,exports){
+},{"./c3/c3":14,"./d3/d3":33,"./d3plus/d3plus":35,"./echarts/echarts":38,"./elegans/elegans":40,"./multiples/multiples":42,"./nvd3/nvd3":45,"./threejs/threejs":47,"./vis/vis":49}],16:[function(require,module,exports){
 var bumpchart = function (userConfig) {
   d3 = dex.charts.d3.d3v3;
   var chart;
@@ -1291,6 +1300,9 @@ var bumpchart = function (userConfig) {
     // Allow method chaining
     return chart;
   };
+    chart.clone = function clone(userConfig) {
+        return bumpchart(userConfig, chart.defaults);
+    };
 
   $(document).ready(function () {
     // Make the entire chart draggable.
@@ -1391,8 +1403,9 @@ var chord = function (userConfig) {
       }),
     },
     "color": d3.scale.category20c(),
-    "innerRadius": "auto",
-    "outerRadius": "auto",
+    "autoRadius" : true,
+    "innerRadius": 350,
+    "outerRadius": 400,
     "tick.start.x": 1,
     "tick.start.y": 0,
     "tick.end.x": 5,
@@ -1408,6 +1421,66 @@ var chord = function (userConfig) {
 
   chart = new dex.component(userConfig, defaults);
 
+  chart.getGuiDefinition = function getGuiDefinition(config) {
+    var guiDef = config || {};
+    var defaults = {
+      "type": "group",
+      "name": "Chord Diagram Settings",
+      "contents": [
+        dex.config.gui.dimensions(),
+        dex.config.gui.general(),
+        {
+          "type": "group",
+          "name": "Miscellaneous",
+          "contents": [
+            {
+              "name": "Auto Radius",
+              "description": "Turn auto-radius on/off.",
+              "target": "autoRadius",
+              "type": "boolean",
+              "initialValue": true
+            },
+            {
+              "name": "Inner Radius",
+              "description": "The inner radius.",
+              "target": "innerRadius",
+              "type": "int",
+              "minValue": 0,
+              "maxValue": 2000,
+              "initialValue": 350
+            },
+            {
+              "name": "Outer Radius",
+              "description": "The outer radius.",
+              "target": "outerRadius",
+              "type": "int",
+              "minValue": 0,
+              "maxValue": 2000,
+              "initialValue": 400
+            },
+            {
+              "name": "Padding",
+              "description": "Padding between nodes.",
+              "target": "padding",
+              "type": "float",
+              "minValue": 0,
+              "maxValue": 1,
+              "initialValue": 0.05
+            }
+          ]
+        },
+        dex.config.gui.editableText({name: "Title"}, "title"),
+        dex.config.gui.text({name: "Labels"}, "label"),
+        dex.config.gui.link({name: "Links"}, "links.mouseout"),
+        dex.config.gui.link({name: "Links on Mouseover"}, "links.mouseover"),
+        dex.config.gui.link({name: "Nodes"}, "nodes.mouseout"),
+        dex.config.gui.link({name: "Nodes on Mouseover"}, "nodes.mouseover"),
+      ]
+    };
+    return dex.config.expandAndOverlay(guiDef, defaults);
+  };
+
+
   chart.render = function render() {
     d3 = dex.charts.d3.d3v3;
     chart.resize();
@@ -1421,14 +1494,19 @@ var chord = function (userConfig) {
     var config = chart.config;
     var csv = config.csv;
     var margin = config.margin;
-    var width = config.width - margin.left - margin.right;
-    var height = config.height - margin.top - margin.bottom;
+    margin.top = +margin.top;
+    margin.bottom = +margin.bottom;
+    margin.left = +margin.left;
+    margin.right = +margin.right;
+
+    var width = +config.width - margin.left - margin.right;
+    var height = +config.height - margin.top - margin.bottom;
 
     d3.selectAll(config.parent).selectAll("*").remove();
 
     var outer;
     var inner;
-    if (config.outerRadius == "auto") {
+    if (config.autoRadius && config.autoRadius != "false") {
       outer = Math.min(width, height) / 2;
       inner = Math.max(outer - 20, 10);
     }
@@ -1460,7 +1538,7 @@ var chord = function (userConfig) {
     config.chordData = chordData;
 
     var chord = d3.layout.chord()
-      .padding(config.padding)
+      .padding(+config.padding)
       .sortSubgroups(d3.descending)
       .matrix(chordData.connections);
 
@@ -1517,15 +1595,16 @@ var chord = function (userConfig) {
 
     ticks.append("text")
       //.call(dex.config.configureText, config.label)
-      .attr("x", config.tick.padding + (config.tick.padding / 4))
+      .attr("x", +config.tick.padding + (+config.tick.padding / 4))
       .attr("dy", ".35em")
       .attr("font-size", config.label.font.size)
+      .attr("fill", config.label.fill)
       .attr("text-anchor", function (d) {
         return d.angle > Math.PI ? "end" : null;
       })
       .attr("transform", function (d) {
         return d.angle > Math.PI ? "rotate(180)translate(-" +
-          ((config.tick.padding * 2) + (config.tick.padding / 2)) + ")" : null;
+          ((+config.tick.padding * 2) + (+config.tick.padding / 2)) + ")" : null;
       })
       .text(function (d) {
         return d.label;
@@ -1566,6 +1645,10 @@ var chord = function (userConfig) {
     // Allow method chaining
     return chart;
   };
+
+    chart.clone = function clone(override) {
+        return chord(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   $(document).ready(function () {
     // Make the entire chart draggable.
@@ -1663,6 +1746,78 @@ var clusteredforce = function (userConfig) {
   };
 
   var chart = new dex.component(userConfig, defaults);
+
+  chart.getGuiDefinition = function getGuiDefinition(config) {
+    var guiDef = config || {};
+    var defaults = {
+      "type": "group",
+      "name": "Clustered Force Settings",
+      "contents": [
+        dex.config.gui.dimensions(),
+        dex.config.gui.general(),
+        {
+          "type": "group",
+          "name": "Physics and Sizing",
+          "contents": [
+            {
+              "name": "Minimum Radius",
+              "description": "The minimum radius of nodes.",
+              "target": "minRadius",
+              "type": "int",
+              "minValue": 1,
+              "maxValue": 100,
+              "initialValue": 1
+            },
+            {
+              "name": "Maximum Radius",
+              "description": "The maximum radius of nodes.",
+              "target": "maxRadius",
+              "type": "int",
+              "minValue": 1,
+              "maxValue": 100,
+              "initialValue": 50
+            },
+            {
+              "name": "Gravity",
+              "description": "The gravity.",
+              "target": "gravity",
+              "type": "int",
+              "minValue": 0,
+              "maxValue": 10,
+              "initialValue": 2
+            },
+            {
+              "name": "Charge",
+              "description": "The charge of nodes.",
+              "target": "charge",
+              "type": "int",
+              "minValue": 1,
+              "maxValue": 100,
+              "initialValue": 1
+            },
+            {
+              "name": "Scale Columns",
+              "description": "Scale columns or not.",
+              "target": "scaleColumns",
+              "type": "boolean",
+              "initialValue": true
+            },
+            {
+              "name": "Padding",
+              "description": "Padding between nodes.",
+              "target": "padding",
+              "type": "int",
+              "minValue": 0,
+              "maxValue": 100,
+              "initialValue": 1
+            }
+          ]
+        },
+        dex.config.gui.stroke({name: "Nodes"}, "circle.stroke")
+      ]
+    };
+    return dex.config.expandAndOverlay(guiDef, defaults);
+  };
 
   chart.render = function () {
     d3 = dex.charts.d3.d3v3;
@@ -1835,6 +1990,10 @@ var clusteredforce = function (userConfig) {
     }
   };
 
+  chart.clone = function clone(override) {
+    return clusteredforce(dex.config.expandAndOverlay(override, userConfig));
+  };
+
   $(document).ready(function () {
     $(chart.config.parent).uitooltip({
       items: "circle",
@@ -1861,98 +2020,138 @@ var dendrogram = function Dendrogram(userConfig) {
   var chart;
 
   var defaults =
-  {
-    // The parent container of this chart.
-    'parent': 'DendrogramParent',
-    // Set these  when you need to CSS style components independently.
-    'id': 'DendrogramId',
-    'class': 'DendrogramClass',
-    'resizable': true,
-    'margin': {
-      'top': 10,
-      'bottom': 10,
-      'left': 10,
-      'right': 10
-    },
-    'transform' : '',
-    // diagonal, elbow
-    'connectionType': 'diagonal',
-    // Our data...
-    'csv': {
-      // Give folks without data something to look at anyhow.
-      'header': ["X", "Y"],
-      'data': [
-        [0, 0],
-        [1, 1],
-        [2, 4],
-        [3, 9],
-        [4, 16]
-      ]
-    },
-    // width and height of our chart.
-    'width': "100%",
-    'height': "100%",
-    'connection': {
-      'length': 180,
-      'style': {
-        'stroke': dex.config.stroke()
-      }
-    },
-    'root': {
-      'name': "ROOT",
-      'category': "ROOT"
-    },
-    'color': d3.scale.category20(),
-    'node': {
-      'expanded': {
-        'label': dex.config.text({
-          'x': 8,
-          'y': 4,
-          'font.weight': 'bold',
-          'fill.fillColor': 'black',
-          'text': function (d) {
-            return (d.name) ? d.name : d.category;
-          }
-        }),
-        'circle': dex.config.circle({
-          'r': 4,
-          'fill': {
-            'fillColor': 'steelblue'
-          }
-        })
+    {
+      // The parent container of this chart.
+      'parent': 'DendrogramParent',
+      // Set these  when you need to CSS style components independently.
+      'id': 'DendrogramId',
+      'class': 'DendrogramClass',
+      'resizable': true,
+      'margin': {
+        'top': 10,
+        'bottom': 10,
+        'left': 10,
+        'right': 10
       },
-      'collapsed': {
-        'label': dex.config.text({
-          'x': 8,
-          'y': 4,
-          'font.weight': 'bold',
-          'text': function (d) {
-            return (d.name) ? d.name : d.category;
-          }
-        }),
-        'circle': dex.config.circle({
-          'r': 5,
-          'fill': {
-            'fillColor': 'green',
-            'fillOpacity': .8
-          }
-        })
-      }
-    },
-    'link': dex.config.link({
-      'fill': {
-        'fillColor': 'none'
+      'transform': '',
+      // diagonal, elbow
+      'connectionType': 'diagonal',
+      // Our data...
+      'csv': {
+        // Give folks without data something to look at anyhow.
+        'header': ["X", "Y"],
+        'data': [
+          [0, 0],
+          [1, 1],
+          [2, 4],
+          [3, 9],
+          [4, 16]
+        ]
       },
-      'stroke': dex.config.stroke({
-        'color': 'green',
-        'width': 1,
-        'opacity': .3,
-        'dasharray': "5 5"
+      // width and height of our chart.
+      'width': "100%",
+      'height': "100%",
+      'connection': {
+        'length': 180
+//      'style': {
+//        'stroke': dex.config.stroke()
+//      }
+      },
+      'root': {
+        'name': "ROOT",
+        // Used?
+        //'category': "ROOT"
+      },
+      // REM: Used?
+      //'color': d3.scale.category20(),
+      'node': {
+        'expanded': {
+          'label': dex.config.text({
+            'x': 8,
+            'y': 4,
+            'font.weight': 'bold',
+            'fill.fillColor': 'black',
+            'text': function (d) {
+              return (d.name) ? d.name : d.category;
+            }
+          }),
+          'circle': dex.config.circle({
+            'r': 4,
+            'fill': {
+              'fillColor': 'steelblue'
+            }
+          })
+        },
+        'collapsed': {
+          'label': dex.config.text({
+            'x': 8,
+            'y': 4,
+            'font.weight': 'bold',
+            'text': function (d) {
+              return (d.name) ? d.name : d.category;
+            }
+          }),
+          'circle': dex.config.circle({
+            'r': 5,
+            'fill': {
+              'fillColor': 'green',
+              'fillOpacity': .8
+            }
+          })
+        }
+      },
+      'link': dex.config.link({
+        'fill': {
+          'fillColor': 'none'
+        },
+        'stroke': dex.config.stroke({
+          'color': 'green',
+          'width': 1,
+          'opacity': .3,
+          'dasharray': "5 5"
+        })
       })
-    })
-  };
+    };
 
   chart = new dex.component(userConfig, defaults);
+
+  chart.getGuiDefinition = function getGuiDefinition(userConfig) {
+    var defaults = {
+      "type": "group",
+      "name": "Dendrogram Settings",
+      "contents": [
+        dex.config.gui.dimensions(),
+        dex.config.gui.general(),
+        {
+          "type": "group",
+          "name": "General",
+          "contents": [
+            {
+              "name": "Root Name",
+              "description": "The text associated with the root node.",
+              "target": "root.name",
+              "type": "string",
+              "initialValue": chart.root.name || "ROOT"
+            },
+            {
+              "name": "Connection Length",
+              "description": "This controls the length of the connections.",
+              "target": "connection.length",
+              "type": "choice",
+              "choices": ["fit-text", "10", "50", "100", "150", "200", "250", "300"],
+              "initialValue": "fit-text"
+            }
+          ]
+        },
+        dex.config.gui.text({name: "Expanded Label"}, "node.expanded.label"),
+        dex.config.gui.circle({name: "Expanded Circle"}, "node.expanded.circle"),
+        dex.config.gui.text({name: "Collapsed Label"}, "node.collapsed.label"),
+        dex.config.gui.circle({name: "Collapsed Circle"}, "node.collapsed.circle"),
+        dex.config.gui.link({}, "link")
+      ]
+    };
+    return dex.config.expandAndOverlay(userConfig, defaults);
+  };
 
   chart.render = function render() {
     d3 = dex.charts.d3.d3v3;
@@ -2018,11 +2217,11 @@ var dendrogram = function Dendrogram(userConfig) {
         config.transform);
 
     json =
-    {
-      "name": config.root.name,
-      "category": config.root.category,
-      "children": dex.csv.toHierarchicalJson(csv)
-    };
+      {
+        "name": config.root.name,
+        "category": config.root.category,
+        "children": dex.csv.toHierarchicalJson(csv)
+      };
 
     root = json;
     root.x0 = height / 2;
@@ -2227,7 +2426,9 @@ var dendrogram = function Dendrogram(userConfig) {
       else {
         d.children = d._children;
         d._children = null;
-        d.children.forEach(function (child) { collapse(child);});
+        d.children.forEach(function (child) {
+          collapse(child);
+        });
         //dex.console.log(d.children);
       }
     }
@@ -2241,6 +2442,10 @@ var dendrogram = function Dendrogram(userConfig) {
 
     dex.config.apply(chart);
     return chart;
+  };
+
+  chart.clone = function clone(override) {
+    return dendrogram(dex.config.expandAndOverlay(override, userConfig));
   };
 
   $(document).ready(function () {
@@ -2771,6 +2976,10 @@ var motionbarchart = function (userConfig) {
     }
   };
 
+    chart.clone = function clone(override) {
+        return motionbarchart(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   $(document).ready(function () {
 
     // Add tooltips
@@ -3139,6 +3348,10 @@ var orbitallayout = function (userConfig) {
       d3.selectAll("g.node > circle").style("stroke", "none").style("stroke-width", 0);
     }
   };
+
+    chart.clone = function clone(override) {
+        return orbitallayout(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   $(document).ready(function () {
     // Make the entire chart draggable.
@@ -3577,6 +3790,10 @@ var parallelcoordinates = function (userConfig) {
 
     return chart;
   };
+
+    chart.clone = function clone(override) {
+        return parallelcoordinates(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   $(document).ready(function () {
     $(document).uitooltip({
@@ -4065,6 +4282,10 @@ var radarchart = function (userConfig) {
     return chart;
   };
 
+    chart.clone = function clone(override) {
+        return radarchart(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   $(document).ready(function () {
     // Make the entire chart draggable.
     //$(chart.config.parent).draggable();
@@ -4283,7 +4504,11 @@ var radialtree = function (userConfig) {
     }
 
     return chart;
-  }
+  };
+
+    chart.clone = function clone(override) {
+        return radialtree(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   function project(x, y) {
     //dex.console.log('project(x,y)', x, y);
@@ -4304,918 +4529,922 @@ module.exports = radialtree;
 
 },{}],26:[function(require,module,exports){
 var sankey = function (userConfig) {
-  d3 = dex.charts.d3.d3v3;
-  var defaultColor = d3.scale.category20c();
-  var chart;
+    d3 = dex.charts.d3.d3v3;
+    var defaultColor = d3.scale.category20c();
+    var chart;
 
-  var defaults = {
-    // The parent container of this chart.
-    'parent': '#SankeyParent',
-    // Set these when you need to CSS style components independently.
-    'id': 'SankeyId',
-    'class': 'SankeyClass',
-    'resizable': true,
-    'width': "100%",
-    'height': "100%",
-    'margin': {
-      'left': 100,
-      'right': 100,
-      'top': 50,
-      'bottom': 50
-    },
-    'transform': "",
-    // Our data...
-    'csv': {
-      // Give folks without data something to look at anyhow.
-      'header': ["X", "Y", "WEIGHT"],
-      'data': [
-        ["A1", "A2", 1],
-        ["B1", "B2", 2],
-        ["C1", "C2", 2],
-        ["C2", "C3", 4]
-      ]
-    },
-    'relationships': null,
-    'layoutIterations': 32,
-    'columnTitle': dex.config.text({
-        'fill.fillColor': 'black',
-        'x': function (d) {
-          var center = window.innerWidth / 2;
-          //var center = (typeof userConfig.width !== 'undefined' ?
-          //  userConfig.width : defaults.width) / 2;
-
-          var nodeWidth = (userConfig.mouseout && userConfig.mouseout.node &&
-          userConfig.mouseout.node.rectangle && userConfig.mouseout.node.rectangle.width) ?
-            userConfig.mouseout.node.rectangle.width : defaults.mouseout.node.rectangle.width;
-
-          var nodePadding = (userConfig.mouseout && userConfig.mouseout.node &&
-          userConfig.mouseout.node.padding) ?
-            userConfig.mouseout.node.padding : defaults.mouseout.node.padding;
-
-          //dex.console.log("d.x=" + d.x + ", width=" + window.innerWidth + ", nodeWidth=" + nodeWidth +
-          //  ", nodePadding=" + nodePadding + ", center=" + center);
-          if (+d > center) {
-            //return +d-nodePadding-nodeWidth;
-            return +d + nodeWidth / 2;
-          }
-          else {
-            //return +d + nodeWidth + nodePadding;
-            return +d + nodeWidth / 2;
-          }
+    var defaults = {
+        // The parent container of this chart.
+        'parent': '#SankeyParent',
+        // Set these when you need to CSS style components independently.
+        'id': 'SankeyId',
+        'class': 'SankeyClass',
+        'resizable': true,
+        'width': "100%",
+        'height': "100%",
+        'margin': {
+            'left': 100,
+            'right': 100,
+            'top': 50,
+            'bottom': 50
         },
-        "y": 10,
-        "writingMode": "tb",
-        "glyphOrientationVertical": 0,
-        "anchor": function (d, i) {
-          //var center = (typeof userConfig.width !== 'undefined' ?
-          // userConfig.width : defaults.width) / 2;
-          var center = window.innerWidth / 2;
-
-          if (+d > center) {
-            // End if horizontal
-            return "start";
-          }
-          else {
-            return "start";
-          }
+        'transform': "",
+        // Our data...
+        'csv': {
+            // Give folks without data something to look at anyhow.
+            'header': ["X", "Y", "WEIGHT"],
+            'data': [
+                ["A1", "A2", 1],
+                ["B1", "B2", 2],
+                ["C1", "C2", 2],
+                ["C2", "C3", 4]
+            ]
         },
-        "text": function (d, i) {
-          return d + ", i" + i;
-        }
-      }
-    ),
-    'label': dex.config.text({
-      'fill.fillColor': 'black',
-      'x': function (d) {
-        var center = window.innerWidth / 2;
-        //var center = (typeof userConfig.width !== 'undefined' ?
-        //  userConfig.width : defaults.width) / 2;
+        'relationships': null,
+        'layoutIterations': 32,
+        'columnTitle': dex.config.text({
+                'fill.fillColor': 'black',
+                'x': function (d) {
+                    var center = window.innerWidth / 2;
+                    //var center = (typeof userConfig.width !== 'undefined' ?
+                    //  userConfig.width : defaults.width) / 2;
 
-        var nodeWidth = (userConfig.mouseout && userConfig.mouseout.node &&
-        userConfig.mouseout.node.rectangle &&
-        userConfig.mouseout.node.rectangle.width) ?
-          userConfig.mouseout.node.rectangle.width : defaults.mouseout.node.rectangle.width;
+                    var nodeWidth = (userConfig.mouseout && userConfig.mouseout.node &&
+                    userConfig.mouseout.node.rectangle && userConfig.mouseout.node.rectangle.width) ?
+                        userConfig.mouseout.node.rectangle.width : defaults.mouseout.node.rectangle.width;
 
-        var nodePadding = (userConfig.mouseout && userConfig.mouseout.node &&
-        userConfig.mouseout.node.padding) ?
-          userConfig.mouseout.node.padding : defaults.mouseout.node.padding;
+                    var nodePadding = (userConfig.mouseout && userConfig.mouseout.node &&
+                    userConfig.mouseout.node.padding) ?
+                        userConfig.mouseout.node.padding : defaults.mouseout.node.padding;
 
-        //dex.console.log("d.x=" + d.x + ", width=" + window.innerWidth + ", nodeWidth=" + nodeWidth +
-        //  ", nodePadding=" + nodePadding + ", center=" + center);
-        if (d.x > center) {
-          return -nodePadding;
-        }
-        else {
-          return nodeWidth + nodePadding;
-        }
-      },
-      'y': function (d) {
-        return d.dy / 2;
-      },
-      'transform': null,
-      'dy': '.35em',
-      'anchor': function (d, i) {
-        //var center = (typeof userConfig.width !== 'undefined' ?
-        // userConfig.width : defaults.width) / 2;
-        var center = window.innerWidth / 2;
+                    //dex.console.log("d.x=" + d.x + ", width=" + window.innerWidth + ", nodeWidth=" + nodeWidth +
+                    //  ", nodePadding=" + nodePadding + ", center=" + center);
+                    if (+d > center) {
+                        //return +d-nodePadding-nodeWidth;
+                        return +d + nodeWidth / 2;
+                    }
+                    else {
+                        //return +d + nodeWidth + nodePadding;
+                        return +d + nodeWidth / 2;
+                    }
+                },
+                "y": 10,
+                "writingMode": "tb",
+                "glyphOrientationVertical": 0,
+                "anchor": function (d, i) {
+                    //var center = (typeof userConfig.width !== 'undefined' ?
+                    // userConfig.width : defaults.width) / 2;
+                    var center = window.innerWidth / 2;
 
-        if (d.x > center) {
-          return "end";
-        }
-        else {
-          return "start";
-        }
-      },
-      'font': {
-        'size': 14
-      },
-      'color': "black",
-      'opacity': 1,
-      'text': function (d) {
-        return d.name;
-      }
-    }),
-    //'columnLayout' : function(node, nodeMap) { return nodeMap[node.name].column },
-    'mouseout': {
-      'link': {
-        'stroke': dex.config.stroke({
-          'opacity': .2,
-          'color': function (d) {
-            return defaultColor(d.category);
-          },
-          'width': function (d) {
-            //return 0;
-            return Math.max(1, d.dy);
-          }
-        }),
-        'fill': dex.config.fill({
-          'fillColor': 'none',
-          'fillOpacity': .4
-        }),
-        'curvature': 0.5
-      },
-      'node': {
-        'padding': 4,
-        'rectangle': dex.config.rectangle(
-          {
-            'width': 32,
-            'color': function (d) {
-              return defaultColor(d.name.replace(/ .*/, ""));
+                    if (+d > center) {
+                        // End if horizontal
+                        return "start";
+                    }
+                    else {
+                        return "start";
+                    }
+                },
+                "text": function (d, i) {
+                    return d + ", i" + i;
+                }
+            }
+        ),
+        'label': dex.config.text({
+            'fill.fillColor': 'black',
+            'x': function (d) {
+                var center = window.innerWidth / 2;
+                //var center = (typeof userConfig.width !== 'undefined' ?
+                //  userConfig.width : defaults.width) / 2;
+
+                var nodeWidth = (userConfig.mouseout && userConfig.mouseout.node &&
+                userConfig.mouseout.node.rectangle &&
+                userConfig.mouseout.node.rectangle.width) ?
+                    userConfig.mouseout.node.rectangle.width : defaults.mouseout.node.rectangle.width;
+
+                var nodePadding = (userConfig.mouseout && userConfig.mouseout.node &&
+                userConfig.mouseout.node.padding) ?
+                    userConfig.mouseout.node.padding : defaults.mouseout.node.padding;
+
+                //dex.console.log("d.x=" + d.x + ", width=" + window.innerWidth + ", nodeWidth=" + nodeWidth +
+                //  ", nodePadding=" + nodePadding + ", center=" + center);
+                if (d.x > center) {
+                    return -nodePadding;
+                }
+                else {
+                    return nodeWidth + nodePadding;
+                }
             },
-            'height': function (d) {
-              return d.dy;
+            'y': function (d) {
+                return d.dy / 2;
             },
-            'stroke': dex.config.stroke({
-              'color': function (d) {
-                return d3.rgb(d.color).darker(2);
-              }
+            'transform': null,
+            'dy': '.35em',
+            'anchor': function (d, i) {
+                //var center = (typeof userConfig.width !== 'undefined' ?
+                // userConfig.width : defaults.width) / 2;
+                var center = window.innerWidth / 2;
+
+                if (d.x > center) {
+                    return "end";
+                }
+                else {
+                    return "start";
+                }
+            },
+            'font': {
+                'size': 14
+            },
+            'color': "black",
+            'opacity': 1,
+            'text': function (d) {
+                return d.name;
+            }
+        }),
+        //'columnLayout' : function(node, nodeMap) { return nodeMap[node.name].column },
+        'mouseout': {
+            'link': {
+                'stroke': dex.config.stroke({
+                    'opacity': .2,
+                    'color': function (d) {
+                        return defaultColor(d.category);
+                    },
+                    'width': function (d) {
+                        //return 0;
+                        return Math.max(1, d.dy);
+                    }
+                }),
+                'fill': dex.config.fill({
+                    'fillColor': 'none',
+                    'fillOpacity': .4
+                }),
+                'curvature': 0.5
+            },
+            'node': {
+                'padding': 4,
+                'rectangle': dex.config.rectangle(
+                    {
+                        'width': 32,
+                        'color': function (d) {
+                            return defaultColor(d.name.replace(/ .*/, ""));
+                        },
+                        'height': function (d) {
+                            return d.dy;
+                        },
+                        'stroke': dex.config.stroke({
+                            'color': function (d) {
+                                return d3.rgb(d.color).darker(2);
+                            }
+                        })
+                    })
+            }
+        },
+        'mouseover': {
+            'link': {
+                'stroke': dex.config.stroke({
+                    'opacity': .8,
+                    'width': function (d) {
+                        return Math.max(1, d.dy);
+                    },
+                    'color': function (d) {
+                        return defaultColor(d.category);
+                    }
+                }),
+                'fill': dex.config.fill({
+                    'fillColor': 'none',
+                    'fillOpacity': .8
+                }),
+            },
+            'node': {
+                'stroke': dex.config.stroke({
+                    'opacity': .8,
+                    'width': function (d) {
+                        return Math.max(1, d.dy);
+                    },
+                    'color': function (d) {
+                        return defaultColor(d.category);
+                    }
+                }),
+                'fill': dex.config.fill({
+                    'fillColor': 'none',
+                    'fillOpacity': .8
+                })
+            }
+        },
+        'node': {
+            'padding': 4,
+            'rectangle': dex.config.rectangle({
+                'width': 32,
+                'color': function (d) {
+                    return defaultColor(d.name.replace(/ .*/, ""));
+                },
+                'height': function (d) {
+                    return d.dy;
+                },
+                'stroke': dex.config.stroke({
+                    'color': function (d) {
+                        return d3.rgb(d.color).darker(2);
+                    }
+                })
             })
-          })
-      }
-    },
-    'mouseover': {
-      'link': {
-        'stroke': dex.config.stroke({
-          'opacity': .8,
-          'width': function (d) {
-            return Math.max(1, d.dy);
-          },
-          'color': function (d) {
-            return defaultColor(d.category);
-          }
-        }),
-        'fill': dex.config.fill({
-          'fillColor': 'none',
-          'fillOpacity': .8
-        }),
-      },
-      'node': {
-        'stroke': dex.config.stroke({
-          'opacity': .8,
-          'width': function (d) {
-            return Math.max(1, d.dy);
-          },
-          'color': function (d) {
-            return defaultColor(d.category);
-          }
-        }),
-        'fill': dex.config.fill({
-          'fillColor': 'none',
-          'fillOpacity': .8
-        })
-      }
-    },
-    'node': {
-      'padding': 4,
-      'rectangle': dex.config.rectangle({
-        'width': 32,
-        'color': function (d) {
-          return defaultColor(d.name.replace(/ .*/, ""));
         },
-        'height': function (d) {
-          return d.dy;
-        },
-        'stroke': dex.config.stroke({
-          'color': function (d) {
-            return d3.rgb(d.color).darker(2);
-          }
-        })
-      })
-    },
-    "manualColumnLayout": false
-  };
-
-  var chart = new dex.component(userConfig, defaults);
-
-  // If we do not have specifically defined relationship fields, then lets
-  // try to make an educated guess about what to do with them.  If the last
-  // column is numeric, we will assume that this is to be used as a weight.
-  // Otherwise, we will use a uniform weighting of 1 for each link.
-  if (!chart.config.relationships) {
-    // If we have less than 3 columns or the last column does not contain
-    // numerics then we will create a set of relationships for each column
-    // with a standard weight of 1 and a single category of 1.
-    if (chart.config.csv.header.length < 3 || !dex.csv.isColumnNumeric(chart.config.csv, chart.config.csv.header.length - 1)) {
-      chart.config.relationships = [];
-
-      for (i = 1; i < chart.config.csv.header.length; i++) {
-        chart.config.relationships.push(
-          {
-            'source': i - 1,
-            'target': i,
-            'value': function (csv, ri) {
-              return 1;
-            },
-            'category': function (csv, ri) {
-              return 1;
-            },
-            'column': function (csv, ri, ci) {
-              return i;
-            }
-          });
-      }
-    }
-    // If we fall through here, then the last column is numeric.  We will
-    // use this for our weight.
-    else {
-      chart.config.relationships = [];
-
-      for (i = 1; i < chart.config.csv.header.length - 1; i++) {
-        chart.config.relationships.push(
-          {
-            'source': i - 1,
-            'target': i,
-            'value': function (csv, ri) {
-              return csv.data[ri][csv.header.length - 1];
-            },
-            'category': function (csv, ri) {
-              return 1;
-            },
-            'column': function (csv, ri, ci) {
-              return i;
-            }
-          });
-      }
-    }
-  }
-
-  chart.render = function render() {
-    d3 = dex.charts.d3.d3v3;
-    return chart.resize();
-  };
-
-  chart.update = function () {
-    d3 = dex.charts.d3.d3v3;
-    var config = chart.config;
-    var margin = config.margin;
-    var csv = config.csv;
-
-    var width = config.width - margin.left - margin.right;
-    var height = config.height - margin.top - margin.bottom;
-
-    d3.selectAll(config.parent).selectAll('*').remove();
-
-    var svg = d3.select(config.parent)
-      .append("svg")
-      .attr("id", config["id"])
-      .attr("class", config["class"])
-      .attr('width', config.width)
-      .attr('height', config.height);
-
-    var rootG = svg
-      .append('g')
-      .attr('transform', 'translate(' +
-        margin.left + ',' + margin.top + ') ' +
-        config.transform);
-
-    var sankeyData = [];
-
-    var nodeMap = {};
-
-    for (ri = 0; ri < config.relationships.length; ri++) {
-      for (i = 0; i < config.csv.data.length; i++) {
-        var relation = [];
-        var source;
-        var target;
-
-        if (dex.object.isFunction(config.relationships[ri].source)) {
-          source = config.relationships[ri].source(config.csv, i);
-        }
-        else {
-          source =
-            {
-              'nodeName': config.csv.data[i][config.relationships[ri].source],
-              'name': config.csv.data[i][config.relationships[ri].source],
-              'column': (config.relationships[ri].column) ?
-                config.relationships[ri].column(csv, i, config.relationships[ri].source) :
-                config.relationships[ri].source
-            };
-        }
-
-        if (dex.object.isFunction(config.relationships[ri].target)) {
-          target = config.relationships[ri].target(config.csv, i);
-        }
-        else {
-          target =
-            {
-              'nodeName': config.csv.data[i][config.relationships[ri].target],
-              'name': config.csv.data[i][config.relationships[ri].target],
-              'column': (config.relationships[ri].column) ?
-                config.relationships[ri].column(csv, i, config.relationships[ri].target) :
-                config.relationships[ri].target
-            }
-        }
-
-        relation.source = source.nodeName;
-        relation.target = target.nodeName;
-
-        // Store this to translate nodenames back to display names.
-        nodeMap[source.nodeName] = source;
-        nodeMap[target.nodeName] = target;
-
-        // Wrap source and target info:
-        //dex.console.log("RELATION", config.relationships[ri]);
-        if (typeof config.relationships[ri].category === "undefined") {
-          //relation.category = csv.data[i][config.relationships[ri].source];
-          relation.category = 1;
-        }
-        else if (dex.object.isFunction(config.relationships[ri].category)) {
-          relation.category = config.relationships[ri].category(config.csv, i);
-        }
-        else {
-          relation.category = config.relationships[ri].category;
-        }
-
-        relation.linkid = "L" + i;
-
-        if (typeof config.relationships[ri].value === "undefined") {
-          relation.value = 1;
-        }
-        else if (dex.object.isFunction(config.relationships[ri].value)) {
-          relation.value = config.relationships[ri].value(config.csv, i);
-        }
-        else {
-          relation.value = config.relationships[ri].value;
-        }
-
-        sankeyData.push(relation);
-      }
-    }
-    //dex.console.log("sankeyData", sankeyData);
-    var units = "Units";
-
-    var formatNumber = d3.format(",.0f"),    // zero decimal places
-      format = function (d) {
-        return formatNumber(d) + " " + units;
-      };
-
-    function manualColumnLayout(nodes, nodeWidth, size) {
-      var numSinks = 1;
-
-      nodes.forEach(function (node) {
-        //node.x = (nodeMap[node.name].column) * nodeWidth;
-        node.x = (nodeMap[node.name].column - 1) * nodeWidth;
-        numSinks = Math.max(numSinks, node.x);
-        node.dx = nodeWidth;
-      });
-
-      var nodeBreadth = (size[0] - nodeWidth) / (numSinks - 1);
-      nodes.forEach(function (node) {
-        node.x *= nodeBreadth;
-      });
-    }
-
-    // Set the sankey diagram properties
-    var sankey = d3sankey()
-      .nodeWidth(config.mouseout.node.rectangle.width)
-      .nodePadding(config.mouseout.node.padding)
-      .size([width - config.mouseout.node.padding, height - config.mouseout.node.padding]);
-
-    if (config.manualColumnLayout) {
-      sankey.columnLayout(manualColumnLayout);
-    }
-
-    var path = sankey.link();
-
-    //set up graph in same style as original example but empty
-    graph = {"nodes": [], "links": []};
-
-    sankeyData.forEach(function (d, i) {
-      graph.nodes.push({"name": d.source});
-      graph.nodes.push({"name": d.target});
-      graph.links.push({
-        "source": d.source, "target": d.target, "value": +d.value,
-        "category": d.category, "linkid": d.linkid
-      });
-    });
-
-    //dex.console.log("GRAPH NODES 1", graph.nodes);
-
-    //thanks Mike Bostock https://groups.google.com/d/msg/d3-js/pl297cFtIQk/Eso4q_eBu1IJ
-    //this handy little function returns only the distinct / unique nodes
-    graph.nodes = d3.keys(d3.nest()
-      .key(function (d) {
-        return d.name;
-      })
-      .map(graph.nodes));
-
-    //dex.console.log("GRAPH NODES 2", graph.nodes);
-
-    // it appears d3 with force layout wants a numeric source and target
-    // so loop through each link replacing the text with its index from node
-    graph.links.forEach(function (d, i) {
-      graph.links[i].source = graph.nodes.indexOf(graph.links[i].source);
-      graph.links[i].target = graph.nodes.indexOf(graph.links[i].target);
-    });
-
-    //now loop through each nodes to make nodes an array of objects rather than an array of strings
-    graph.nodes.forEach(function (d, i) {
-      graph.nodes[i] = {"name": d};
-    });
-
-    sankey
-      .nodes(graph.nodes)
-      .links(graph.links)
-      .curvature(config.mouseout.link.curvature)
-      .layout(config.layoutIterations);
-
-    // add in the links
-    var link = rootG.append("g").selectAll(".link")
-      .data(graph.links)
-      .enter().append("path")
-      .attr("class", "link")
-      .attr("id", function (d) {
-        return d.linkid;
-      })
-      .attr("d", path)
-      .call(dex.config.configureLink, config.mouseout.link)
-      .sort(function (a, b) {
-        return b.dy - a.dy;
-      })
-      .on("mouseover", function (d) {
-        rootG.selectAll("#" + d.linkid)//.style("stroke-opacity", 1)
-          .call(dex.config.configureLink, config.mouseover.link);
-      })
-      .on("mouseout", function (d) {
-        rootG.selectAll("#" + d.linkid)//.style("stroke-opacity", config.link.stroke.opacity);
-          .call(dex.config.configureLink, config.mouseout.link);
-      });
-
-    // add the link titles
-    link.append("tooltip-content")
-      .text(function (d) {
-        return nodeMap[d.source.name].name + " -> " +
-          nodeMap[d.target.name].name + "\n" + format(d.value);
-      });
-
-    // add in the nodes
-    var node = rootG.append("g").selectAll(".node")
-      .data(graph.nodes)
-      .enter().append("g")
-      .attr("class", "node")
-      .attr("transform", function (d) {
-        return "translate(" + d.x + "," + d.y + ")";
-      })
-      .call(d3.behavior.drag()
-        .origin(function (d) {
-          return d;
-        })
-        .on("dragstart", function () {
-          this.parentNode.appendChild(this);
-        })
-        .on("drag", dragmove));
-
-    // add the rectangles for the nodes
-    node.append("rect")
-      .call(dex.config.configureRectangle, config.mouseout.node.rectangle)
-      .on("mouseover", function (d) {
-        var links = (d.sourceLinks.length > 0) ?
-          d.sourceLinks : d.targetLinks;
-
-        links.forEach(function (link) {
-          rootG.selectAll("#" + link.linkid)
-            .call(dex.config.configureLink, config.mouseover.node);
-        });
-      })
-      .on("mouseout", function (d) {
-
-        var links = (d.sourceLinks.length > 0) ?
-          d.sourceLinks : d.targetLinks;
-        links.forEach(function (link) {
-          rootG.selectAll("#" + link.linkid)
-            .call(dex.config.configureLink, config.mouseout.link);
-        });
-      })
-      .append("title")
-      .text(function (d) {
-        return nodeMap[d.name].name + "\n" + format(d.value);
-      });
-
-    config.label.text = function (d) {
-      return nodeMap[d.name].name;
+        "manualColumnLayout": false
     };
 
-    /////////// A HACK TO ADD TITLE LABELS
-    var locations = {};
-    var rects = rootG.selectAll("rect").each(function (rect) {
-      locations[rect.x] = true;
-    });
+    var chart = new dex.component(userConfig, defaults);
 
-    var orderedLocations = dex.object.keys(locations).sort(function (a, b) {
-      return a - b;
-    });
+    // If we do not have specifically defined relationship fields, then lets
+    // try to make an educated guess about what to do with them.  If the last
+    // column is numeric, we will assume that this is to be used as a weight.
+    // Otherwise, we will use a uniform weighting of 1 for each link.
+    if (!chart.config.relationships) {
+        // If we have less than 3 columns or the last column does not contain
+        // numerics then we will create a set of relationships for each column
+        // with a standard weight of 1 and a single category of 1.
+        if (chart.config.csv.header.length < 3 || !dex.csv.isColumnNumeric(chart.config.csv, chart.config.csv.header.length - 1)) {
+            chart.config.relationships = [];
 
-    //var locationWidth = (orderedLocations[1] - orderedLocations[0]) / 2;
+            for (i = 1; i < chart.config.csv.header.length; i++) {
+                chart.config.relationships.push(
+                    {
+                        'source': i - 1,
+                        'target': i,
+                        'value': function (csv, ri) {
+                            return 1;
+                        },
+                        'category': function (csv, ri) {
+                            return 1;
+                        },
+                        'column': function (csv, ri, ci) {
+                            return i;
+                        }
+                    });
+            }
+        }
+        // If we fall through here, then the last column is numeric.  We will
+        // use this for our weight.
+        else {
+            chart.config.relationships = [];
 
-    //orderedLocations = orderedLocations.map(function(d) { return +d + locationWidth});
-
-    var titles = rootG.append("g").selectAll("text")
-      .data(orderedLocations)
-      .enter()
-      .append("text")
-      .call(dex.config.configureText, config.columnTitle)
-      .text(function (d, i) {
-        return csv.header[i];
-      });
-
-    //////////// END OF HACK
-
-    // add in the title for the nodes
-    node.append("text")
-      .call(dex.config.configureText, config.label);
-
-    // the function for moving the nodes
-    function dragmove(d) {
-      d3.select(this).attr("transform",
-        "translate(" + (
-          d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
-        ) + "," + (
-          d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
-        ) + ")");
-      sankey.relayout();
-      link.attr("d", path);
+            for (i = 1; i < chart.config.csv.header.length - 1; i++) {
+                chart.config.relationships.push(
+                    {
+                        'source': i - 1,
+                        'target': i,
+                        'value': function (csv, ri) {
+                            return csv.data[ri][csv.header.length - 1];
+                        },
+                        'category': function (csv, ri) {
+                            return 1;
+                        },
+                        'column': function (csv, ri, ci) {
+                            return i;
+                        }
+                    });
+            }
+        }
     }
-  };
 
-  return chart;
+    chart.render = function render() {
+        d3 = dex.charts.d3.d3v3;
+        return chart.resize();
+    };
+
+    chart.update = function () {
+        d3 = dex.charts.d3.d3v3;
+        var config = chart.config;
+        var margin = config.margin;
+        var csv = config.csv;
+
+        var width = config.width - margin.left - margin.right;
+        var height = config.height - margin.top - margin.bottom;
+
+        d3.selectAll(config.parent).selectAll('*').remove();
+
+        var svg = d3.select(config.parent)
+            .append("svg")
+            .attr("id", config["id"])
+            .attr("class", config["class"])
+            .attr('width', config.width)
+            .attr('height', config.height);
+
+        var rootG = svg
+            .append('g')
+            .attr('transform', 'translate(' +
+                margin.left + ',' + margin.top + ') ' +
+                config.transform);
+
+        var sankeyData = [];
+
+        var nodeMap = {};
+
+        for (ri = 0; ri < config.relationships.length; ri++) {
+            for (i = 0; i < config.csv.data.length; i++) {
+                var relation = [];
+                var source;
+                var target;
+
+                if (dex.object.isFunction(config.relationships[ri].source)) {
+                    source = config.relationships[ri].source(config.csv, i);
+                }
+                else {
+                    source =
+                        {
+                            'nodeName': config.csv.data[i][config.relationships[ri].source],
+                            'name': config.csv.data[i][config.relationships[ri].source],
+                            'column': (config.relationships[ri].column) ?
+                                config.relationships[ri].column(csv, i, config.relationships[ri].source) :
+                                config.relationships[ri].source
+                        };
+                }
+
+                if (dex.object.isFunction(config.relationships[ri].target)) {
+                    target = config.relationships[ri].target(config.csv, i);
+                }
+                else {
+                    target =
+                        {
+                            'nodeName': config.csv.data[i][config.relationships[ri].target],
+                            'name': config.csv.data[i][config.relationships[ri].target],
+                            'column': (config.relationships[ri].column) ?
+                                config.relationships[ri].column(csv, i, config.relationships[ri].target) :
+                                config.relationships[ri].target
+                        }
+                }
+
+                relation.source = source.nodeName;
+                relation.target = target.nodeName;
+
+                // Store this to translate nodenames back to display names.
+                nodeMap[source.nodeName] = source;
+                nodeMap[target.nodeName] = target;
+
+                // Wrap source and target info:
+                //dex.console.log("RELATION", config.relationships[ri]);
+                if (typeof config.relationships[ri].category === "undefined") {
+                    //relation.category = csv.data[i][config.relationships[ri].source];
+                    relation.category = 1;
+                }
+                else if (dex.object.isFunction(config.relationships[ri].category)) {
+                    relation.category = config.relationships[ri].category(config.csv, i);
+                }
+                else {
+                    relation.category = config.relationships[ri].category;
+                }
+
+                relation.linkid = "L" + i;
+
+                if (typeof config.relationships[ri].value === "undefined") {
+                    relation.value = 1;
+                }
+                else if (dex.object.isFunction(config.relationships[ri].value)) {
+                    relation.value = config.relationships[ri].value(config.csv, i);
+                }
+                else {
+                    relation.value = config.relationships[ri].value;
+                }
+
+                sankeyData.push(relation);
+            }
+        }
+        //dex.console.log("sankeyData", sankeyData);
+        var units = "Units";
+
+        var formatNumber = d3.format(",.0f"),    // zero decimal places
+            format = function (d) {
+                return formatNumber(d) + " " + units;
+            };
+
+        function manualColumnLayout(nodes, nodeWidth, size) {
+            var numSinks = 1;
+
+            nodes.forEach(function (node) {
+                //node.x = (nodeMap[node.name].column) * nodeWidth;
+                node.x = (nodeMap[node.name].column - 1) * nodeWidth;
+                numSinks = Math.max(numSinks, node.x);
+                node.dx = nodeWidth;
+            });
+
+            var nodeBreadth = (size[0] - nodeWidth) / (numSinks - 1);
+            nodes.forEach(function (node) {
+                node.x *= nodeBreadth;
+            });
+        }
+
+        // Set the sankey diagram properties
+        var sankey = d3sankey()
+            .nodeWidth(config.mouseout.node.rectangle.width)
+            .nodePadding(config.mouseout.node.padding)
+            .size([width - config.mouseout.node.padding, height - config.mouseout.node.padding]);
+
+        if (config.manualColumnLayout) {
+            sankey.columnLayout(manualColumnLayout);
+        }
+
+        var path = sankey.link();
+
+        //set up graph in same style as original example but empty
+        graph = {"nodes": [], "links": []};
+
+        sankeyData.forEach(function (d, i) {
+            graph.nodes.push({"name": d.source});
+            graph.nodes.push({"name": d.target});
+            graph.links.push({
+                "source": d.source, "target": d.target, "value": +d.value,
+                "category": d.category, "linkid": d.linkid
+            });
+        });
+
+        //dex.console.log("GRAPH NODES 1", graph.nodes);
+
+        //thanks Mike Bostock https://groups.google.com/d/msg/d3-js/pl297cFtIQk/Eso4q_eBu1IJ
+        //this handy little function returns only the distinct / unique nodes
+        graph.nodes = d3.keys(d3.nest()
+            .key(function (d) {
+                return d.name;
+            })
+            .map(graph.nodes));
+
+        //dex.console.log("GRAPH NODES 2", graph.nodes);
+
+        // it appears d3 with force layout wants a numeric source and target
+        // so loop through each link replacing the text with its index from node
+        graph.links.forEach(function (d, i) {
+            graph.links[i].source = graph.nodes.indexOf(graph.links[i].source);
+            graph.links[i].target = graph.nodes.indexOf(graph.links[i].target);
+        });
+
+        //now loop through each nodes to make nodes an array of objects rather than an array of strings
+        graph.nodes.forEach(function (d, i) {
+            graph.nodes[i] = {"name": d};
+        });
+
+        sankey
+            .nodes(graph.nodes)
+            .links(graph.links)
+            .curvature(config.mouseout.link.curvature)
+            .layout(config.layoutIterations);
+
+        // add in the links
+        var link = rootG.append("g").selectAll(".link")
+            .data(graph.links)
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("id", function (d) {
+                return d.linkid;
+            })
+            .attr("d", path)
+            .call(dex.config.configureLink, config.mouseout.link)
+            .sort(function (a, b) {
+                return b.dy - a.dy;
+            })
+            .on("mouseover", function (d) {
+                rootG.selectAll("#" + d.linkid)//.style("stroke-opacity", 1)
+                    .call(dex.config.configureLink, config.mouseover.link);
+            })
+            .on("mouseout", function (d) {
+                rootG.selectAll("#" + d.linkid)//.style("stroke-opacity", config.link.stroke.opacity);
+                    .call(dex.config.configureLink, config.mouseout.link);
+            });
+
+        // add the link titles
+        link.append("tooltip-content")
+            .text(function (d) {
+                return nodeMap[d.source.name].name + " -> " +
+                    nodeMap[d.target.name].name + "\n" + format(d.value);
+            });
+
+        // add in the nodes
+        var node = rootG.append("g").selectAll(".node")
+            .data(graph.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            })
+            .call(d3.behavior.drag()
+                .origin(function (d) {
+                    return d;
+                })
+                .on("dragstart", function () {
+                    this.parentNode.appendChild(this);
+                })
+                .on("drag", dragmove));
+
+        // add the rectangles for the nodes
+        node.append("rect")
+            .call(dex.config.configureRectangle, config.mouseout.node.rectangle)
+            .on("mouseover", function (d) {
+                var links = (d.sourceLinks.length > 0) ?
+                    d.sourceLinks : d.targetLinks;
+
+                links.forEach(function (link) {
+                    rootG.selectAll("#" + link.linkid)
+                        .call(dex.config.configureLink, config.mouseover.node);
+                });
+            })
+            .on("mouseout", function (d) {
+
+                var links = (d.sourceLinks.length > 0) ?
+                    d.sourceLinks : d.targetLinks;
+                links.forEach(function (link) {
+                    rootG.selectAll("#" + link.linkid)
+                        .call(dex.config.configureLink, config.mouseout.link);
+                });
+            })
+            .append("title")
+            .text(function (d) {
+                return nodeMap[d.name].name + "\n" + format(d.value);
+            });
+
+        config.label.text = function (d) {
+            return nodeMap[d.name].name;
+        };
+
+        /////////// A HACK TO ADD TITLE LABELS
+        var locations = {};
+        var rects = rootG.selectAll("rect").each(function (rect) {
+            locations[rect.x] = true;
+        });
+
+        var orderedLocations = dex.object.keys(locations).sort(function (a, b) {
+            return a - b;
+        });
+
+        //var locationWidth = (orderedLocations[1] - orderedLocations[0]) / 2;
+
+        //orderedLocations = orderedLocations.map(function(d) { return +d + locationWidth});
+
+        var titles = rootG.append("g").selectAll("text")
+            .data(orderedLocations)
+            .enter()
+            .append("text")
+            .call(dex.config.configureText, config.columnTitle)
+            .text(function (d, i) {
+                return csv.header[i];
+            });
+
+        //////////// END OF HACK
+
+        // add in the title for the nodes
+        node.append("text")
+            .call(dex.config.configureText, config.label);
+
+        // the function for moving the nodes
+        function dragmove(d) {
+            d3.select(this).attr("transform",
+                "translate(" + (
+                    d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
+                ) + "," + (
+                    d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
+                ) + ")");
+            sankey.relayout();
+            link.attr("d", path);
+        }
+    };
+
+    chart.clone = function clone(override) {
+        return sankey(dex.config.expandAndOverlay(override, userConfig));
+    };
+
+    return chart;
 }
 
 // SANKEY.JS : from Mike Bostock
 d3sankey = function () {
-  var sankey = {},
-    nodeWidth = 24,
-    nodePadding = 8,
-    columnLayout = defaultColumnLayout,
-    curvature = .5,
-    size = [1, 1],
-    nodes = [],
-    links = [];
+    var sankey = {},
+        nodeWidth = 24,
+        nodePadding = 8,
+        columnLayout = defaultColumnLayout,
+        curvature = .5,
+        size = [1, 1],
+        nodes = [],
+        links = [];
 
-  sankey.columnLayout = function (_) {
-    if (!arguments.length) return columnLayout;
-    columnLayout = _;
-    return sankey;
-  };
-
-  sankey.curvature = function (_) {
-    if (!arguments.length) return curvature;
-    curvature = +_;
-    return sankey;
-  };
-
-  sankey.nodeWidth = function (_) {
-    if (!arguments.length) return nodeWidth;
-    nodeWidth = +_;
-    return sankey;
-  };
-
-  sankey.nodePadding = function (_) {
-    if (!arguments.length) return nodePadding;
-    nodePadding = +_;
-    return sankey;
-  };
-
-  sankey.nodes = function (_) {
-    if (!arguments.length) return nodes;
-    nodes = _;
-    return sankey;
-  };
-
-  sankey.links = function (_) {
-    if (!arguments.length) return links;
-    links = _;
-    return sankey;
-  };
-
-  sankey.size = function (_) {
-    if (!arguments.length) return size;
-    size = _;
-    return sankey;
-  };
-
-  sankey.layout = function (iterations) {
-    computeNodeLinks();
-    computeNodeValues();
-    computeNodeBreadths(nodes);
-    computeNodeDepths(iterations);
-    computeLinkDepths();
-    return sankey;
-  };
-
-  sankey.relayout = function () {
-    computeLinkDepths();
-    return sankey;
-  };
-
-  sankey.link = function () {
-//    var curvature = .5;
-
-    function link(d) {
-      var x0 = d.source.x + d.source.dx,
-        x1 = d.target.x,
-        xi = d3.interpolateNumber(x0, x1),
-        x2 = xi(curvature),
-        x3 = xi(1 - curvature),
-        y0 = d.source.y + d.sy + d.dy / 2,
-        y1 = d.target.y + d.ty + d.dy / 2;
-      return "M" + x0 + "," + y0
-        + "C" + x2 + "," + y0
-        + " " + x3 + "," + y1
-        + " " + x1 + "," + y1;
-    }
-
-    link.curvature = function (_) {
-      if (!arguments.length) return curvature;
-      curvature = +_;
-      return link;
+    sankey.columnLayout = function (_) {
+        if (!arguments.length) return columnLayout;
+        columnLayout = _;
+        return sankey;
     };
 
-    return link;
-  };
+    sankey.curvature = function (_) {
+        if (!arguments.length) return curvature;
+        curvature = +_;
+        return sankey;
+    };
 
-  // Populate the sourceLinks and targetLinks for each node.
-  // Also, if the source and target are not objects, assume they are indices.
-  function computeNodeLinks() {
-    nodes.forEach(function (node) {
-      node.sourceLinks = [];
-      node.targetLinks = [];
-    });
-    links.forEach(function (link) {
-      var source = link.source,
-        target = link.target;
-      if (typeof source === "number") source = link.source = nodes[link.source];
-      if (typeof target === "number") target = link.target = nodes[link.target];
-      source.sourceLinks.push(link);
-      target.targetLinks.push(link);
-    });
-  }
+    sankey.nodeWidth = function (_) {
+        if (!arguments.length) return nodeWidth;
+        nodeWidth = +_;
+        return sankey;
+    };
 
-  // Compute the value (size) of each node by summing the associated links.
-  function computeNodeValues() {
-    nodes.forEach(function (node) {
-      node.value = Math.max(
-        d3.sum(node.sourceLinks, value),
-        d3.sum(node.targetLinks, value)
-      );
-    });
-  }
+    sankey.nodePadding = function (_) {
+        if (!arguments.length) return nodePadding;
+        nodePadding = +_;
+        return sankey;
+    };
 
-  // Iteratively assign the breadth (x-position) for each node.
-  // Nodes are assigned the maximum breadth of incoming neighbors plus one;
-  // nodes with no incoming links are assigned breadth zero, while
-  // nodes with no outgoing links are assigned the maximum breadth.
-  function computeNodeBreadths() {
-    columnLayout(nodes, nodeWidth, size);
-  }
+    sankey.nodes = function (_) {
+        if (!arguments.length) return nodes;
+        nodes = _;
+        return sankey;
+    };
 
-  function defaultColumnLayout(nodes, nodeWidth, size) {
-    var remainingNodes = nodes,
-      visited = {},
-      x = 0;
+    sankey.links = function (_) {
+        if (!arguments.length) return links;
+        links = _;
+        return sankey;
+    };
 
-    //dex.console.log("NODE", nodes[0]);
-    while (remainingNodes.length) {
-      nextNodes = [];
-      visited[remainingNodes[0].name] = true;
-      remainingNodes.forEach(function (node) {
-        node.x = x;
-        node.dx = nodeWidth;
-        node.sourceLinks.forEach(function (link) {
-          if (!visited[link.target.name]) {
-            nextNodes.push(link.target);
-          }
-          else {
-            dex.console.log("CYCLE DETECTED AT: " + node.name + "->" + link.target.name);
-          }
-        });
-      });
-      remainingNodes = nextNodes;
-      ++x;
-    }
+    sankey.size = function (_) {
+        if (!arguments.length) return size;
+        size = _;
+        return sankey;
+    };
 
-    moveSinksRight(x);
-    scaleNodeBreadths((size[0] - nodeWidth) / (x - 1));
-  }
+    sankey.layout = function (iterations) {
+        computeNodeLinks();
+        computeNodeValues();
+        computeNodeBreadths(nodes);
+        computeNodeDepths(iterations);
+        computeLinkDepths();
+        return sankey;
+    };
 
-  function moveSourcesRight() {
-    nodes.forEach(function (node) {
-      if (!node.targetLinks.length) {
-        node.x = d3.min(node.sourceLinks, function (d) {
-            return d.target.x;
-          }) - 1;
-      }
-    });
-  }
+    sankey.relayout = function () {
+        computeLinkDepths();
+        return sankey;
+    };
 
-  function moveSinksRight(x) {
-    nodes.forEach(function (node) {
-      if (!node.sourceLinks.length) {
-        node.x = x - 1;
-      }
-    });
-  }
+    sankey.link = function () {
+//    var curvature = .5;
 
-  function scaleNodeBreadths(kx) {
-    nodes.forEach(function (node) {
-      node.x *= kx;
-    });
-  }
-
-  function computeNodeDepths(iterations) {
-    var nodesByBreadth = d3.nest()
-      .key(function (d) {
-        return d.x;
-      })
-      .sortKeys(d3.ascending)
-      .entries(nodes)
-      .map(function (d) {
-        return d.values;
-      });
-
-    //
-    initializeNodeDepth();
-    resolveCollisions();
-    for (var alpha = 1; iterations > 0; --iterations) {
-      relaxRightToLeft(alpha *= .99);
-      resolveCollisions();
-      relaxLeftToRight(alpha);
-      resolveCollisions();
-    }
-
-    function initializeNodeDepth() {
-      var ky = d3.min(nodesByBreadth, function (nodes) {
-        return (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value);
-      });
-
-      nodesByBreadth.forEach(function (nodes) {
-        nodes.forEach(function (node, i) {
-          node.y = i;
-          node.dy = node.value * ky;
-        });
-      });
-
-      links.forEach(function (link) {
-        link.dy = link.value * ky;
-      });
-    }
-
-    function relaxLeftToRight(alpha) {
-      nodesByBreadth.forEach(function (nodes, breadth) {
-        nodes.forEach(function (node) {
-          if (node.targetLinks.length) {
-            var y = d3.sum(node.targetLinks, weightedSource) / d3.sum(node.targetLinks, value);
-            node.y += (y - center(node)) * alpha;
-          }
-        });
-      });
-
-      function weightedSource(link) {
-        return center(link.source) * link.value;
-      }
-    }
-
-    function relaxRightToLeft(alpha) {
-      nodesByBreadth.slice().reverse().forEach(function (nodes) {
-        nodes.forEach(function (node) {
-          if (node.sourceLinks.length) {
-            var y = d3.sum(node.sourceLinks, weightedTarget) / d3.sum(node.sourceLinks, value);
-            node.y += (y - center(node)) * alpha;
-          }
-        });
-      });
-
-      function weightedTarget(link) {
-        return center(link.target) * link.value;
-      }
-    }
-
-    function resolveCollisions() {
-      nodesByBreadth.forEach(function (nodes) {
-        var node,
-          dy,
-          y0 = 0,
-          n = nodes.length,
-          i;
-
-        // Push any overlapping nodes down.
-        nodes.sort(ascendingDepth);
-        for (i = 0; i < n; ++i) {
-          node = nodes[i];
-          dy = y0 - node.y;
-          if (dy > 0) node.y += dy;
-          y0 = node.y + node.dy + nodePadding;
+        function link(d) {
+            var x0 = d.source.x + d.source.dx,
+                x1 = d.target.x,
+                xi = d3.interpolateNumber(x0, x1),
+                x2 = xi(curvature),
+                x3 = xi(1 - curvature),
+                y0 = d.source.y + d.sy + d.dy / 2,
+                y1 = d.target.y + d.ty + d.dy / 2;
+            return "M" + x0 + "," + y0
+                + "C" + x2 + "," + y0
+                + " " + x3 + "," + y1
+                + " " + x1 + "," + y1;
         }
 
-        // If the bottommost node goes outside the bounds, push it back up.
-        dy = y0 - nodePadding - size[1];
-        if (dy > 0) {
-          y0 = node.y -= dy;
+        link.curvature = function (_) {
+            if (!arguments.length) return curvature;
+            curvature = +_;
+            return link;
+        };
 
-          // Push any overlapping nodes back up.
-          for (i = n - 2; i >= 0; --i) {
-            node = nodes[i];
-            dy = node.y + node.dy + nodePadding - y0;
-            if (dy > 0) node.y -= dy;
-            y0 = node.y;
-          }
+        return link;
+    };
+
+    // Populate the sourceLinks and targetLinks for each node.
+    // Also, if the source and target are not objects, assume they are indices.
+    function computeNodeLinks() {
+        nodes.forEach(function (node) {
+            node.sourceLinks = [];
+            node.targetLinks = [];
+        });
+        links.forEach(function (link) {
+            var source = link.source,
+                target = link.target;
+            if (typeof source === "number") source = link.source = nodes[link.source];
+            if (typeof target === "number") target = link.target = nodes[link.target];
+            source.sourceLinks.push(link);
+            target.targetLinks.push(link);
+        });
+    }
+
+    // Compute the value (size) of each node by summing the associated links.
+    function computeNodeValues() {
+        nodes.forEach(function (node) {
+            node.value = Math.max(
+                d3.sum(node.sourceLinks, value),
+                d3.sum(node.targetLinks, value)
+            );
+        });
+    }
+
+    // Iteratively assign the breadth (x-position) for each node.
+    // Nodes are assigned the maximum breadth of incoming neighbors plus one;
+    // nodes with no incoming links are assigned breadth zero, while
+    // nodes with no outgoing links are assigned the maximum breadth.
+    function computeNodeBreadths() {
+        columnLayout(nodes, nodeWidth, size);
+    }
+
+    function defaultColumnLayout(nodes, nodeWidth, size) {
+        var remainingNodes = nodes,
+            visited = {},
+            x = 0;
+
+        //dex.console.log("NODE", nodes[0]);
+        while (remainingNodes.length) {
+            nextNodes = [];
+            visited[remainingNodes[0].name] = true;
+            remainingNodes.forEach(function (node) {
+                node.x = x;
+                node.dx = nodeWidth;
+                node.sourceLinks.forEach(function (link) {
+                    if (!visited[link.target.name]) {
+                        nextNodes.push(link.target);
+                    }
+                    else {
+                        dex.console.log("CYCLE DETECTED AT: " + node.name + "->" + link.target.name);
+                    }
+                });
+            });
+            remainingNodes = nextNodes;
+            ++x;
         }
-      });
+
+        moveSinksRight(x);
+        scaleNodeBreadths((size[0] - nodeWidth) / (x - 1));
     }
 
-    function ascendingDepth(a, b) {
-      return a.y - b.y;
+    function moveSourcesRight() {
+        nodes.forEach(function (node) {
+            if (!node.targetLinks.length) {
+                node.x = d3.min(node.sourceLinks, function (d) {
+                        return d.target.x;
+                    }) - 1;
+            }
+        });
     }
-  }
 
-  function computeLinkDepths() {
-    nodes.forEach(function (node) {
-      node.sourceLinks.sort(ascendingTargetDepth);
-      node.targetLinks.sort(ascendingSourceDepth);
+    function moveSinksRight(x) {
+        nodes.forEach(function (node) {
+            if (!node.sourceLinks.length) {
+                node.x = x - 1;
+            }
+        });
+    }
+
+    function scaleNodeBreadths(kx) {
+        nodes.forEach(function (node) {
+            node.x *= kx;
+        });
+    }
+
+    function computeNodeDepths(iterations) {
+        var nodesByBreadth = d3.nest()
+            .key(function (d) {
+                return d.x;
+            })
+            .sortKeys(d3.ascending)
+            .entries(nodes)
+            .map(function (d) {
+                return d.values;
+            });
+
+        //
+        initializeNodeDepth();
+        resolveCollisions();
+        for (var alpha = 1; iterations > 0; --iterations) {
+            relaxRightToLeft(alpha *= .99);
+            resolveCollisions();
+            relaxLeftToRight(alpha);
+            resolveCollisions();
+        }
+
+        function initializeNodeDepth() {
+            var ky = d3.min(nodesByBreadth, function (nodes) {
+                return (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value);
+            });
+
+            nodesByBreadth.forEach(function (nodes) {
+                nodes.forEach(function (node, i) {
+                    node.y = i;
+                    node.dy = node.value * ky;
+                });
+            });
+
+            links.forEach(function (link) {
+                link.dy = link.value * ky;
+            });
+        }
+
+        function relaxLeftToRight(alpha) {
+            nodesByBreadth.forEach(function (nodes, breadth) {
+                nodes.forEach(function (node) {
+                    if (node.targetLinks.length) {
+                        var y = d3.sum(node.targetLinks, weightedSource) / d3.sum(node.targetLinks, value);
+                        node.y += (y - center(node)) * alpha;
+                    }
+                });
+            });
+
+            function weightedSource(link) {
+                return center(link.source) * link.value;
+            }
+        }
+
+        function relaxRightToLeft(alpha) {
+            nodesByBreadth.slice().reverse().forEach(function (nodes) {
+                nodes.forEach(function (node) {
+                    if (node.sourceLinks.length) {
+                        var y = d3.sum(node.sourceLinks, weightedTarget) / d3.sum(node.sourceLinks, value);
+                        node.y += (y - center(node)) * alpha;
+                    }
+                });
+            });
+
+            function weightedTarget(link) {
+                return center(link.target) * link.value;
+            }
+        }
+
+        function resolveCollisions() {
+            nodesByBreadth.forEach(function (nodes) {
+                var node,
+                    dy,
+                    y0 = 0,
+                    n = nodes.length,
+                    i;
+
+                // Push any overlapping nodes down.
+                nodes.sort(ascendingDepth);
+                for (i = 0; i < n; ++i) {
+                    node = nodes[i];
+                    dy = y0 - node.y;
+                    if (dy > 0) node.y += dy;
+                    y0 = node.y + node.dy + nodePadding;
+                }
+
+                // If the bottommost node goes outside the bounds, push it back up.
+                dy = y0 - nodePadding - size[1];
+                if (dy > 0) {
+                    y0 = node.y -= dy;
+
+                    // Push any overlapping nodes back up.
+                    for (i = n - 2; i >= 0; --i) {
+                        node = nodes[i];
+                        dy = node.y + node.dy + nodePadding - y0;
+                        if (dy > 0) node.y -= dy;
+                        y0 = node.y;
+                    }
+                }
+            });
+        }
+
+        function ascendingDepth(a, b) {
+            return a.y - b.y;
+        }
+    }
+
+    function computeLinkDepths() {
+        nodes.forEach(function (node) {
+            node.sourceLinks.sort(ascendingTargetDepth);
+            node.targetLinks.sort(ascendingSourceDepth);
+        });
+        nodes.forEach(function (node) {
+            var sy = 0, ty = 0;
+            node.sourceLinks.forEach(function (link) {
+                link.sy = sy;
+                sy += link.dy;
+            });
+            node.targetLinks.forEach(function (link) {
+                link.ty = ty;
+                ty += link.dy;
+            });
+        });
+
+        function ascendingSourceDepth(a, b) {
+            return a.source.y - b.source.y;
+        }
+
+        function ascendingTargetDepth(a, b) {
+            return a.target.y - b.target.y;
+        }
+    }
+
+    function center(node) {
+        return node.y + node.dy / 2;
+    }
+
+    function value(link) {
+        return link.value;
+    }
+
+    $(document).ready(function () {
+        // Add tooltips
+        $(document).uitooltip({
+            items: "path",
+            content: function () {
+                return $(this).find("tooltip-content").text();
+            },
+            track: true
+        });
+
+        // Make the entire chart draggable.
+        //$(sankey.config.parent).draggable();
     });
-    nodes.forEach(function (node) {
-      var sy = 0, ty = 0;
-      node.sourceLinks.forEach(function (link) {
-        link.sy = sy;
-        sy += link.dy;
-      });
-      node.targetLinks.forEach(function (link) {
-        link.ty = ty;
-        ty += link.dy;
-      });
-    });
 
-    function ascendingSourceDepth(a, b) {
-      return a.source.y - b.source.y;
-    }
-
-    function ascendingTargetDepth(a, b) {
-      return a.target.y - b.target.y;
-    }
-  }
-
-  function center(node) {
-    return node.y + node.dy / 2;
-  }
-
-  function value(link) {
-    return link.value;
-  }
-
-  $(document).ready(function () {
-    // Add tooltips
-    $(document).uitooltip({
-      items: "path",
-      content: function () {
-        return $(this).find("tooltip-content").text();
-      },
-      track: true
-    });
-
-    // Make the entire chart draggable.
-    //$(sankey.config.parent).draggable();
-  });
-
-  return sankey;
+    return sankey;
 };
 
 module.exports = sankey;
@@ -5421,6 +5650,10 @@ var scatterplot = function (userConfig) {
     }
   };
 
+    chart.clone = function clone(override) {
+        return scatterplot(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   $(document).ready(function () {
     // Make the entire chart draggable.
     //$(chart.config.parent).draggable();
@@ -5608,6 +5841,10 @@ var sunburst = function (userConfig) {
       return (x(d.x + d.dx / 2) - Math.PI / 2) / Math.PI * 180;
     }
   };
+
+    chart.clone = function clone(override) {
+        return sunburst(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   $(document).ready(function () {
     // Make the entire chart draggable.
@@ -5891,6 +6128,11 @@ var topojsonmap = function (userConfig) {
 
     initialize();
   };
+
+    chart.clone = function clone(override) {
+        return topojsonmap(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   return chart;
 };
 
@@ -6254,6 +6496,10 @@ var treemap = function (userConfig) {
 
     return chart;
   };
+
+    chart.clone = function clone(override) {
+        return treemap(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   $(document).ready(function () {
     // Make the entire chart draggable.
@@ -6705,6 +6951,10 @@ var treemapBarChart = function (userConfig) {
     return chart;
   };
 
+    chart.clone = function clone(override) {
+        return treemapBarChart(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   $(document).ready(function () {
     // Make the entire chart draggable.
     //$(sankey.config.parent).draggable();
@@ -7067,6 +7317,10 @@ var ringnetwork = function (userConfig) {
     viz.draw();
   };
 
+    chart.clone = function clone(override) {
+        return ringnetwork(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   $(document).ready(function () {
     // Make the entire chart draggable.
     //$(chart.config.parent).draggable();
@@ -7231,6 +7485,10 @@ var bubblechart = function (userConfig) {
     //d3 = dex.charts.d3.d3v3;
     internalChart.resize();
   };
+
+    chart.clone = function clone(override) {
+        return bubblechart(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   $(document).ready(function () {
     // Make the entire chart draggable.
@@ -7413,6 +7671,10 @@ var scatterplot = function (userConfig) {
     //internalChart.resize();
   };
 
+    chart.clone = function clone(override) {
+        return scatterplot(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   $(document).ready(function () {
     // Make the entire chart draggable.
     //$(chart.config.parent).draggable();
@@ -7432,206 +7694,442 @@ elegans.ScatterPlot = require("./ScatterPlot");
 
 module.exports = elegans;
 },{"./ScatterPlot":39}],41:[function(require,module,exports){
-var bubblechart = function (userConfig) {
-  d3 = dex.charts.d3.d3v3;
-  var chart;
+var gridstermultiples = function (userConfig) {
+    var chart;
+    var gridster;
+    var cells = [];
 
-  var defaults = {
-    'parent': '#Nvd3_BubbleChartParent',
-    'id': 'Nvd3_BubbleChartId',
-    'class': 'Nvd3_BubbleChartClass',
-    'resizable': true,
-    'csv': {
-      'header': [],
-      'data': []
-    },
-    'width': "100%",
-    'height': "100%",
-    'legend': 'right'
-  };
+    var defaults = {
+        'parent': '#GridsterMultiplesParent',
+        'id': 'GridsterMultiplesId',
+        'class': 'GridsterMultiplesClass',
+        'resizable': true,
+        'frames': {},
+        'width': "100%",
+        'height': "100%",
+        'cell' : {
+          'width' : 6,
+          'height' : 6
+        },
+        'baseChart': dex.charts.d3.Dendrogram(),
+        'gridsterConfig': {
+            widget_base_dimensions: [50, 50],
+            widget_margins: [1, 1],
+            //helper: 'clone',
+            animate: false,
+            draggable: {
+                enabled: true,
+                start: function (e, ui) {
+                    dex.console.log("DRAG-START", e, ui);
+                },
+                handle: '.drag-handle'
+            },
+            resize: {
+                enabled: true,
+                min_size: [1, 1],
+                stop: function (event, ui, $widget) {
+                    dex.console.log("Event", event, ui, $widget);
+                    cells.forEach(function (cell, i) {
+                        cell.render();
+                    })
+                }
+            }
+        }
+    };
 
-  var chart = new dex.component(userConfig, defaults);
-  var internalChart;
+    chart = new dex.component(userConfig, defaults);
 
-  chart.render = function render() {
-    d3 = dex.charts.d3.d3v3;
-    var config = chart.config;
-    var csv = config.csv;
+    chart.render = function render() {
+        var config = chart.config;
+        var frames = config.frames;
 
-    d3.select(config.parent).selectAll("*").remove();
+        d3.selectAll(config.parent).selectAll("*").remove();
 
-    //dex.console.log("CSV", csv, dex.csv.group(csv, [0]));
-    var groups = dex.csv.group(csv, [0]);
-    var nvd3Data = groups.map(function (group) {
-      //dex.console.log("KEY", group.key, group);
-      return {
-        'key': group.key,
-        'values': group.csv.data.map(function (row) {
-          return {'x': +row[1], 'y': +row[2], 'size': +row[3]};
-        })
-      }
-    });
+        dex.console.log("FRAMES", frames);
 
-    //dex.console.log("NVDDATA", nvd3Data);
+        var numFrames = frames.frames.length;
 
-    var nvd3Chart = nv.models.scatterChart()
-      .showDistX(true)
-      .showDistY(true)
-      .useVoronoi(true)
-      .color(d3.scale.category10().range())
-      .duration(300);
+        var gridsterContainer = d3.select(config.parent)
+            .append("div")
+            .attr("id", config["id"])
+            .attr("class", "gridster")
+            .attr("width", config.width)
+            .attr("height", config.height)
+            .append("ul");
 
-    //nvd3Chart.xAxis.tickFormat(d3.format('.02f'));
-    nvd3Chart.yAxis.tickFormat(d3.format('.02f'));
-    nvd3Chart.xAxis
-      .showMaxMin(false)
-      .tickFormat(function (d) {
-        return d3.time.format('%x')(new Date(d))
-      });
+        dex.console.log("Invoking gridster constructor");
 
-    var svg = d3.select(config.parent)
-      .append("svg")
-      .attr("id", config["id"])
-      .attr("class", config["class"])
-      .attr('width', config.width)
-      .attr('height', config.height)
-      .datum(nvd3Data)
-      .transition()
-      .duration(500)
-      .call(nvd3Chart);
+        gridster = $(".gridster ul")
+            .gridster(config.gridsterConfig)
+            .data('gridster');
 
-    nv.utils.windowResize(nvd3Chart.update);
+        cells = [];
+        frames.frames.forEach(function (frame, i) {
+            /*            d3.select(".gridster ul")
+             .append("li")
+             .attr("data-row", Math.floor(i / config.numColumns + 1))
+             .attr("data-col", (i % config.numColumns + 1))
+             .attr("data-sizex", "1")
+             .attr("data-sizey", "1")
+             .append("div")
+             .attr("id", config.id + i)
+             .attr("class", config["class"] + "Cell");
+             */
+            var widget = "<li><table id='widget-table' style='word-break:break-all;'>" +
+                "<tr id='widget-header-row'><td id='widget-header' class='drag-handle'>" +
+                frames.frameIndices[i] +
+                "</td></tr>" +
+                "<tr><td id='widget-content' colspan='2'><div id='" + (config.id + i) +
+                "' height='100%' width='100%'></div></td></tr></table></li>"
 
-    internalChart = nv.addGraph(function () {
-      return nvd3Chart;
-    }, function () {
-      d3.selectAll(".nv-legend-symbol").on('click',
-        function () {
-          dex.console.log("Clicked Legend Of", nvd3Chart.datum());
+            gridster.add_widget(widget, config.cell.width, config.cell.height);
+
+            //         var cellChart = config.baseChart
+            //           .clone()
+            //         .attr("parent", "#" + config.id + i)
+            //       .attr("csv", frame);
+            var cellChart = config.baseChart.clone({
+                "parent": "#" + config.id + i,
+                "csv": frame
+            });
+            cellChart.render();
+            cells.push(cellChart);
         });
-    });
 
-    return chart
-  };
+        return chart;
+    };
 
-  chart.update = function () {
-    d3 = dex.charts.d3.d3v3;
-    //internalChart.load({'columns': chart.config.csv.data});
-  };
-
-  $(document).ready(function () {
-    // Make the entire chart draggable.
-    //$(chart.config.parent).draggable();
-  });
-
-  return chart;
-};
-
-module.exports = bubblechart;
-},{}],42:[function(require,module,exports){
-var stackedareachart = function (userConfig) {
-  d3 = dex.charts.d3.d3v3;
-  var chart;
-
-  var defaults = {
-    'parent': '#Nvd3_StackedAreaChart',
-    'id': 'Nvd3_StackedAreaChartId',
-    'class': 'Nvd3_StackedAreaChartClass',
-    'resizable': true,
-    'csv': {
-      'header': [],
-      'data': []
-    },
-    'width': "100%",
-    'height': "100%",
-    'legend': 'right'
-  };
-
-  var chart = new dex.component(userConfig, defaults);
-  var internalChart;
-
-  chart.render = function render() {
-    d3 = dex.charts.d3.d3v3;
-    var config = chart.config;
-    var csv = config.csv;
-
-    d3.select(config.parent).selectAll("*").remove();
-
-    //dex.console.log("CSV", csv, dex.csv.group(csv, [0]));
-    var groups = dex.csv.group(csv, [0]);
-    var nvd3Data = groups.map(function (group) {
-      //dex.console.log("KEY", group.key, group);
-      return {
-        'key': group.key,
-        'values': group.csv.data.map(function (row) {
-          return [+row[1], +row[2]];
+    chart.update = function () {
+        cells.forEach(function (cell) {
+            cell.update();
         })
-      }
-    });
+    };
 
-    //dex.console.log("NVDDATA", nvdData);
-
-    var nvd3Chart = nv.models.stackedAreaChart()
-      .x(function (d) {
-        return d[0]
-      })
-      .y(function (d) {
-        return d[1]
-      })
-      .clipEdge(true)
-      .useInteractiveGuideline(true);
-
-    nvd3Chart.xAxis
-      .showMaxMin(false)
-      .tickFormat(function (d) {
-        return d3.time.format('%x')(new Date(d))
-      });
-
-    nvd3Chart.yAxis
-      .tickFormat(d3.format(',.2f'));
-
-    var svg = d3.select(config.parent)
-      .append("svg")
-      .attr("id", config["id"])
-      .attr("class", config["class"])
-      .attr('width', config.width)
-      .attr('height', config.height)
-      .datum(nvd3Data)
-      .transition()
-      .duration(500)
-      .call(nvd3Chart);
-
-    nv.utils.windowResize(nvd3Chart.update);
-
-    internalChart = nv.addGraph(function () {
-      return nvd3Chart;
-    }, function () {
-      d3.selectAll(".nv-legend-symbol").on('click',
-        function () {
-          dex.console.log("Clicked Legend Of", nvd3Chart.datum());
-        });
+    $(document).ready(function () {
+        var config = chart.config;
+        // Make the entire chart draggable.
+        //$(chart.config.parent).draggable();
     });
 
     return chart;
-  };
+};
 
-  chart.update = function () {
+module.exports = gridstermultiples;
+},{}],42:[function(require,module,exports){
+/**
+ * @module dex/charts/gridster
+ */
+var multiples = {};
+
+multiples.GridsterMultiples = require("./GridsterMultiples");
+
+module.exports = multiples;
+},{"./GridsterMultiples":41}],43:[function(require,module,exports){
+var bubblechart = function (userConfig) {
     d3 = dex.charts.d3.d3v3;
-    //internalChart.load({'columns': chart.config.csv.data});
-  };
+    var chart;
 
-  $(document).ready(function () {
-    // Make the entire chart draggable.
-    if (chart.config.draggable) {
-      $(chart.config.parent).draggable();
-    }
-  });
+    var defaults = {
+        'parent': '#Nvd3_BubbleChartParent',
+        'id': 'Nvd3_BubbleChartId',
+        'class': 'Nvd3_BubbleChartClass',
+        'resizable': true,
+        'csv': {
+            'header': [],
+            'data': []
+        },
+        'width': "100%",
+        'height': "100%",
+        'legend': 'right'
+    };
 
-  return chart;
+    var chart = new dex.component(userConfig, defaults);
+    var internalChart;
+
+    chart.render = function render() {
+        d3 = dex.charts.d3.d3v3;
+        var config = chart.config;
+        var csv = config.csv;
+
+        var types = dex.csv.guessTypes(csv);
+        dex.console.log("TYPES", types);;
+
+        var xlabels = [];
+
+        d3.select(config.parent).selectAll("*").remove();
+        var groups = dex.csv.group(csv, [0]);
+        var nvd3Data = groups.map(function (group) {
+            //dex.console.log("KEY", group.key, group);
+            return {
+                'key': group.key,
+                'values': group.csv.data.map(function (row, i) {
+                    //dex.console.log("ROW", row);
+                    var values = {};
+                    if (types[1] == "string") {
+                        values.x = i;
+                        values.xlabel = row[1];
+                    }
+                    else if (types[1] == "date") {
+                        values.x = new Date(row[1]);
+                    }
+                    else {
+                        values.x = +row[1];
+                    }
+
+                    if (types[2] == "string") {
+                        values.y = i;
+                        values.ylabel = row[2];
+                    }
+                    else if (types[2] == "date") {
+                        values.y = new Date(row[2]);
+                    }
+                    else {
+                        values.y = +row[2];
+                    }
+
+                    if (types[3] == "string") {
+                        values.size = 1;
+                    }
+                    else if (types[2] == "date") {
+                        values.size = 1;
+                    }
+                    else {
+                        values.size = +row[3];
+                    }
+
+                    return values;
+                })
+            }
+        });
+
+        var nvd3Chart = nv.models.scatterChart()
+            .showDistX(true)
+            .showDistY(true)
+            .useVoronoi(true)
+            .color(d3.scale.category10().range())
+            .duration(300);
+
+        //nvd3Chart.xAxis.tickFormat(d3.format('.02f'));
+        nvd3Chart.yAxis.tickFormat(d3.format('.1f'));
+        nvd3Chart.xAxis
+            .showMaxMin(false)
+            .tickFormat(function (d) {
+                if (types[1] == "date") {
+                    return d3.time.format('%x')(new Date(d))
+                }
+                else if (types[1] == "string") {
+                    return nvd3Data[0].values[d].xlabel;
+                }
+                else {
+                    return d3.format(".1f")(d);
+                }
+            });
+
+        nvd3Chart.yAxis
+            .showMaxMin(false)
+            .tickFormat(function (d) {
+                if (types[2] == "date") {
+                    //return d3.format(".1f")(d);
+                    return d3.time.format('%x')(new Date(d))
+                }
+                else if (types[2] == "string") {
+                    return nvd3Data[0].values[d].ylabel;
+                }
+                else {
+                    return d3.format(".1f")(d);
+                }
+            });
+
+        var svg = d3.select(config.parent)
+            .append("svg")
+            .attr("id", config["id"])
+            .attr("class", config["class"])
+            .attr('width', config.width)
+            .attr('height', config.height)
+            .datum(nvd3Data)
+            .transition()
+            .duration(500)
+            .call(nvd3Chart);
+
+        nv.utils.windowResize(nvd3Chart.update);
+
+        internalChart = nv.addGraph(function () {
+            return nvd3Chart;
+        }, function () {
+            d3.selectAll(".nv-legend-symbol").on('click',
+                function () {
+                    dex.console.log("Clicked Legend Of", nvd3Chart.datum());
+                });
+        });
+
+        return chart
+    };
+
+    chart.update = function () {
+        d3 = dex.charts.d3.d3v3;
+        //internalChart.load({'columns': chart.config.csv.data});
+    };
+
+    chart.clone = function clone(override) {
+        return bubblechart(dex.config.expandAndOverlay(override, userConfig));
+    };
+
+    $(document).ready(function () {
+        // Make the entire chart draggable.
+        //$(chart.config.parent).draggable();
+    });
+
+    return chart;
+};
+
+module.exports = bubblechart;
+},{}],44:[function(require,module,exports){
+var stackedareachart = function (userConfig) {
+    d3 = dex.charts.d3.d3v3;
+    var chart;
+
+    var defaults = {
+        'parent': '#Nvd3_StackedAreaChart',
+        'id': 'Nvd3_StackedAreaChartId',
+        'class': 'Nvd3_StackedAreaChartClass',
+        'resizable': true,
+        'csv': {
+            'header': [],
+            'data': []
+        },
+        'width': "100%",
+        'height': "100%",
+        'legend': 'right'
+    };
+
+    var chart = new dex.component(userConfig, defaults);
+    var internalChart;
+
+    chart.render = function render() {
+        d3 = dex.charts.d3.d3v3;
+        var config = chart.config;
+        var csv = config.csv;
+
+        var types = dex.csv.guessTypes(csv);
+        //dex.console.log("TYPES", types);
+
+        d3.select(config.parent).selectAll("*").remove();
+
+        //dex.console.log("CSV", csv, dex.csv.group(csv, [0]));
+        var groups = dex.csv.group(csv, [0]);
+
+
+        var nvd3Data = groups.map(function (group) {
+            //dex.console.log("KEY", group.key, group);
+            return {
+                'key': group.key,
+                'values': group.csv.data.map(function (row, i) {
+                    //dex.console.log("ROW", row);
+                    var values = {};
+                    if (types[1] == "string") {
+                        values.x = i;
+                        values.xlabel = row[1];
+                    }
+                    else if (types[1] == "date") {
+                        values.x = new Date(row[1]);
+                    }
+                    else {
+                        values.x = +row[1];
+                    }
+
+                    if (types[2] == "string") {
+                        values.y = i;
+                        values.ylabel = row[2];
+                    }
+                    else if (types[2] == "date") {
+                        values.y = new Date(row[2]);
+                    }
+                    else {
+                        values.y = +row[2];
+                    }
+                    return values;
+                })
+            }
+        });
+
+        var nvd3Chart = nv.models.stackedAreaChart()
+            .clipEdge(true)
+            .useInteractiveGuideline(true);
+
+        nvd3Chart.xAxis
+            .showMaxMin(false)
+            .tickFormat(function (d, i) {
+                if (types[1] == "date") {
+                    return d3.time.format('%x')(new Date(d))
+                }
+                else if (types[1] == "number") {
+                    return d3.format(".1f")(d)
+                }
+                else {
+                    dex.console.log("D", d, nvd3Data);
+                    return nvd3Data[0].values[d].xlabel;
+                }
+            });
+
+        nvd3Chart.yAxis
+            .tickFormat(function (d) {
+                if (types[2] == "date") {
+                    return d3.time.format('%x')(new Date(d))
+                }
+                else if (types[2] == "number") {
+                    return d3.format(".1f")(d)
+                }
+                else {
+                    return d;
+                }
+            });
+
+        var svg = d3.select(config.parent)
+            .append("svg")
+            .attr("id", config["id"])
+            .attr("class", config["class"])
+            .attr('width', config.width)
+            .attr('height', config.height)
+            .datum(nvd3Data)
+            .transition()
+            .duration(500)
+            .call(nvd3Chart);
+
+        nv.utils.windowResize(nvd3Chart.update);
+
+        internalChart = nv.addGraph(function () {
+            return nvd3Chart;
+        }, function () {
+            d3.selectAll(".nv-legend-symbol").on('click',
+                function () {
+                    dex.console.log("Clicked Legend Of", nvd3Chart);
+                });
+        });
+
+        return chart;
+    };
+
+    chart.update = function () {
+        d3 = dex.charts.d3.d3v3;
+        //internalChart.load({'columns': chart.config.csv.data});
+    };
+
+    chart.clone = function clone(override) {
+        return stackedareachart(dex.config.expandAndOverlay(override, userConfig));
+    };
+
+    $(document).ready(function () {
+        // Make the entire chart draggable.
+        if (chart.config.draggable) {
+            $(chart.config.parent).draggable();
+        }
+    });
+
+    return chart;
 };
 
 module.exports = stackedareachart;
-},{}],43:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 /**
  *
  * This module provides NVD3 based visualization components.
@@ -7645,7 +8143,7 @@ nvd3.StackedAreaChart = require("./StackedAreaChart");
 nvd3.BubbleChart = require("./BubbleChart");
 
 module.exports = nvd3;
-},{"./BubbleChart":41,"./StackedAreaChart":42}],44:[function(require,module,exports){
+},{"./BubbleChart":43,"./StackedAreaChart":44}],46:[function(require,module,exports){
 var scatterplot = function (userConfig) {
   var defaults = {
     // The parent container of this chart.
@@ -8007,11 +8505,15 @@ var scatterplot = function (userConfig) {
 
   };
 
+    chart.clone = function clone(override) {
+        return scatterplot(dex.config.expandAndOverlay(override, userConfig));
+    };
+
   return chart;
 };
 
 module.exports = scatterplot;
-},{}],45:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 /**
  *
  * This module provides ThreeJS/WebGL based visualization components.
@@ -8024,7 +8526,7 @@ var threejs = {};
 threejs.ScatterPlot = require("./ScatterPlot");
 
 module.exports = threejs;
-},{"./ScatterPlot":44}],46:[function(require,module,exports){
+},{"./ScatterPlot":46}],48:[function(require,module,exports){
 var network = function (userConfig) {
   var chart;
 
@@ -8125,6 +8627,10 @@ var network = function (userConfig) {
     var csv = config.csv;
     chart.render();
   };
+
+    chart.clone = function clone(override) {
+        return network(dex.config.expandAndOverlay(override, userConfig));
+    };
 
   chart.createData = function() {
 
@@ -8247,7 +8753,7 @@ var network = function (userConfig) {
 };
 
 module.exports = network;
-},{}],47:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 /**
  *
  * This module provides routines for dealing with arrays.
@@ -8260,7 +8766,7 @@ var vis = {};
 vis.Network = require("./Network");
 
 module.exports = vis;
-},{"./Network":46}],48:[function(require,module,exports){
+},{"./Network":48}],50:[function(require,module,exports){
 /**
  *
  * This module provides routines for dealing with colors.
@@ -8823,7 +9329,7 @@ module.exports = function color(dex) {
   };
 };
 
-},{}],49:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 module.exports = function (dex) {
 
   return function (userConfig, defaultConfig) {
@@ -8864,6 +9370,17 @@ module.exports = function (dex) {
         dex.object.setHierarchical(this.config, name, value, '.');
       }
       return this;
+    };
+
+    this.clone = function (userConfig) {
+      dex.console.log("No clone function defined for", this);
+    };
+
+    this.getGuiDefinition = function (userConfig, prefix) {
+      return [
+        dex.config.gui.dimensions(userConfig, prefix),
+        dex.config.gui.general(userConfig, prefix)
+      ];
     };
 
     this.subscribe = function (source, eventType, callback) {
@@ -8972,13 +9489,11 @@ module.exports = function (dex) {
             width = "100%";
           }
 
-          if (width == 0)
-          {
+          if (width == 0) {
             width = 200;
           }
 
-          if (height == 0)
-          {
+          if (height == 0) {
             height = 200;
           }
 
@@ -9015,10 +9530,10 @@ module.exports = function (dex) {
     };
 
     // Used to load chart state from the DOM.
-    this.load = function (location) {
+    this.load = function () {
       var config = {};
 
-      $(location + " div").each(function (i) {
+      $("#dexjs-config > div").each(function (i) {
         dex.console.log("Loading Setting: '" + $(this).attr('id') + "'='" +
           $(this).attr('value') + "'");
         config[$(this).attr('id')] = $(this).attr('value');
@@ -9028,13 +9543,93 @@ module.exports = function (dex) {
       return this.configure(config);
     };
 
-    // Used to save chart state within the DOM.
-    this.save = function (location, config) {
-      dex.console.log("Saving Configuration To: " + location, config);
-      $(location).children().remove();
+    // Used to print save log.
+    this.logSave = function logSave(saveConfig, prefix) {
+      var config = saveConfig || this.attr() || {};
+      var ns = (prefix) ? prefix + "." : "";
       _.keys(config).forEach(function (key) {
-        $(location).append("<div id='" + key + "' value='" + config[key] + "'></div>");
+        var obj = config[key];
+        //dex.console.log(typeof obj);
+        // Don't serialize the CSV.
+        switch (key) {
+          case "csv":
+          case "channel": {
+            return;
+          }
+        }
+        if (config[key] == "") {
+          return;
+        }
+
+        // Arrays are not handled.
+        if (Array.isArray(obj)) {
+          return;
+        }
+        switch (typeof obj) {
+          case "object" : {
+            logSave(config[key], ns + key);
+            break;
+          }
+          // Don't serialize functions or things which are undefined.
+          case "function" :
+          case "undefined" : {
+            break;
+          }
+          default: {
+            dex.console.log("<div id='" + ns + key + "' value='" + config[key] + "'></div>");
+          }
+        }
+
       });
+      return this;
+    };
+
+    this.saveRelative = function saveRelative(location, saveConfig, prefix) {
+      var config = saveConfig || {};
+      var ns = (prefix) ? prefix + "." : "";
+      _.keys(config).forEach(function (key) {
+        var obj = config[key];
+        //dex.console.log(typeof obj);
+        // Don't serialize the CSV.
+        switch (key) {
+          case "csv":
+          case "channel": {
+            return;
+          }
+        }
+        if (config[key] == "") {
+          return;
+        }
+
+        // Arrays are not handled.
+        if (Array.isArray(obj)) {
+          return;
+        }
+        switch (typeof obj) {
+          case "object" : {
+            saveRelative(location, config[key], ns + key);
+            break;
+          }
+          // Don't serialize functions or things which are undefined.
+          case "function" :
+          case "undefined" : {
+            break;
+          }
+          default: {
+            $(location).append("<div id='" + ns + key + "' value='" +
+              config[key] + "'></div>");
+          }
+        }
+      });
+      return this;
+    };
+
+    // Used to save chart state within the DOM.
+    this.save = function (config) {
+      $("#dexjs-config").remove();
+      $("body").prepend("<div id='dexjs-config' style='visibility: hidden;'></div>")
+      var saveConfig = config || this.attr() || {};
+      this.saveRelative("#dexjs-config", saveConfig);
       return this;
     };
 
@@ -9056,7 +9651,7 @@ module.exports = function (dex) {
     return this;
   };
 };
-},{}],50:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 /**
  *
  * Config module.
@@ -9183,7 +9778,7 @@ module.exports = function config(dex) {
       var node = d3.select(config.parent).select("svg");
       //dex.console.log("APPLYING STYLE TO NODE:", node);
       if (node && config && config.apply) {
-        config.apply.forEach(function(applyConfig) {
+        config.apply.forEach(function (applyConfig) {
           var affectedNodes = node.selectAll(applyConfig["select"]);
 
           if (applyConfig && applyConfig.styles) {
@@ -9213,13 +9808,10 @@ module.exports = function config(dex) {
      */
     'font': function font(custom) {
       var defaults = {
-        'decoration': 'none',
         'family': 'sans-serif',
-        'letterSpacing': 'normal',
         'size': 14,
         'style': 'normal',
         'weight': 'normal',
-        'wordSpacing': 'normal',
         'variant': 'normal'
       };
 
@@ -9244,10 +9836,6 @@ module.exports = function config(dex) {
         dex.config.setAttr(node, 'font-size', fontSpec.size, i);
         dex.config.setAttr(node, 'font-weight', fontSpec.weight, i);
         dex.config.setAttr(node, 'font-style', fontSpec.style, i);
-        dex.config.setAttr(node, 'text-decoration', fontSpec.decoration, i);
-
-        dex.config.setAttr(node, 'word-spacing', fontSpec.wordSpacing, i);
-        dex.config.setAttr(node, 'letter-spacing', fontSpec.letterSpacing, i);
         dex.config.setAttr(node, 'variant', fontSpec.variant, i);
       }
       return node;
@@ -9273,14 +9861,13 @@ module.exports = function config(dex) {
           'textLength': undefined,
           'lengthAdjust': undefined,
           'transform': '',
-          'glyphOrientationVertical': undefined,
           'text': undefined,
-          "decoration" : "none",
+          "decoration": "none",
           'dx': 0,
           'dy': 0,
           'writingMode': undefined,
           'anchor': 'start',
-          'fill': dex.config.fill(),
+          'fill': 'fill',
           'format': undefined,
           'events': dex.config.events()
         };
@@ -9307,17 +9894,15 @@ module.exports = function config(dex) {
         dex.config.setAttr(node, "y", textSpec.y, i);
         dex.config.setAttr(node, "dx", textSpec.dx, i);
         dex.config.setAttr(node, "dy", textSpec.dy, i);
+        dex.config.setAttr(node, "fill", textSpec.fill, i);
         dex.config.setStyle(node, "text-anchor", textSpec.anchor, i);
         dex.config.configureFont(node, textSpec.font, i);
         dex.config.setAttr(node, 'textLength', textSpec.textLength, i);
         dex.config.setAttr(node, 'lengthAdjust', textSpec.lengthAdjust, i);
         dex.config.setAttr(node, 'transform', textSpec.transform, i);
-        dex.config.setAttr(node, 'glyph-orientation-vertical',
-          textSpec.glyphOrientationVertical, i);
         dex.config.setStyle(node, "text-decoration", textSpec.decoration, i);
         dex.config.setAttr(node, 'writing-mode', textSpec.writingMode, i);
         dex.config.callIfDefined(node, 'text', textSpec.text, i);
-        dex.config.configureFill(node, textSpec.fill, i);
         dex.config.configureEvents(node, textSpec.events, i);
       }
       return node;
@@ -9341,9 +9926,9 @@ module.exports = function config(dex) {
           'opacity': 1,
           'dasharray': '',
           'transform': '',
-          'lineCap' : '',
-          'lineJoin' : '',
-          'miterLimit' : ''
+          'lineCap': '',
+          'lineJoin': '',
+          'miterLimit': ''
         };
 
       var config = dex.config.expandAndOverlay(strokeSpec, defaults);
@@ -9385,7 +9970,8 @@ module.exports = function config(dex) {
       var defaults =
         {
           'fillColor': "grey",
-          'fillOpacity': 1
+          'fillOpacity': 1,
+          'fillRule' : "nonzero"
         };
 
       var config = dex.config.expandAndOverlay(custom, defaults);
@@ -9406,6 +9992,7 @@ module.exports = function config(dex) {
       if (config) {
         dex.config.setStyle(node, 'fill', config.fillColor, i);
         dex.config.setStyle(node, 'fill-opacity', config.fillOpacity, i);
+        dex.config.setStyle(node, 'fill-rule', config.fillRule, i);
       }
       return node;
     },
@@ -10245,10 +10832,538 @@ module.exports = function config(dex) {
       }
 
       return scale;
-    }
+    },
+
+    'gui': require("./gui")(dex)
   };
 };
-},{}],51:[function(require,module,exports){
+},{"./gui":53}],53:[function(require,module,exports){
+/**
+ *
+ * gui definition module.
+ * @module dex/config/gui
+ *
+ */
+
+module.exports = function gui(dex) {
+  return {
+    'dimensions': function dimensions(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Chart Dimensions",
+        "contents": [
+          {
+            "name": "Height",
+            "description": "The height of the chart.",
+            "target": ns + "height",
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 2000,
+            "initialValue": 600
+          },
+          {
+            "name": "Width",
+            "description": "The width of the chart.",
+            "target": ns + "width",
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 2000,
+            "initialValue": 800
+          },
+          {
+            "name": "Top Margin",
+            "description": "The top margin of the chart.",
+            "target": ns + "margin.top",
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 500,
+            "initialValue": 50
+          },
+          {
+            "name": "Bottom Margin",
+            "description": "The bottom margin of the chart.",
+            "target": ns + "margin.bottom",
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 500,
+            "initialValue": 50
+          },
+          {
+            "name": "Left Margin",
+            "description": "Left top margin of the chart.",
+            "target": "margin.left",
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 500,
+            "initialValue": 50
+          },
+          {
+            "name": "Right Margin",
+            "description": "The right margin of the chart.",
+            "target": "margin.right",
+            "type": "int",
+            "minValue": 0,
+            "maxValue": 500,
+            "initialValue": 50
+          }
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'font': function font(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Font",
+        "contents": [
+          {
+            "name": "Font Size",
+            "description": "The size of the font.",
+            "target": ns + "size",
+            "type": "int",
+            "minValue": 1,
+            "maxValue": 256,
+            "initialValue": 12
+          },
+          {
+            "name": "Font Family",
+            "description": "The font family.",
+            "target": ns + "family",
+            "type": "choice",
+            "choices": ["courier", "sans-serif", "times-roman"],
+            "initialValue": "sans-serif"
+          },
+          {
+            "name": "Font Style",
+            "description": "The font style.",
+            "target": ns + "style",
+            "type": "choice",
+            "choices": ["normal", "italic", "oblique", "inherit"],
+            "initialValue": "normal"
+          },
+          {
+            "name": "Font Weight",
+            "description": "The weight of the font.",
+            "target": "weight",
+            "type": "choice",
+            "choices": ["normal", "bold", "bolder", "lighter", "100", "200", "300", "400", "500",
+              "600", "700", "800", "900"],
+            "initialValue": "normal"
+          },
+          {
+            "name": "Font Variant",
+            "description": "The font variant.",
+            "target": "variant",
+            "type": "choice",
+            "choices": ["normal", "inherit", "small-caps"],
+            "initialValue": "normal"
+          }
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'text': function text(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Text",
+        "contents": [
+          {
+            "type": "group",
+            "name": "General",
+            "contents": [
+              {
+                "name": "Transform",
+                "description": "A transform to be applied to the text.",
+                "target": ns + "transform",
+                "type": "string",
+                "initialValue": ""
+              },
+              {
+                "name": "Format",
+                "description": "The text format.",
+                "target": ns + "format",
+                "type": "string",
+                "initialValue": ""
+              },
+              {
+                "name": "Text Color",
+                "description": "The text color.",
+                "target": ns + "fill",
+                "type" : "color",
+                "initialValue": "black"
+              },
+              {
+                "name": "Anchor",
+                "description": "The text anchor.",
+                "target": ns + "anchor",
+                "type": "choice",
+                "choices": ["middle", "start", "end"],
+                "initialValue": "middle"
+              },
+              {
+                "name": "X Offset",
+                "description": "The x offset of the text.",
+                "target": ns + "dx",
+                "type": "int",
+                "minValue": -2000,
+                "maxValue": 2000,
+                "initialValue": 0
+              },
+              {
+                "name": "Y Offset",
+                "description": "The y offset of the text.",
+                "target": ns + "dy",
+                "type": "int",
+                "minValue": -2000,
+                "maxValue": 2000,
+                "initialValue": 0
+              },
+              {
+                "name": "Text Decoration",
+                "description": "The text decoration.",
+                "target": ns + "decoration",
+                "type": "choice",
+                "choices": ["none", "underline", "overline", "line-through", "blink", "inherit"],
+                "initialValue": "none"
+              },
+              {
+                "name": "Writing Mode",
+                "description": "The text writing mode family.",
+                "target": ns + "writingMode",
+                "type": "choice",
+                "choices": ["inherit", "lr-tb", "rl-tb", "tb-rl", "lr", "rl", "tb"],
+                "initialValue": "inherit"
+              },
+              {
+                "name": "Text Length",
+                "description": "The text length.",
+                "target": ns + "textLength",
+                "type": "int",
+                "minValue": 1,
+                "maxValue": 2000,
+                "initialValue": ""
+              },
+              {
+                "name": "Length Adjust",
+                "description": "The text length adjustment.",
+                "target": ns + "lengthAdjust",
+                "type": "choice",
+                "choices": ["", "spacing", "spacingAndGlyphs"],
+                "initialValue": ""
+              }
+            ]
+          },
+          dex.config.gui.font(config.font || {}, ns + "font"),
+          dex.config.gui.fill(config.fill || {}, ns + "fill")
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'editableText': function text(config, prefix) {
+      var config = dex.config.gui.text(config, prefix);
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      config.contents[0].contents.unshift(
+        {
+          "name": "Text Contents",
+          "description": "The text.",
+          "target": ns + "text",
+          "type": "string",
+          "initialValue": ""
+        }
+      );
+      return config;
+    },
+    'fill': function fill(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Fill",
+        "contents": [
+          {
+            "name": "Fill",
+            "description": "The fill color or none.",
+            "target": ns + "fill",
+            "type": "choice",
+            "choices": ["none", "red", "green", "blue", "black", "white", "yellow",
+              "purple", "orange", "pink", "cyan", "steelblue", "grey",],
+            "initialValue": "none"
+          },
+          {
+            "name": "Fill",
+            "description": "The text anchor.",
+            "target": ns + "fill",
+            "type": "color"
+          },
+          {
+            "name": "Fill Opacity",
+            "description": "The text anchor.",
+            "target": ns + "opacity",
+            "type": "float",
+            "minValue": 0.0,
+            "maxValue": 1.0,
+            "initialValue": 1.0
+          },
+          {
+            "name": "Fill Rule",
+            "description": "The fill color or none.",
+            "target": ns + "fillRule",
+            "type": "choice",
+            "choices": ["nonzero", "evenodd", "inherit"],
+            "initialValue": "nonzero"
+          }
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'link': function link(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Link",
+        "contents": [
+          dex.config.gui.fill(config.fill || {}, ns + "fill"),
+          dex.config.gui.stroke(config.stroke || {}, ns + "stroke")
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'stroke': function stroke(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Stroke",
+        "contents": [
+          {
+            "name": "Width",
+            "description": "The fill color or none.",
+            "target": ns + "width",
+            "type": "float",
+            "minValue": 0.0,
+            "maxValue": 10.0,
+            "initialValue": 1.0
+          },
+          {
+            "name": "Color",
+            "description": "The stroke color.",
+            "target": ns + "color",
+            "type": "choice",
+            "choices": ["none", "red", "green", "blue", "black", "white", "yellow",
+              "purple", "orange", "pink", "cyan", "steelblue", "grey",],
+            "initialValue": "black"
+          },
+          {
+            "name": "Color",
+            "description": "The stroke color.",
+            "target": ns + "color",
+            "type": "color"
+          },
+          {
+            "name": "Opacity",
+            "description": "The stroke opacity.",
+            "target": ns + "opacity",
+            "type": "float",
+            "minValue": 0.0,
+            "maxValue": 1.0,
+            "initialValue": 1.0
+          },
+          {
+            "name": "Dash Array",
+            "description": "The stroke dash array.",
+            "target": ns + "dasharray",
+            "type": "string",
+            "initialValue": ""
+          },
+          {
+            "name": "transform",
+            "description": "The stroke transformation.",
+            "target": ns + "transform",
+            "type": "string",
+            "initialValue": ""
+          },
+          {
+            "name": "Line Cap",
+            "description": "The line cap.",
+            "target": ns + "lineCap",
+            "type": "choice",
+            "choices": ["inherit", "butt", "round", "square"],
+            "initialValue": "inherit"
+          },
+          {
+            "name": "Line Join",
+            "description": "The line join.",
+            "target": ns + "lineJoin",
+            "type": "choice",
+            "choices": ["miter", "round", "bevel", "inherit"],
+            "initialValue": "miter"
+          },
+          {
+            "name": "Miter Limit",
+            "description": "The miter limit.",
+            "target": ns + "miterLimit",
+            "type": "float",
+            "minValue": 0.0,
+            "maxValue": 20.0,
+            "initialValue": 4.0
+          }
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'general': function general(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "General",
+        "contents": [
+          {
+            "name": "Resizable",
+            "description": "This determines whether the chart is resizable or not.",
+            "target": ns + "resizable",
+            "type": "boolean",
+            "initialValue": true
+          },
+          {
+            "name": "Draggable",
+            "description": "This determines whether the chart is draggable or not.",
+            "target": ns + "draggable",
+            "type": "boolean",
+            "initialValue": false
+          },
+          {
+            "name": "Transform",
+            "description": "A transform to be applied to the chart.",
+            "target": ns + "transform",
+            "type": "string",
+            "initialValue": ""
+          }
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'circle': function circle(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Circle",
+        "contents": [
+          {
+            "type": "group",
+            "name": "General",
+            "contents": [
+              {
+                "name": "Radius",
+                "description": "This determines the radius of the circle.",
+                "target": ns + "r",
+                "type": "float",
+                "minValue": 0,
+                "maxValue": 200,
+                "initialValue": 5
+              },
+              {
+                "name": "Transform",
+                "description": "A transform to be applied to the circle.",
+                "target": ns + "transform",
+                "type": "string",
+                "initialValue": ""
+              }
+            ]
+          },
+          dex.config.gui.fill(config.fill || {}, ns + prefix),
+          dex.config.gui.stroke(config.stroke || {}, ns + prefix)
+        ]
+      };
+      dex.config.gui.fill(config, ns + "fill");
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'path': function path(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Path",
+        "contents": [
+          dex.config.gui.fill(config.fill || {}, ns + prefix),
+          dex.config.gui.stroke(config.stroke || {}, ns + prefix)
+        ]
+      };
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+    'rectangle': function circle(config, prefix) {
+      var ns = (typeof prefix !== 'undefined') ? (prefix + ".") : "";
+      var userConfig = config || {};
+      var defaults = {
+        "type": "group",
+        "name": "Rectangle",
+        "contents": [
+          {
+            "type": "group",
+            "name": "General",
+            "contents": [
+              {
+                "name": "Height",
+                "description": "This determines the height of the rectangle.",
+                "target": ns + "height",
+                "type": "float",
+                "minValue": 0,
+                "maxValue": 200,
+                "initialValue": 5
+              },
+              {
+                "name": "Width",
+                "description": "This determines the width of the rectangle.",
+                "target": ns + "width",
+                "type": "float",
+                "minValue": 0,
+                "maxValue": 200,
+                "initialValue": 5
+              },
+              {
+                "name": "X Radius",
+                "description": "The x radius.",
+                "target": ns + "rx",
+                "type": "float",
+                "minValue": 0,
+                "maxValue": 200,
+                "initialValue": 0
+              },
+              {
+                "name": "Y Radius",
+                "description": "The y radius.",
+                "target": ns + "ry",
+                "type": "float",
+                "minValue": 0,
+                "maxValue": 200,
+                "initialValue": 0
+              },
+              {
+                "name": "Transform",
+                "description": "A transform to be applied to the rectangle.",
+                "target": ns + "transform",
+                "type": "string",
+                "initialValue": ""
+              }
+            ]
+          },
+          dex.config.gui.fill(config.fill || {}, ns + prefix),
+          dex.config.gui.stroke(config.stroke || {}, ns + prefix)
+        ]
+      };
+      dex.config.gui.fill(config, ns + "fill");
+      return dex.config.expandAndOverlay(userConfig, defaults);
+    },
+  };
+};
+},{}],54:[function(require,module,exports){
 /**
  *
  * This module provides console logging capabilities.
@@ -10385,7 +11500,7 @@ module.exports = function (dex) {
     }
   };
 };
-},{}],52:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 /**
  *
  * This module provides support for dealing with csv structures.  This
@@ -10397,294 +11512,294 @@ module.exports = function (dex) {
 
 module.exports = function csv(dex) {
 
-  return {
-    /**
-     *
-     * @param header
-     * @param data
-     * @returns {{header: *, data: *}}
-     */
-    'csv': function (header, data) {
-      var csv = {
-        "header": header,
-        "data": data
-      };
+    return {
+        /**
+         *
+         * @param header
+         * @param data
+         * @returns {{header: *, data: *}}
+         */
+        'csv': function (header, data) {
+            var csv = {
+                "header": header,
+                "data": data
+            };
 
-      return csv;
-    },
+            return csv;
+        },
 
-    /**
-     *
-     * @param csv
-     * @returns {{header: *, data: {header, data}}}
-     */
-    'transpose': function (csv) {
-      return {
-        "header": csv.header,
-        "data": dex.matrix.transpose(csv.data)
-      };
-    },
+        /**
+         *
+         * @param csv
+         * @returns {{header: *, data: {header, data}}}
+         */
+        'transpose': function (csv) {
+            return {
+                "header": csv.header,
+                "data": dex.matrix.transpose(csv.data)
+            };
+        },
 
-    /**
-     * Given a CSV, create a connection matrix suitable for feeding into a chord
-     * diagram.  Ex, given CSV:
-     *
-     * @param csv
-     * @returns {{header: Array, connections: Array}|*}
-     *
-     */
-    'getConnectionMatrix': function (csv) {
-      var matrix = [];
-      var ri, ci;
-      var row;
-      var cid;
-      var header = [];
-      var nameToIndex = {};
-      var connectionMatrix;
-      var uniques;
-      var nameIndices = [];
-      var src, dest;
+        /**
+         * Given a CSV, create a connection matrix suitable for feeding into a chord
+         * diagram.  Ex, given CSV:
+         *
+         * @param csv
+         * @returns {{header: Array, connections: Array}|*}
+         *
+         */
+        'getConnectionMatrix': function (csv) {
+            var matrix = [];
+            var ri, ci;
+            var row;
+            var cid;
+            var header = [];
+            var nameToIndex = {};
+            var connectionMatrix;
+            var uniques;
+            var nameIndices = [];
+            var src, dest;
 
-      // Create a list of unique values to relate to one another.
-      uniques = dex.matrix.uniques(csv.data);
-      // Flatten them into our header.
-      header = dex.matrix.flatten(uniques);
+            // Create a list of unique values to relate to one another.
+            uniques = dex.matrix.uniques(csv.data);
+            // Flatten them into our header.
+            header = dex.matrix.flatten(uniques);
 
-      // Create a map of names to header index for each column.
-      nameToIndex = new Array(uniques.length);
-      for (ri = 0, cid = 0; ri < uniques.length; ri++) {
-        nameToIndex[ri] =
-          {};
-        for (ci = 0; ci < uniques[ri].length; ci++) {
-          nameToIndex[ri][header[cid]] = cid;
-          cid += 1;
-        }
-      }
+            // Create a map of names to header index for each column.
+            nameToIndex = new Array(uniques.length);
+            for (ri = 0, cid = 0; ri < uniques.length; ri++) {
+                nameToIndex[ri] =
+                    {};
+                for (ci = 0; ci < uniques[ri].length; ci++) {
+                    nameToIndex[ri][header[cid]] = cid;
+                    cid += 1;
+                }
+            }
 
-      // Create a N x N matrix of zero values.
-      matrix = new Array(header.length);
-      for (ri = 0; ri < header.length; ri++) {
-        row = new Array(header.length);
-        for (ci = 0; ci < header.length; ci++) {
-          row[ci] = 0;
-        }
-        matrix[ri] = row;
-      }
-      //dex.console.log("nameToIndex", nameToIndex, "matrix", matrix);
+            // Create a N x N matrix of zero values.
+            matrix = new Array(header.length);
+            for (ri = 0; ri < header.length; ri++) {
+                row = new Array(header.length);
+                for (ci = 0; ci < header.length; ci++) {
+                    row[ci] = 0;
+                }
+                matrix[ri] = row;
+            }
+            //dex.console.log("nameToIndex", nameToIndex, "matrix", matrix);
 
-      for (ri = 0; ri < csv.data.length; ri++) {
-        for (ci = 1; ci < csv.header.length; ci++) {
-          src = nameToIndex[ci - 1][csv.data[ri][ci - 1]];
-          dest = nameToIndex[ci][csv.data[ri][ci]];
+            for (ri = 0; ri < csv.data.length; ri++) {
+                for (ci = 1; ci < csv.header.length; ci++) {
+                    src = nameToIndex[ci - 1][csv.data[ri][ci - 1]];
+                    dest = nameToIndex[ci][csv.data[ri][ci]];
 
-          //dex.console.log(csv.data[ri][ci-1] + "<->" + csv.data[ri][ci], src + "<->" + dest);
-          matrix[src][dest] = 1;
-          matrix[dest][src] = 1;
-        }
-      }
+                    //dex.console.log(csv.data[ri][ci-1] + "<->" + csv.data[ri][ci], src + "<->" + dest);
+                    matrix[src][dest] = 1;
+                    matrix[dest][src] = 1;
+                }
+            }
 
-      connectionMatrix = {"header": header, "connections": matrix};
-      //dex.console.log("Connection Matrix", connectionMatrix);
-      return connectionMatrix;
-    },
+            connectionMatrix = {"header": header, "connections": matrix};
+            //dex.console.log("Connection Matrix", connectionMatrix);
+            return connectionMatrix;
+        },
 
-    'getColumnNumber': function (csv, colIndex) {
-      if (colIndex === undefined) {
-        return -1;
-      }
+        'getColumnNumber': function (csv, colIndex) {
+            if (colIndex === undefined) {
+                return -1;
+            }
 
-      var colNum = csv.header.indexOf(colIndex);
+            var colNum = csv.header.indexOf(colIndex);
 
-      if (colNum >= 0) {
-        return colNum;
-      }
+            if (colNum >= 0) {
+                return colNum;
+            }
 
-      if (colIndex >= 0 && colIndex < csv.header.length) {
-        return colIndex;
-      }
+            if (colIndex >= 0 && colIndex < csv.header.length) {
+                return colIndex;
+            }
 
-      return -1;
-    },
+            return -1;
+        },
 
-    /**
-     *  Given a csv and a column index, return the name of the column.
-     *  If a string is supplied, return the string if it is the name
-     *  of a header.  If an integer is supplied, return the name of
-     *  the header if that header exists.  This allows us to enable
-     *  users to index columns via header name or by index.
-     *
-     * @param csv The csv for which we're retrieving the column name.
-     * @param colIndex The name of the column header or its index.
-     *
-     * @returns {*} Null if the column index does not exist, the name
-     * of the corresponding header otherwise.
-     */
-    'getColumnName': function (csv, colIndex) {
-      if (colIndex === undefined) {
-        return null;
-      }
+        /**
+         *  Given a csv and a column index, return the name of the column.
+         *  If a string is supplied, return the string if it is the name
+         *  of a header.  If an integer is supplied, return the name of
+         *  the header if that header exists.  This allows us to enable
+         *  users to index columns via header name or by index.
+         *
+         * @param csv The csv for which we're retrieving the column name.
+         * @param colIndex The name of the column header or its index.
+         *
+         * @returns {*} Null if the column index does not exist, the name
+         * of the corresponding header otherwise.
+         */
+        'getColumnName': function (csv, colIndex) {
+            if (colIndex === undefined) {
+                return null;
+            }
 
-      if (colIndex >= 0 && colIndex < csv.header.length) {
-        return csv.header[colIndex];
-      }
+            if (colIndex >= 0 && colIndex < csv.header.length) {
+                return csv.header[colIndex];
+            }
 
-      if (csv.header.indexOf(colIndex) >= 0) {
-        return colIndex;
-      }
+            if (csv.header.indexOf(colIndex) >= 0) {
+                return colIndex;
+            }
 
-      return null;
-    },
+            return null;
+        },
 
-    /**
-     *
-     * Retrieve the column referred to by the column index.  The
-     * column index can be a header name or a value column number.
-     *
-     * @param csv The csv we're retrieving the data from.
-     * @param colIndex The index of the column we wish to retrieve.
-     *
-     */
-    'getColumnData': function (csv, colIndex) {
-      var i = dex.csv.getColumnNumber(csv, colIndex);
+        /**
+         *
+         * Retrieve the column referred to by the column index.  The
+         * column index can be a header name or a value column number.
+         *
+         * @param csv The csv we're retrieving the data from.
+         * @param colIndex The index of the column we wish to retrieve.
+         *
+         */
+        'getColumnData': function (csv, colIndex) {
+            var i = dex.csv.getColumnNumber(csv, colIndex);
 
-      return csv.data.map(function (row) {
-        return row[i];
-      });
-    },
+            return csv.data.map(function (row) {
+                return row[i];
+            });
+        },
 
-    /**
-     *
-     * @param csv
-     * @param keyIndex - Numerical header index or name.
-     * @returns {{}}
-     */
-    'createMap': function (csv, keyIndex) {
-      // CSV undefined
-      if (csv === undefined) {
-        throw "dex.csv.createMap(csv, keyIndex) : csv is undefined.";
-      }
-      if (keyIndex === undefined) {
-        keyIndex = 0;
-      }
-      else {
-        // 0 : number
-        // [0] : object
-        // '0' : string
-        dex.console.log("UNKNOWN-TYPE", typeof(keyIndex));
-      }
-      return {};
-    },
+        /**
+         *
+         * @param csv
+         * @param keyIndex - Numerical header index or name.
+         * @returns {{}}
+         */
+        'createMap': function (csv, keyIndex) {
+            // CSV undefined
+            if (csv === undefined) {
+                throw "dex.csv.createMap(csv, keyIndex) : csv is undefined.";
+            }
+            if (keyIndex === undefined) {
+                keyIndex = 0;
+            }
+            else {
+                // 0 : number
+                // [0] : object
+                // '0' : string
+                dex.console.log("UNKNOWN-TYPE", typeof(keyIndex));
+            }
+            return {};
+        },
 
-    'json2Csv': function (json) {
-      var csv = {'header': [], 'data': []};
-      if (_.isUndefined(json) || json.length <= 0) {
-        return csv;
-      }
-      csv.header = _.keys(json[0]);
-      json.forEach(function (jsonRow) {
-        var row = [];
-        csv.header.forEach(function (columnName) {
-          row.push(jsonRow[columnName]);
-        });
-        csv.data.push(row);
-      });
+        'json2Csv': function (json) {
+            var csv = {'header': [], 'data': []};
+            if (_.isUndefined(json) || json.length <= 0) {
+                return csv;
+            }
+            csv.header = _.keys(json[0]);
+            json.forEach(function (jsonRow) {
+                var row = [];
+                csv.header.forEach(function (columnName) {
+                    row.push(jsonRow[columnName]);
+                });
+                csv.data.push(row);
+            });
 
-      return csv;
-    },
+            return csv;
+        },
 
-    /**
-     *
-     * @param csv
-     * @param rowIndex
-     * @param columnIndex
-     * @returns {*}
-     */
-    'toJson': function (csv, rowIndex, columnIndex) {
-      var jsonData = [];
-      var ri, ci, jsonRow;
+        /**
+         *
+         * @param csv
+         * @param rowIndex
+         * @param columnIndex
+         * @returns {*}
+         */
+        'toJson': function (csv, rowIndex, columnIndex) {
+            var jsonData = [];
+            var ri, ci, jsonRow;
 
-      if (arguments.length >= 3) {
-        jsonRow = {};
-        jsonRow[csv.header[columnIndex]] = csv.data[rowIndex][columnIndex];
-        return jsonRow;
-      }
-      else if (arguments.length === 2) {
-        var jsonRow =
-          {};
-        for (ci = 0; ci < csv.header.length; ci += 1) {
-          jsonRow[csv.header[ci]] = csv.data[rowIndex][ci];
-        }
-        return jsonRow;
-      }
-      else if (arguments.length === 1) {
-        for (ri = 0; ri < csv.data.length; ri++) {
-          var jsonRow =
-            {};
-          for (ci = 0; ci < csv.header.length; ci++) {
-            jsonRow[csv.header[ci]] = csv.data[ri][ci];
-            //dex.console.log(csv.header[ci] + "=" + csv.data[ri][ci], jsonRow);
-          }
-          jsonData.push(jsonRow);
-        }
-      }
-      return jsonData;
-    },
+            if (arguments.length >= 3) {
+                jsonRow = {};
+                jsonRow[csv.header[columnIndex]] = csv.data[rowIndex][columnIndex];
+                return jsonRow;
+            }
+            else if (arguments.length === 2) {
+                var jsonRow =
+                    {};
+                for (ci = 0; ci < csv.header.length; ci += 1) {
+                    jsonRow[csv.header[ci]] = csv.data[rowIndex][ci];
+                }
+                return jsonRow;
+            }
+            else if (arguments.length === 1) {
+                for (ri = 0; ri < csv.data.length; ri++) {
+                    var jsonRow =
+                        {};
+                    for (ci = 0; ci < csv.header.length; ci++) {
+                        jsonRow[csv.header[ci]] = csv.data[ri][ci];
+                        //dex.console.log(csv.header[ci] + "=" + csv.data[ri][ci], jsonRow);
+                    }
+                    jsonData.push(jsonRow);
+                }
+            }
+            return jsonData;
+        },
 
-    /**
-     *
-     * @param csv
-     * @returns {{}}
-     */
-    'toColumnArrayJson': function (csv) {
-      var json = {};
-      var ri, ci, jsonRow;
+        /**
+         *
+         * @param csv
+         * @returns {{}}
+         */
+        'toColumnArrayJson': function (csv) {
+            var json = {};
+            var ri, ci, jsonRow;
 
-      if (arguments.length === 1) {
-        for (ci = 0; ci < csv.header.length; ci++) {
-          json[csv.header[ci]] = [];
-        }
+            if (arguments.length === 1) {
+                for (ci = 0; ci < csv.header.length; ci++) {
+                    json[csv.header[ci]] = [];
+                }
 
-        for (ri = 0; ri < csv.data.length; ri++) {
-          for (ci = 0; ci < csv.header.length; ci++) {
-            json[csv.header[ci]].push(csv.data[ri][ci]);
-          }
-        }
-      }
+                for (ri = 0; ri < csv.data.length; ri++) {
+                    for (ci = 0; ci < csv.header.length; ci++) {
+                        json[csv.header[ci]].push(csv.data[ri][ci]);
+                    }
+                }
+            }
 
-      return json;
-    },
+            return json;
+        },
 
-    /**
-     *
-     * Make a copy of this csv.
-     *
-     * @param {csv} csv The csv to copy.
-     * @returns {csv} A copy of the original csv.
-     *
-     */
-    'copy': function (csv) {
-      var copy = {
-        'header': dex.array.copy(csv.header),
-        'data': dex.matrix.copy(csv.data)
-      };
-      return copy;
-    },
+        /**
+         *
+         * Make a copy of this csv.
+         *
+         * @param {csv} csv The csv to copy.
+         * @returns {csv} A copy of the original csv.
+         *
+         */
+        'copy': function (csv) {
+            var copy = {
+                'header': dex.array.copy(csv.header),
+                'data': dex.matrix.copy(csv.data)
+            };
+            return copy;
+        },
 
-    /**
-     *
-     * A utility transform for dealing with some of D3's more finiky formats.
-     *
-     * csv =
-     * {
+        /**
+         *
+         * A utility transform for dealing with some of D3's more finiky formats.
+         *
+         * csv =
+         * {
  * 	 header : {C1,C2,C3},
  *   data   : [
  *     [A,B,C],
  *     [A,B,D]
  *   ]
  * }
-     * into:
-     * json =
-     * {
+         * into:
+         * json =
+         * {
  * 	"name"     : rootName,
  *  "category" : category,
  *  "children" :
@@ -10718,838 +11833,854 @@ module.exports = function csv(dex) {
  *     ]
  *  ]
  * }
-     *
-     * @param {Object} csv
-     */
-    'toHierarchicalJson': function (csv) {
-      var connections = dex.csv.connections(csv);
-      return getChildren(connections, 0);
+         *
+         * @param {Object} csv
+         */
+        'toHierarchicalJson': function (csv) {
+            var connections = dex.csv.connections(csv);
+            return getChildren(connections, 0);
 
-      function getChildren(connections, depth) {
-        //dex.console.log("connections:", connections, "depth="+depth);
-        var kids = [], cname;
+            function getChildren(connections, depth) {
+                //dex.console.log("connections:", connections, "depth="+depth);
+                var kids = [], cname;
 
-        if (typeof connections === 'undefined') {
-          return kids;
-        }
+                if (typeof connections === 'undefined') {
+                    return kids;
+                }
 
-        for (cname in connections) {
-          //dex.console.log("CNAME", cname);
-          if (connections.hasOwnProperty(cname)) {
-            kids.push(createChild(cname, csv.header[depth],
-              getChildren(connections[cname], depth + 1)));
-          }
-        }
+                for (cname in connections) {
+                    //dex.console.log("CNAME", cname);
+                    if (connections.hasOwnProperty(cname)) {
+                        kids.push(createChild(cname, csv.header[depth],
+                            getChildren(connections[cname], depth + 1)));
+                    }
+                }
 
-        return kids;
-      }
+                return kids;
+            }
 
-      function createChild(name, category, children) {
-        var child =
-          {
-            "name": name,
-            "category": category,
-            "children": children
-          };
-        return child;
-      }
-    },
+            function createChild(name, category, children) {
+                var child =
+                    {
+                        "name": name,
+                        "category": category,
+                        "children": children
+                    };
+                return child;
+            }
+        },
 
-    /**
-     *
-     * Transforms:
-     * csv =
-     * {
+        /**
+         *
+         * Transforms:
+         * csv =
+         * {
  * 	 header : {C1,C2,C3},
  *   data   : [
  *     [A,B,C],
  *     [A,B,D]
  *   ]
  * }
-     * into:
-     * connections =
-     * { A:{B:{C:{},D:{}}}}
-     *
-     * @param {Object} csv
-     *
-     */
-    'connections': function (csv) {
-      var connections =
-        {};
-      var ri;
+         * into:
+         * connections =
+         * { A:{B:{C:{},D:{}}}}
+         *
+         * @param {Object} csv
+         *
+         */
+        'connections': function (csv) {
+            var connections =
+                {};
+            var ri;
 
-      for (ri = 0; ri < csv.data.length; ri++) {
-        dex.object.connect(connections, csv.data[ri]);
-      }
-
-      //dex.console.log("connections:", connections);
-      return connections;
-    },
-
-    /**
-     *
-     * @param csv
-     * @param keyIndex
-     * @returns {{}}
-     *
-     */
-    'createRowMap': function (csv, keyIndex) {
-      var map =
-        {};
-      var ri;
-
-      for (ri = 0; ri < csv.data.length; ri++) {
-        if (csv.data[ri].length == csv.header.length) {
-          map[csv.data[ri][keyIndex]] = csv.data[ri];
-        }
-      }
-      return map;
-    },
-
-    /**
-     *
-     * @param csv
-     * @param columns
-     * @returns {{}}
-     */
-    'columnSlice': function (csv, columns) {
-      var slice = {};
-      var columnNumbers = columns.map(function (column) {
-        return dex.csv.getColumnNumber(csv, column);
-      });
-
-      slice.header = dex.array.slice(csv.header, columnNumbers);
-      slice.data = dex.matrix.slice(csv.data, columnNumbers);
-
-      return slice;
-    },
-
-    /**
-     *
-     * @param csv
-     * @returns {Array}
-     */
-    'getNumericColumnNames': function (csv) {
-      var possibleNumeric =
-        {};
-      var i, j, ri, ci;
-      var numericColumns = [];
-
-      for (i = 0; i < csv.header.length; i++) {
-        possibleNumeric[csv.header[i]] = true;
-      }
-
-      // Iterate thru the data, skip the header.
-      for (ri = 0; ri < csv.data.length; ri++) {
-        for (ci = 0; ci < csv.data[ri].length && ci < csv.header.length; ci++) {
-          if (possibleNumeric[csv.header[ci]] && !dex.object.isNumeric(csv.data[ri][ci])) {
-            possibleNumeric[csv.header[ci]] = false;
-          }
-        }
-      }
-
-      for (ci = 0; ci < csv.header.length; ci++) {
-        if (possibleNumeric[csv.header[ci]]) {
-          numericColumns.push(csv.header[ci]);
-        }
-      }
-
-      return numericColumns;
-    },
-
-    /**
-     *
-     * @param csv
-     * @returns {Array}
-     */
-    'guessTypes': function (csv) {
-      var i = 0;
-      var testResults = [];
-      csv.header.forEach(function (hdr) {
-        testResults.push({})
-      });
-      var numCols = csv.header.length;
-
-      csv.data.forEach(function (row) {
-        for (i = 0; i < numCols; i++) {
-
-          if (!testResults[i]["notDate"]) {
-            var date = new Date(row[i]);
-            if (isNaN(date.getTime())) {
-              //dex.console.log("not date" + i);
-              testResults[i]["notDate"] = true;
+            for (ri = 0; ri < csv.data.length; ri++) {
+                dex.object.connect(connections, csv.data[ri]);
             }
-          }
 
-          if (!testResults[i]["notNumber"]) {
-            if (isNaN(row[i])) {
-              testResults[i]["notNumber"] = true;
+            //dex.console.log("connections:", connections);
+            return connections;
+        },
+
+        /**
+         *
+         * @param csv
+         * @param keyIndex
+         * @returns {{}}
+         *
+         */
+        'createRowMap': function (csv, keyIndex) {
+            var map =
+                {};
+            var ri;
+
+            for (ri = 0; ri < csv.data.length; ri++) {
+                if (csv.data[ri].length == csv.header.length) {
+                    map[csv.data[ri][keyIndex]] = csv.data[ri];
+                }
             }
-          }
-        }
-      });
-
-      var types = [];
-
-      for (i = 0; i < numCols; i++) {
-        var results = testResults[i];
-        if (!results.notDate && results.notNumber) {
-          types.push('date');
-        }
-        else if (!results.notNumber) {
-          types.push('number');
-        }
-        else {
-          types.push('string');
-        }
-      }
-
-      return types;
-    },
-
-    /**
-     *
-     * @param csv
-     * @returns {*}
-     */
-    'strictTypes': function strictTypes(csv) {
-      var types = dex.csv.guessTypes(csv);
-
-      for (var i = 0; i < types.length; i++) {
-        if (types[i] == 'date') {
-          csv.data.forEach(function (row, ri) {
-            csv.data[ri][i] = new Date(csv.data[ri][i]);
-          })
-        }
-        else {
-          if (types[i] == 'number') {
-            csv.data.forEach(function (row, ri) {
-              dex.console.log("row[" + ri + "]=" + row[ri]);
-              csv.data[ri][i] = new Double(csv.data[ri][i]);
-            })
-          }
-        }
-      }
-
-      return csv;
-    },
-
-    'getRankedCsv': function (csv, nameIndex, sequenceIndex, valueIndex, options) {
-      var rankedCsv = dex.csv.copy(csv);
-      var opts = options || {};
-      var orderDescending = opts.descending || false;
-
-      var si = dex.csv.getColumnNumber(csv, sequenceIndex);
-      var ni = dex.csv.getColumnNumber(csv, nameIndex);
-      var vi = dex.csv.getColumnNumber(csv, valueIndex);
-
-      rankedCsv.data.sort(function (row1, row2) {
-        if (+row1[si] == +row2[si]) {
-          if (+row1[vi] == +row2[vi]) {
-            if (row1[ni] < row2[ni]) {
-              return -1;
-            }
-            else if (row1[ni] > row2[ni]) {
-              return 1;
-            }
-            else {
-              return 0;
-            }
-          }
-          else {
-            if (orderDescending) {
-              return +row2[vi] - +row1[vi];
-            }
-            else {
-              return +row1[vi] - +row2[vi];
-            }
-          }
-        }
-        else {
-          return +row1[si] - +row2[si];
-        }
-      });
-
-      rankedCsv.header.push("rank");
-      var rank = 0;
-      var prev = undefined;
-      rankedCsv.data.forEach(function (row) {
-        if (prev == row[si]) {
-          rank++;
-          row.push(rank);
-        }
-        else {
-          row.push(1);
-          rank = 1;
-        }
-        prev = row[si];
-      });
-
-      return rankedCsv;
-    },
-
-    'uniqueArray': function (csv, columnIndex) {
-      return dex.array.unique(dex.matrix.flatten(
-        dex.matrix.slice(csv.data, [columnIndex])));
-    },
-
-    'uniques': function (csv, columns) {
-      return dex.matrix.uniques(csv.data, columns);
-    },
-
-    'selectRows': function (csv, fn) {
-      var subset = [];
-      csv.data.forEach(function (row) {
-        if (fn(row)) {
-          subset.push(row);
-        }
-      });
-
-      return {'header': csv.header, 'data': subset};
-    },
-
-    'extent': function (csv, columns) {
-      return dex.matrix.extent(csv.data, columns);
-    },
-
-    /**
-     *
-     * This routine will return a frames structure based on a csv and
-     * an index.  It will first identify all unique values within the
-     * selected column, then sort them into an array of frame indexes.
-     * From there, it will return an array of csv where the elements
-     * contain the specified frame index at the cooresponding location.
-     * This routine supports things such as time/value filtering for
-     * things like a time or slicing dimension for various charts.
-     * IE: No need to write a motion bubble chart, simply combine a
-     * vcr-player with a regular bubble chart connected to play/rewind
-     * events and motion will follow.
-     *
-     * @param csv
-     * @param columnIndex
-     * @returns {{frameIndices: Array.<T>, frames: Array}}
-     */
-    'getFramesByIndex': function (csv, columnIndex) {
-      var types = dex.csv.guessTypes(csv);
-      //dex.console.log("TYPES", types);
-      var frameIndices;
-
-      if (types[columnIndex] == "number") {
-        frameIndices = _.uniq(csv.data.map(function (row) {
-          return row[columnIndex]
-        })).sort(function (a, b) {
-          return a - b
-        });
-      }
-      else if (types[columnIndex] == "date") {
-        frameIndices = _.uniq(csv.data.map(function (row) {
-          return row[columnIndex]
-        })).sort(function (a, b) {
-          a = new Date(a);
-          b = new Date(b);
-          return a > b ? 1 : a < b ? -1 : 0;
-        });
-      }
-      else {
-        frameIndices = _.uniq(csv.data.map(function (row) {
-          return row[columnIndex]
-        })).sort();
-      }
-      //dex.console.log("FRAME-INDICES", frameIndices)
-      var header = dex.array.copy(csv.header);
-      var frameIndexName = header.splice(columnIndex, 1);
-      var frames = [];
-
-      for (var fi = 0; fi < frameIndices.length; fi++) {
-        var frame = {header: header};
-        var frameData = [];
-
-        for (var ri = 0; ri < csv.data.length; ri++) {
-          if (csv.data[ri][columnIndex] == frameIndices[fi]) {
-            var frameRow = dex.array.copy(csv.data[ri]);
-            frameRow.splice(columnIndex, 1);
-            frameData.push(frameRow);
-          }
-        }
-        frame["data"] = frameData;
-        frames.push(frame);
-      }
-
-      return {
-        'frameIndices': frameIndices,
-        'frames': frames
-      }
-    },
-
-    /**
-     *
-     * Frame out a csv based on non-distinct permutations.  Exclude the
-     * column pointed to by groupIndex from the permutations.  This will
-     * be used to group and typically color the various series contained
-     * within the frames.  A set of frames suitable for SPLOM might be
-     * generated via a call of getPermutationFrames(csv, 2).  However, as
-     * this is written generically, it will also support higher order
-     * dimensions as well.
-     *
-     * @param csv The csv we wish to frame.
-     * @param permutationSize The length of the desired permutations.
-     * @param groupIndex The index of we are grouping upon.
-     * @returns {{frameIndices: Array, frames: Array}}
-     *
-     */
-
-    'getPermutationFrames': function (csv, permutationSize, groupIndex) {
-      var gi = dex.csv.getColumnNumber(csv, groupIndex);
-
-      var plist = dex.range(0, csv.header.length - 1);
-      if (gi >= 0) {
-        plist.splice(gi, 1);
-      }
-      var permutations = dex.array.getPermutations(plist, permutationSize);
-
-      return dex.csv.getFrames(csv, permutations, gi);
-    },
-
-    'getCombinationFrames': function (csv, comboFrames, groupIndex) {
-      var gi = dex.csv.getColumnNumber(csv, groupIndex);
-
-      var plist = dex.range(0, csv.header.length - 1);
-      if (gi >= 0) {
-        plist.splice(gi, 1);
-      }
-      var combos = dex.array.getCombinations(plist, comboFrames);
-
-      return dex.csv.getFrames(csv, combos, gi);
-    },
-
-    'getFrames': function (csv, permutations, groupIndex) {
-      var frameIndices = [];
-      var frames = [];
-      var gi = dex.csv.getColumnNumber(csv, groupIndex);
-
-      permutations.forEach(function (permutation) {
-
-        frameIndices.push(permutation.map(function (hi) {
-          return csv.header[hi];
-        }).join(" vs "));
-
-        var columnIndices = dex.array.copy(permutation);
-        if (gi >= 0) {
-          columnIndices.unshift(gi);
-        }
-
-        frames.push(dex.csv.columnSlice(csv, columnIndices));
-      });
-
-      return {'frameIndices': frameIndices, 'frames': frames};
-    },
-
-    /**
-     *
-     * @param csv
-     * @returns {Array}
-     */
-    'getNumericIndices': function (csv) {
-      var possibleNumeric =
-        {};
-      var i, j;
-      var numericIndices = [];
-
-      for (i = 0; i < csv.header.length; i++) {
-        possibleNumeric[csv.header[i]] = true;
-      }
-
-      // Iterate thru the data, skip the header.
-      for (i = 1; i < csv.data.length; i++) {
-        for (j = 0; j < csv.data[i].length && j < csv.header.length; j++) {
-          if (possibleNumeric[csv.header[j]] && !dex.object.isNumeric(csv.data[i][j])) {
-            console.log("csv.header[" + j + "]=" + csv.header[j] + " is not numeric due to csv.data[" + i + "]["
-              + j + "]=" + csv.data[i][j]);
-            possibleNumeric[csv.header[j]] = false;
-          }
-        }
-      }
-
-      for (i = 0; i < csv.header.length; i++) {
-        if (possibleNumeric[csv.header[i]]) {
-          numericIndices.push(i);
-        }
-      }
-
-      return numericIndices;
-    },
-
-    'getCategoricalIndices': function (csv) {
-      var possibleNumeric =
-        {};
-      var i, j;
-      var categoricalIndices = [];
-
-      for (i = 0; i < csv.header.length; i++) {
-        possibleNumeric[csv.header[i]] = true;
-      }
-
-      // Iterate thru the data, skip the header.
-      for (i = 1; i < csv.data.length; i++) {
-        for (j = 0; j < csv.data[i].length && j < csv.header.length; j++) {
-          if (possibleNumeric[csv.header[j]] && !dex.object.isNumeric(csv.data[i][j])) {
-            console.log("csv.header[" + j + "]=" + csv.header[j] + " is not numeric due to csv.data[" + i + "]["
-              + j + "]=" + csv.data[i][j]);
-            possibleNumeric[csv.header[j]] = false;
-          }
-        }
-      }
-
-      for (i = 0; i < csv.header.length; i++) {
-        if (!possibleNumeric[csv.header[i]]) {
-          categoricalIndices.push(i);
-        }
-      }
-
-      return categoricalIndices;
-    },
-
-    /**
-     *
-     * @param csv
-     * @param columnNum
-     * @returns {boolean}
-     */
-    'isColumnNumeric': function (csv, columnNum) {
-      var i;
-
-      for (i = 0; i < csv.data.length; i++) {
-        if (!dex.object.isNumeric(csv.data[i][columnNum])) {
-          return false;
-        }
-      }
-      return true;
-    },
-
-    /**
-     *
-     * Given a series of categorical indices into a csv which
-     * contains some numeric data, create a new CSV where the
-     * first column is the aggregated categorical indices and
-     * the contents are the sum of numeric columns matching the
-     * aggregated categories.
-     *
-     * @param csv The csv to summarize.
-     * @param columnIndexes The indices to be used in summarization.
-     *
-     * @returns {{header, data: Array}}
-     */
-    'summary': function (csv, columnIndexes) {
-      // Create summary data groups csv.
-      var summaryGroups = dex.csv.columnSlice(csv, columnIndexes);
-
-      // Calculate the indices we will be summarizing.  Omit any
-      // numeric indices contained in the grouping.
-      var summaryIndices = dex.csv.getNumericIndices(csv)
-        .filter(function (el) {
-          return columnIndexes.indexOf(el) < 0;
-        });
-
-      // Extract a csv containing only what we are summarizing.
-      var ncsv = dex.csv.columnSlice(csv, summaryIndices);
-
-      // Initialize a name value pair structure where the key is
-      // the aggregated group values.
-      var summaryMap = {};
-      summaryGroups.data.forEach(function (row) {
-        if (!summaryMap[row.join(":")]) {
-          summaryMap[row.join(":")] =
-            Array.apply(null, Array(summaryIndices.length))
-              .map(Number.prototype.valueOf, 0);
-        }
-      });
-
-      // Add up the summary.
-      for (var i = 0; i < ncsv.data.length; i++) {
-        var key = summaryGroups.data[i].join(":");
-        for (var j = 0; j < ncsv.data[i].length; j++) {
-          summaryMap[key][j] += ncsv.data[i][j];
-        }
-      }
-
-      // Create the base summary csv.
-      var summary = {
-        "header": ncsv.header,
-        "data": []
-      };
-      // Prepend the aggregated summary name to the csv header.
-      summary.header.unshift(summaryGroups.header.join(":"));
-
-      // Iterate over each summary entry creating a row for each.
-      for (key in summaryMap) {
-        var data = summaryMap[key];
-        data.unshift(key);
-        summary.data.push(data);
-      }
-
-      // Return it back to the user.
-      return summary;
-    },
-
-    /**
-     *
-     * @param csv
-     * @param columns
-     * @returns {*}
-     */
-    'group': function (csv, columns) {
-      var ri, ci;
-      var groups = {};
-      var returnGroups = [];
-      var values;
-      var key;
-      var otherColumns;
-      var otherHeaders;
-      var groupName;
-
-      if (arguments < 2) {
-        return csv;
-      }
-
-      function compare(a, b) {
-        var si, h;
-
-        for (si = 0; si < columns.length; si++) {
-          h = csv.header[columns[si]]
-          if (a[h] < b[h]) {
-            return -1;
-          }
-          else if (a[h] > b[h]) {
-            return 1
-          }
-        }
-
-        return 0;
-      }
-
-      //otherColumns = dex.array.difference(dex.range(0, csv.header.length), columns);
-      //otherHeaders = dex.array.slice(csv.header, otherColumns);
-
-      for (ri = 0; ri < csv.data.length; ri += 1) {
-        values = dex.array.slice(csv.data[ri], columns);
-        key = values.join(':::');
-
-        if (groups[key]) {
-          group = groups[key];
-        }
-        else {
-          //group = { 'csv' : dex.csv.csv(otherHeaders, []) };
-          group =
-            {
-              'key': key,
-              'values': [],
-              'csv': dex.csv.csv(csv.header, [])
-            };
-          for (ci = 0; ci < values.length; ci++) {
-            group.values.push({'name': csv.header[columns[ci]], 'value': values[ci]});
-          }
-          groups[key] = group;
-        }
-        //group.csv.data.push(dex.array.slice(csv.data[ri], otherColumns));
-        group.csv.data.push(csv.data[ri]);
-        //groups[key] = group;
-      }
-
-      for (groupName in groups) {
-        if (groups.hasOwnProperty(groupName)) {
-          returnGroups.push(groups[groupName]);
-        }
-      }
-
-      return returnGroups.sort(compare);
-    },
-
-    /**
-     *
-     * @param csv
-     * @param func
-     */
-    'visitCells': function (csv, func) {
-      var ci, ri;
-
-      for (ri = 0; ri < csv.data.length; ri++) {
-        for (ci = 0; ci < csv.header.length; ci++) {
-          func(ci, ri, csv.data[ri][ci]);
-        }
-      }
-    },
-
-    /**
-     *
-     * @param csv
-     * @returns {number}
-     */
-    'longestWord': function (csv) {
-      var longest = 0;
-      for (var row = 0; row < csv.data.length; row++) {
-        for (var col = 0; col < csv.data[row].length; col++) {
-          if (longest < csv.data[row][col].length) {
-            longest = csv.data[row][col].length;
-          }
-        }
-      }
-      return longest;
-    },
-
-    /**
-     *
-     * @param csv
-     * @returns {{}|*}
-     */
-    'numericSubset': function (csv) {
-      return dex.csv.columnSlice(csv, dex.csv.getNumericIndices(csv));
-    },
-
-    'categoricalSubset': function (csv) {
-      return dex.csv.columnSlice(csv, dex.csv.getCategoricalIndices(csv));
-    },
-
-    'toJsonHierarchy': function (csv, ci) {
-      // If 1 argument, then setup and call with 2.
-      if (arguments.length == 1) {
-        var result = {'name': 'root', children: dex.csv.toJsonHierarchy(csv, 0)};
-        //dex.console.log("RESULT", result);
-        return result;
-      }
-      else if (arguments.length == 2) {
-        var valueMap = {};
-
-        for (var ri = 0; ri < csv.data.length; ri++) {
-          if (valueMap.hasOwnProperty(csv.data[ri][ci])) {
-            valueMap[csv.data[ri][ci]]++;
-          }
-          else {
-            valueMap[csv.data[ri][ci]] = 1;
-          }
-        }
-
-        if (ci >= csv.header.length - 1) {
-          return _.keys(valueMap).map(function (key) {
-            return {'name': key, 'size': valueMap[key]};
-          });
-        }
-        else {
-          return _.keys(valueMap).map(function (key) {
-            return {'name': key, 'size': valueMap[key]};
-          });
-        }
-      }
-    },
-
-    'getGraph': function (csv) {
-
-      var nodes = [];
-      var links = [];
-      var nodeNum = 0;
-      var indexMap = [];
-
-      // Record uniques across the data, treating each column as it's own namespace.
-      csv.header.map(function (col, ci) {
-        indexMap.push({});
-        csv.data.map(function (row, ri) {
-          if (_.isUndefined(indexMap[ci][row[ci]])) {
-            indexMap[ci][row[ci]] = nodeNum;
-            nodes.push({'name': row[ci]});
-            nodeNum++;
-          }
-        });
-      });
-
-      for (var ci = 1; ci < csv.header.length; ci++) {
-        csv.data.map(function (row, ri) {
-          links.push({'source': indexMap[ci - 1][row[ci - 1]], 'target': indexMap[ci][row[ci]], 'value': 1});
-        });
-      }
-
-      //dex.console.log("NODES", nodes, links, indexMap);
-      return {'nodes': nodes, 'links': links};
-    },
-
-    'toNestedJson': function (csv, manualWeight) {
-      manualWeight = manualWeight || false;
-      //dex.console.log("CMAP", dex.csv.getConnectionMap(csv), manualWeight);
-      var result = {
-        'name': csv.header[0],
-        'children': dex.csv.toNestedJsonChildren(
-          dex.csv.getConnectionMap(csv), manualWeight)
-      };
-      //dex.console.log("toNestedJson.result()", result);
-      return result;
-    },
-
-    'toNestedJsonChildren': function (cmap, manualWeight) {
-      manualWeight = manualWeight || false;
-      //dex.console.log("CMAP", cmap);
-      var children = [];
-      _.keys(cmap).map(function (key) {
-        var childMap = cmap[key];
-
-        if (_.keys(childMap).length <= 0) {
-          //dex.console.log("Child Map 0", childMap, cmap);
-          children.push({'name': key, 'size': 1});
-        }
-        else if (manualWeight) {
-
-          var props = Object.getOwnPropertyNames(childMap);
-          //dex.console.log("KEY", key, "childMap", childMap, "cm.props", props);
-
-          if (props.length == 1) {
-            var props2 = Object.getOwnPropertyNames(childMap[props[0]]);
-            //dex.console.log("GRANDCHILD-PROPS", props2);
-            if (props2.length == 0) {
-              children.push({'name': key, size: +props[0]});
-            }
-            else {
-              children.push({
-                'name': key,
-                'children': dex.csv.toNestedJsonChildren(cmap[key], manualWeight)
-              });
-            }
-          }
-          else {
-            children.push({
-              'name': key,
-              'children': dex.csv.toNestedJsonChildren(cmap[key], manualWeight)
+            return map;
+        },
+
+        /**
+         *
+         * @param csv
+         * @param columns
+         * @returns {{}}
+         */
+        'columnSlice': function (csv, columns) {
+            var slice = {};
+            var columnNumbers = columns.map(function (column) {
+                return dex.csv.getColumnNumber(csv, column);
             });
-          }
-        }
-        else {
-          children.push({
-            'name': key,
-            'children': dex.csv.toNestedJsonChildren(cmap[key], manualWeight)
-          });
-        }
-      });
+
+            slice.header = dex.array.slice(csv.header, columnNumbers);
+            slice.data = dex.matrix.slice(csv.data, columnNumbers);
+
+            return slice;
+        },
+
+        /**
+         *
+         * @param csv
+         * @returns {Array}
+         */
+        'getNumericColumnNames': function (csv) {
+            var possibleNumeric =
+                {};
+            var i, j, ri, ci;
+            var numericColumns = [];
+
+            for (i = 0; i < csv.header.length; i++) {
+                possibleNumeric[csv.header[i]] = true;
+            }
+
+            // Iterate thru the data, skip the header.
+            for (ri = 0; ri < csv.data.length; ri++) {
+                for (ci = 0; ci < csv.data[ri].length && ci < csv.header.length; ci++) {
+                    if (possibleNumeric[csv.header[ci]] && !dex.object.isNumeric(csv.data[ri][ci])) {
+                        possibleNumeric[csv.header[ci]] = false;
+                    }
+                }
+            }
+
+            for (ci = 0; ci < csv.header.length; ci++) {
+                if (possibleNumeric[csv.header[ci]]) {
+                    numericColumns.push(csv.header[ci]);
+                }
+            }
+
+            return numericColumns;
+        },
+
+        /**
+         *
+         * @param csv
+         * @returns {Array}
+         */
+        'guessTypes': function (csv) {
+            var guessedTypes = [];
+            var i = 0;
+            var testResults = [];
+            dex.console.log("GUESSING TYPES OF ", csv);
+            csv.header.forEach(function (hdr) {
+                testResults.push({"notNumber": false, "notDate": false})
+            });
+            var numCols = csv.header.length;
+
+            csv.data.forEach(function (row) {
+                for (i = 0; i < numCols; i++) {
+
+                    if (!testResults[i]["notDate"]) {
+                        if (Object.prototype.toString.call(row[i]) === '[object Date]') {
+                            testResults[i]["notNumber"] = true;
+                        }
+                        else {
+                            var date = new Date(row[i]);
+                            if (isNaN(date.getTime())) {
+                                //dex.console.log("not date" + i);
+                                testResults[i]["notDate"] = true;
+                            }
+                        }
+                    }
+
+                    if (!testResults[i]["notNumber"]) {
+                        if (isNaN(row[i])) {
+                            //dex.console.log(row[i], i, "is not a number")
+                            testResults[i]["notNumber"] = true;
+                        }
+                    }
+                }
+            });
+
+            for (i = 0; i < numCols; i++) {
+                var results = testResults[i];
+                if (!results.notNumber) {
+                    guessedTypes.push("number");
+                }
+                else if (!results.notDate) {
+                    guessedTypes.push("date");
+                }
+                else {
+                    guessedTypes.push("string");
+                }
+            }
+
+            return guessedTypes;
+        },
+
+        /**
+         *
+         * @param csv
+         * @returns {*}
+         */
+        'strictTypes': function strictTypes(csv) {
+            var types = dex.csv.guessTypes(csv);
+
+            for (var i = 0; i < types.length; i++) {
+                if (types[i] == 'date') {
+                    csv.data.forEach(function (row, ri) {
+                        csv.data[ri][i] = new Date(csv.data[ri][i]);
+                    })
+                }
+                else {
+                    if (types[i] == 'number') {
+                        csv.data.forEach(function (row, ri) {
+                            dex.console.log("row[" + ri + "]=" + row[ri]);
+                            csv.data[ri][i] = new Double(csv.data[ri][i]);
+                        })
+                    }
+                }
+            }
+
+            return csv;
+        },
+
+        'getRankedCsv': function (csv, nameIndex, sequenceIndex, valueIndex, options) {
+            var rankedCsv = dex.csv.copy(csv);
+            var opts = options || {};
+            var orderDescending = opts.descending || false;
+
+            var si = dex.csv.getColumnNumber(csv, sequenceIndex);
+            var ni = dex.csv.getColumnNumber(csv, nameIndex);
+            var vi = dex.csv.getColumnNumber(csv, valueIndex);
+
+            rankedCsv.data.sort(function (row1, row2) {
+                if (+row1[si] == +row2[si]) {
+                    if (+row1[vi] == +row2[vi]) {
+                        if (row1[ni] < row2[ni]) {
+                            return -1;
+                        }
+                        else if (row1[ni] > row2[ni]) {
+                            return 1;
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                    else {
+                        if (orderDescending) {
+                            return +row2[vi] - +row1[vi];
+                        }
+                        else {
+                            return +row1[vi] - +row2[vi];
+                        }
+                    }
+                }
+                else {
+                    return +row1[si] - +row2[si];
+                }
+            });
+
+            rankedCsv.header.push("rank");
+            var rank = 0;
+            var prev = undefined;
+            rankedCsv.data.forEach(function (row) {
+                if (prev == row[si]) {
+                    rank++;
+                    row.push(rank);
+                }
+                else {
+                    row.push(1);
+                    rank = 1;
+                }
+                prev = row[si];
+            });
+
+            return rankedCsv;
+        },
+
+        'uniqueArray': function (csv, columnIndex) {
+            return dex.array.unique(dex.matrix.flatten(
+                dex.matrix.slice(csv.data, [columnIndex])));
+        },
+
+        'uniques': function (csv, columns) {
+            return dex.matrix.uniques(csv.data, columns);
+        },
+
+        'selectRows': function (csv, fn) {
+            var subset = [];
+            csv.data.forEach(function (row) {
+                if (fn(row)) {
+                    subset.push(row);
+                }
+            });
+
+            return {'header': csv.header, 'data': subset};
+        },
+
+        'extent': function (csv, columns) {
+            return dex.matrix.extent(csv.data, columns);
+        },
+
+        /**
+         *
+         * This routine will return a frames structure based on a csv and
+         * an index.  It will first identify all unique values within the
+         * selected column, then sort them into an array of frame indexes.
+         * From there, it will return an array of csv where the elements
+         * contain the specified frame index at the cooresponding location.
+         * This routine supports things such as time/value filtering for
+         * things like a time or slicing dimension for various charts.
+         * IE: No need to write a motion bubble chart, simply combine a
+         * vcr-player with a regular bubble chart connected to play/rewind
+         * events and motion will follow.
+         *
+         * @param csv
+         * @param columnIndex
+         * @returns {{frameIndices: Array.<T>, frames: Array}}
+         */
+        'getFramesByIndex': function (csv, columnIndex) {
+            var types = dex.csv.guessTypes(csv);
+            //dex.console.log("TYPES", types);
+            var frameIndices;
+
+            if (types[columnIndex] == "number") {
+                frameIndices = _.uniq(csv.data.map(function (row) {
+                    return row[columnIndex]
+                })).sort(function (a, b) {
+                    return a - b
+                });
+            }
+            else if (types[columnIndex] == "date") {
+                frameIndices = _.uniq(csv.data.map(function (row) {
+                    return row[columnIndex]
+                })).sort(function (a, b) {
+                    a = new Date(a);
+                    b = new Date(b);
+                    return a > b ? 1 : a < b ? -1 : 0;
+                });
+            }
+            else {
+                frameIndices = _.uniq(csv.data.map(function (row) {
+                    return row[columnIndex]
+                })).sort();
+            }
+            //dex.console.log("FRAME-INDICES", frameIndices)
+            var header = dex.array.copy(csv.header);
+            var frameIndexName = header.splice(columnIndex, 1);
+            var frames = [];
+
+            for (var fi = 0; fi < frameIndices.length; fi++) {
+                var frame = {header: header};
+                var frameData = [];
+
+                for (var ri = 0; ri < csv.data.length; ri++) {
+                    if (csv.data[ri][columnIndex] == frameIndices[fi]) {
+                        var frameRow = dex.array.copy(csv.data[ri]);
+                        frameRow.splice(columnIndex, 1);
+                        frameData.push(frameRow);
+                    }
+                }
+                frame["data"] = frameData;
+                frames.push(frame);
+            }
+
+            return {
+                'frameIndices': frameIndices,
+                'frames': frames
+            }
+        },
+
+        /**
+         *
+         * Frame out a csv based on non-distinct permutations.  Exclude the
+         * column pointed to by groupIndex from the permutations.  This will
+         * be used to group and typically color the various series contained
+         * within the frames.  A set of frames suitable for SPLOM might be
+         * generated via a call of getPermutationFrames(csv, 2).  However, as
+         * this is written generically, it will also support higher order
+         * dimensions as well.
+         *
+         * @param csv The csv we wish to frame.
+         * @param permutationSize The length of the desired permutations.
+         * @param groupIndex The index of we are grouping upon.
+         * @returns {{frameIndices: Array, frames: Array}}
+         *
+         */
+        'getPermutationFrames': function (csv, permutationSize, groupIndex) {
+            var gi = dex.csv.getColumnNumber(csv, groupIndex);
+
+            var plist = dex.range(0, csv.header.length - 1);
+            if (gi >= 0) {
+                plist.splice(gi, 1);
+            }
+            var permutations = dex.array.getPermutations(plist, permutationSize);
+
+            return dex.csv.getFrames(csv, permutations, gi);
+        },
+
+        /**
+         *
+         * Generate frames based upon a grouping parameter, then
+         *
+         * @param csv The csv we wish to frame.
+         * @param comboLength The length of the combinations.
+         * @param groupIndex The group index.  This column will be present in
+         * every combination.
+         * @returns {*|{frameIndices, frames}}
+         */
+        'getCombinationFrames': function (csv, comboLength, groupIndex) {
+            var gi = dex.csv.getColumnNumber(csv, groupIndex);
+
+            var plist = dex.range(0, csv.header.length);
+            if (gi >= 0) {
+                plist.splice(gi, 1);
+            }
+            dex.console.log("PLIST", plist);
+            var combos = dex.array.getCombinations(plist, comboLength);
+
+            return dex.csv.getFrames(csv, combos, gi);
+        },
+
+        'getFrames': function (csv, permutations, groupIndex) {
+            var frameIndices = [];
+            var frames = [];
+            var gi = dex.csv.getColumnNumber(csv, groupIndex);
+
+            permutations.forEach(function (permutation) {
+
+                frameIndices.push(permutation.map(function (hi) {
+                    return csv.header[hi];
+                }).join(" vs "));
+
+                var columnIndices = dex.array.copy(permutation);
+                if (gi >= 0) {
+                    columnIndices.unshift(gi);
+                }
+
+                frames.push(dex.csv.columnSlice(csv, columnIndices));
+            });
+
+            return {'frameIndices': frameIndices, 'frames': frames};
+        },
+
+        /**
+         *
+         * @param csv
+         * @returns {Array}
+         */
+        'getNumericIndices': function (csv) {
+            var possibleNumeric =
+                {};
+            var i, j;
+            var numericIndices = [];
+
+            for (i = 0; i < csv.header.length; i++) {
+                possibleNumeric[csv.header[i]] = true;
+            }
+
+            // Iterate thru the data, skip the header.
+            for (i = 1; i < csv.data.length; i++) {
+                for (j = 0; j < csv.data[i].length && j < csv.header.length; j++) {
+                    if (possibleNumeric[csv.header[j]] && !dex.object.isNumeric(csv.data[i][j])) {
+                        console.log("csv.header[" + j + "]=" + csv.header[j] + " is not numeric due to csv.data[" + i + "]["
+                            + j + "]=" + csv.data[i][j]);
+                        possibleNumeric[csv.header[j]] = false;
+                    }
+                }
+            }
+
+            for (i = 0; i < csv.header.length; i++) {
+                if (possibleNumeric[csv.header[i]]) {
+                    numericIndices.push(i);
+                }
+            }
+
+            return numericIndices;
+        },
+
+        'getCategoricalIndices': function (csv) {
+            var possibleNumeric =
+                {};
+            var i, j;
+            var categoricalIndices = [];
+
+            for (i = 0; i < csv.header.length; i++) {
+                possibleNumeric[csv.header[i]] = true;
+            }
+
+            // Iterate thru the data, skip the header.
+            for (i = 1; i < csv.data.length; i++) {
+                for (j = 0; j < csv.data[i].length && j < csv.header.length; j++) {
+                    if (possibleNumeric[csv.header[j]] && !dex.object.isNumeric(csv.data[i][j])) {
+                        console.log("csv.header[" + j + "]=" + csv.header[j] + " is not numeric due to csv.data[" + i + "]["
+                            + j + "]=" + csv.data[i][j]);
+                        possibleNumeric[csv.header[j]] = false;
+                    }
+                }
+            }
+
+            for (i = 0; i < csv.header.length; i++) {
+                if (!possibleNumeric[csv.header[i]]) {
+                    categoricalIndices.push(i);
+                }
+            }
+
+            return categoricalIndices;
+        },
+
+        /**
+         *
+         * @param csv
+         * @param columnNum
+         * @returns {boolean}
+         */
+        'isColumnNumeric': function (csv, columnNum) {
+            var i;
+
+            for (i = 0; i < csv.data.length; i++) {
+                if (!dex.object.isNumeric(csv.data[i][columnNum])) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        /**
+         *
+         * Given a series of categorical indices into a csv which
+         * contains some numeric data, create a new CSV where the
+         * first column is the aggregated categorical indices and
+         * the contents are the sum of numeric columns matching the
+         * aggregated categories.
+         *
+         * @param csv The csv to summarize.
+         * @param columnIndexes The indices to be used in summarization.
+         *
+         * @returns {{header, data: Array}}
+         */
+        'summary': function (csv, columnIndexes) {
+            // Create summary data groups csv.
+            var summaryGroups = dex.csv.columnSlice(csv, columnIndexes);
+
+            // Calculate the indices we will be summarizing.  Omit any
+            // numeric indices contained in the grouping.
+            var summaryIndices = dex.csv.getNumericIndices(csv)
+                .filter(function (el) {
+                    return columnIndexes.indexOf(el) < 0;
+                });
+
+            // Extract a csv containing only what we are summarizing.
+            var ncsv = dex.csv.columnSlice(csv, summaryIndices);
+
+            // Initialize a name value pair structure where the key is
+            // the aggregated group values.
+            var summaryMap = {};
+            summaryGroups.data.forEach(function (row) {
+                if (!summaryMap[row.join(":")]) {
+                    summaryMap[row.join(":")] =
+                        Array.apply(null, Array(summaryIndices.length))
+                            .map(Number.prototype.valueOf, 0);
+                }
+            });
+
+            // Add up the summary.
+            for (var i = 0; i < ncsv.data.length; i++) {
+                var key = summaryGroups.data[i].join(":");
+                for (var j = 0; j < ncsv.data[i].length; j++) {
+                    summaryMap[key][j] += ncsv.data[i][j];
+                }
+            }
+
+            // Create the base summary csv.
+            var summary = {
+                "header": ncsv.header,
+                "data": []
+            };
+            // Prepend the aggregated summary name to the csv header.
+            summary.header.unshift(summaryGroups.header.join(":"));
+
+            // Iterate over each summary entry creating a row for each.
+            for (key in summaryMap) {
+                var data = summaryMap[key];
+                data.unshift(key);
+                summary.data.push(data);
+            }
+
+            // Return it back to the user.
+            return summary;
+        },
+
+        /**
+         *
+         * @param csv
+         * @param columns
+         * @returns {*}
+         */
+        'group': function (csv, columns) {
+            var ri, ci;
+            var groups = {};
+            var returnGroups = [];
+            var values;
+            var key;
+            var otherColumns;
+            var otherHeaders;
+            var groupName;
+
+            if (arguments < 2) {
+                return csv;
+            }
+
+            function compare(a, b) {
+                var si, h;
+
+                for (si = 0; si < columns.length; si++) {
+                    h = csv.header[columns[si]]
+                    if (a[h] < b[h]) {
+                        return -1;
+                    }
+                    else if (a[h] > b[h]) {
+                        return 1
+                    }
+                }
+
+                return 0;
+            }
+
+            //otherColumns = dex.array.difference(dex.range(0, csv.header.length), columns);
+            //otherHeaders = dex.array.slice(csv.header, otherColumns);
+
+            for (ri = 0; ri < csv.data.length; ri += 1) {
+                values = dex.array.slice(csv.data[ri], columns);
+                key = values.join(':::');
+
+                if (groups[key]) {
+                    group = groups[key];
+                }
+                else {
+                    //group = { 'csv' : dex.csv.csv(otherHeaders, []) };
+                    group =
+                        {
+                            'key': key,
+                            'values': [],
+                            'csv': dex.csv.csv(csv.header, [])
+                        };
+                    for (ci = 0; ci < values.length; ci++) {
+                        group.values.push({'name': csv.header[columns[ci]], 'value': values[ci]});
+                    }
+                    groups[key] = group;
+                }
+                //group.csv.data.push(dex.array.slice(csv.data[ri], otherColumns));
+                group.csv.data.push(csv.data[ri]);
+                //groups[key] = group;
+            }
+
+            for (groupName in groups) {
+                if (groups.hasOwnProperty(groupName)) {
+                    returnGroups.push(groups[groupName]);
+                }
+            }
+
+            return returnGroups.sort(compare);
+        },
+
+        /**
+         *
+         * @param csv
+         * @param func
+         */
+        'visitCells': function (csv, func) {
+            var ci, ri;
+
+            for (ri = 0; ri < csv.data.length; ri++) {
+                for (ci = 0; ci < csv.header.length; ci++) {
+                    func(ci, ri, csv.data[ri][ci]);
+                }
+            }
+        },
+
+        /**
+         *
+         * @param csv
+         * @returns {number}
+         */
+        'longestWord': function (csv) {
+            var longest = 0;
+            for (var row = 0; row < csv.data.length; row++) {
+                for (var col = 0; col < csv.data[row].length; col++) {
+                    if (longest < csv.data[row][col].length) {
+                        longest = csv.data[row][col].length;
+                    }
+                }
+            }
+            return longest;
+        },
+
+        /**
+         *
+         * @param csv
+         * @returns {{}|*}
+         */
+        'numericSubset': function (csv) {
+            return dex.csv.columnSlice(csv, dex.csv.getNumericIndices(csv));
+        },
+
+        'categoricalSubset': function (csv) {
+            return dex.csv.columnSlice(csv, dex.csv.getCategoricalIndices(csv));
+        },
+
+        'toJsonHierarchy': function (csv, ci) {
+            // If 1 argument, then setup and call with 2.
+            if (arguments.length == 1) {
+                var result = {'name': 'root', children: dex.csv.toJsonHierarchy(csv, 0)};
+                //dex.console.log("RESULT", result);
+                return result;
+            }
+            else if (arguments.length == 2) {
+                var valueMap = {};
+
+                for (var ri = 0; ri < csv.data.length; ri++) {
+                    if (valueMap.hasOwnProperty(csv.data[ri][ci])) {
+                        valueMap[csv.data[ri][ci]]++;
+                    }
+                    else {
+                        valueMap[csv.data[ri][ci]] = 1;
+                    }
+                }
+
+                if (ci >= csv.header.length - 1) {
+                    return _.keys(valueMap).map(function (key) {
+                        return {'name': key, 'size': valueMap[key]};
+                    });
+                }
+                else {
+                    return _.keys(valueMap).map(function (key) {
+                        return {'name': key, 'size': valueMap[key]};
+                    });
+                }
+            }
+        },
+
+        'getGraph': function (csv) {
+
+            var nodes = [];
+            var links = [];
+            var nodeNum = 0;
+            var indexMap = [];
+
+            // Record uniques across the data, treating each column as it's own namespace.
+            csv.header.map(function (col, ci) {
+                indexMap.push({});
+                csv.data.map(function (row, ri) {
+                    if (_.isUndefined(indexMap[ci][row[ci]])) {
+                        indexMap[ci][row[ci]] = nodeNum;
+                        nodes.push({'name': row[ci]});
+                        nodeNum++;
+                    }
+                });
+            });
+
+            for (var ci = 1; ci < csv.header.length; ci++) {
+                csv.data.map(function (row, ri) {
+                    links.push({'source': indexMap[ci - 1][row[ci - 1]], 'target': indexMap[ci][row[ci]], 'value': 1});
+                });
+            }
+
+            //dex.console.log("NODES", nodes, links, indexMap);
+            return {'nodes': nodes, 'links': links};
+        },
+
+        'toNestedJson': function (csv, manualWeight) {
+            manualWeight = manualWeight || false;
+            //dex.console.log("CMAP", dex.csv.getConnectionMap(csv), manualWeight);
+            var result = {
+                'name': csv.header[0],
+                'children': dex.csv.toNestedJsonChildren(
+                    dex.csv.getConnectionMap(csv), manualWeight)
+            };
+            //dex.console.log("toNestedJson.result()", result);
+            return result;
+        },
+
+        'toNestedJsonChildren': function (cmap, manualWeight) {
+            manualWeight = manualWeight || false;
+            //dex.console.log("CMAP", cmap);
+            var children = [];
+            _.keys(cmap).map(function (key) {
+                var childMap = cmap[key];
+
+                if (_.keys(childMap).length <= 0) {
+                    //dex.console.log("Child Map 0", childMap, cmap);
+                    children.push({'name': key, 'size': 1});
+                }
+                else if (manualWeight) {
+
+                    var props = Object.getOwnPropertyNames(childMap);
+                    //dex.console.log("KEY", key, "childMap", childMap, "cm.props", props);
+
+                    if (props.length == 1) {
+                        var props2 = Object.getOwnPropertyNames(childMap[props[0]]);
+                        //dex.console.log("GRANDCHILD-PROPS", props2);
+                        if (props2.length == 0) {
+                            children.push({'name': key, size: +props[0]});
+                        }
+                        else {
+                            children.push({
+                                'name': key,
+                                'children': dex.csv.toNestedJsonChildren(cmap[key], manualWeight)
+                            });
+                        }
+                    }
+                    else {
+                        children.push({
+                            'name': key,
+                            'children': dex.csv.toNestedJsonChildren(cmap[key], manualWeight)
+                        });
+                    }
+                }
+                else {
+                    children.push({
+                        'name': key,
+                        'children': dex.csv.toNestedJsonChildren(cmap[key], manualWeight)
+                    });
+                }
+            });
 
 //dex.console.log("CHILDREN", children);
-      return children;
-    },
+            return children;
+        },
 
-    'getConnectionMap': function (csv) {
-      var rootMap = {};
-      var curMap = {}
+        'getConnectionMap': function (csv) {
+            var rootMap = {};
+            var curMap = {}
 
-      for (var row = 0; row < csv.data.length; row++) {
-        curMap = rootMap;
+            for (var row = 0; row < csv.data.length; row++) {
+                curMap = rootMap;
 
-        for (var col = 0; col < csv.header.length; col++) {
-          if (!_.has(curMap, csv.data[row][col])) {
-            curMap[csv.data[row][col]] = {};
-          }
-          curMap = curMap[csv.data[row][col]];
+                for (var col = 0; col < csv.header.length; col++) {
+                    if (!_.has(curMap, csv.data[row][col])) {
+                        curMap[csv.data[row][col]] = {};
+                    }
+                    curMap = curMap[csv.data[row][col]];
+                }
+            }
+
+            return rootMap;
         }
-      }
-
-      return rootMap;
-    }
-  };
+    };
 };
-},{}],53:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 /**
  *
  * This module provides support for creating various datasets.
@@ -11968,7 +13099,7 @@ module.exports = function datagen(dex) {
   };
 };
 
-},{}],54:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 // Allow user to override, but define this by default:
 
 /**
@@ -12229,7 +13360,7 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
 $.widget.bridge('uibutton', $.ui.button);
 
 module.exports = dex;
-},{"../lib/pubsub":3,"./array/array":4,"./charts/charts":15,"./color/color":48,"./component/component":49,"./config/config":50,"./console/console":51,"./csv/csv":52,"./datagen/datagen":53,"./json/json":55,"./matrix/matrix":56,"./object/object":57,"./ui/ui":67,"./util/util":68}],55:[function(require,module,exports){
+},{"../lib/pubsub":3,"./array/array":4,"./charts/charts":15,"./color/color":50,"./component/component":51,"./config/config":52,"./console/console":54,"./csv/csv":55,"./datagen/datagen":56,"./json/json":58,"./matrix/matrix":59,"./object/object":60,"./ui/ui":70,"./util/util":71}],58:[function(require,module,exports){
 /**
  *
  * This module provides routines dealing with json data.
@@ -12332,7 +13463,7 @@ module.exports = function json(dex) {
   };
 };
 
-},{}],56:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 /**
  *
  * This module provides routines dealing with matrices.
@@ -12647,7 +13778,7 @@ module.exports = function matrix(dex) {
   };
 };
 
-},{}],57:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 /**
  *
  * This module provides routines dealing with javascript objects.
@@ -12969,7 +14100,7 @@ module.exports = function object(dex) {
 };
 
 
-},{}],58:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 /**
  *
  * This class creates and attaches a SqlQuery user interface onto the
@@ -13068,7 +14199,7 @@ var sqlquery = function (userConfig) {
 };
 
 module.exports = sqlquery;
-},{}],59:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 /**
  *
  * @constructor
@@ -13168,7 +14299,7 @@ var table = function (userConfig) {
 };
 
 module.exports = table;
-},{}],60:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 var typestable = function (userConfig) {
 
   var defaults =
@@ -13249,7 +14380,7 @@ var typestable = function (userConfig) {
 };
 
 module.exports = typestable;
-},{}],61:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 var configurationbox = function (userConfig) {
 
   var defaults =
@@ -13335,7 +14466,7 @@ var configurationbox = function (userConfig) {
 };
 
 module.exports = configurationbox;
-},{}],62:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 var player = function (userConfig) {
 
   var defaults = {
@@ -13533,7 +14664,7 @@ var player = function (userConfig) {
 };
 
 module.exports = player;
-},{}],63:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 var selectable = function (userConfig) {
 
   var defaults =
@@ -13630,7 +14761,7 @@ var selectable = function (userConfig) {
 };
 
 module.exports = selectable;
-},{}],64:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 var slider = function (userConfig) {
 
   var defaults = {
@@ -13722,7 +14853,7 @@ var slider = function (userConfig) {
 };
 
 module.exports = slider;
-},{}],65:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 var tabs = function (userConfig) {
   var defaults = {
     // The parent container of this chart.
@@ -13826,7 +14957,7 @@ var tabs = function (userConfig) {
 };
 
 module.exports = tabs;
-},{}],66:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 /**
  *
  * This module provides ui components based upon jquery-ui.
@@ -13844,7 +14975,7 @@ module.exports = function jqueryui(dex) {
     'Tabs': require("./Tabs")
   };
 };
-},{"./ConfigurationBox":61,"./Player":62,"./Selectable":63,"./Slider":64,"./Tabs":65}],67:[function(require,module,exports){
+},{"./ConfigurationBox":64,"./Player":65,"./Selectable":66,"./Slider":67,"./Tabs":68}],70:[function(require,module,exports){
 /**
  *
  * This module provides ui components from a variety of sources.
@@ -13870,7 +15001,7 @@ module.exports = function ui(dex) {
     'TypesTable': require("./TypesTable")
   };
 };
-},{"./SqlQuery":58,"./Table":59,"./TypesTable":60,"./jqueryui/jqueryui":66}],68:[function(require,module,exports){
+},{"./SqlQuery":61,"./Table":62,"./TypesTable":63,"./jqueryui/jqueryui":69}],71:[function(require,module,exports){
 /**
  *
  * This module provides utility routines.
@@ -13943,5 +15074,5 @@ module.exports = function util(dex) {
     }
   };
 };
-},{}]},{},[54])(54)
+},{}]},{},[57])(57)
 });

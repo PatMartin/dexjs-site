@@ -111,3 +111,56 @@ dex.js exposes the underlying configuration of charts in a number of ways:
   2. Though a dynamic programmable styling.  All elements under the parent
   container are exposed for configuration and styling.
   3. Through traditional CSS styling.
+
+## Designed to be Embedded
+
+One unique feature of dex.js charts is that they are designed to be
+embedded into other tools; making it an ideal framework for data
+visualization for my Java based data visualization tool
+[Dex](https://dexvis.net).  This is actually **why** dex.js was written
+in the first place.
+
+### GUI Specification
+
+Each chart is capable of communicating it's configuration interface as a
+JSON object via:
+
+```javascript
+chart.getGuiDefinition();
+```
+
+This definition communicates the aspects of the chart which are available
+for configuration.  Information around how this GUI definition can be used
+to drive GUIs in other language can be found the blog article
+["Data Driven UI"](https://dexvis.net/posts/DataDrivenUI.html)
+
+### Chart Configuration
+
+The attr function is available for manipulating these
+settings:
+
+```javascript
+chart.attr("height", 400); // Set chart height to 400 pixels
+var height = chart.attr("height"); // Get current chart height
+var config = chart.attr(); // Get chart configuration
+```
+
+### Chart Persistence
+
+A chart may save it's configuration to a DOM element within the page:
+
+```javascript
+chart.save();
+```
+
+Behind the scenes, a div element named "dexjs-config" is created with
+hidden visibility.  The configuration is dumped into this structure.
+
+A chart may load it's configuration from the page via:
+
+```javascript
+chart.load();
+```
+
+This routine will load the contents of "dexjs-config" into the chart's
+configuration.
