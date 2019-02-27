@@ -1,0 +1,177 @@
+{{ partial "header.html" . }}
+{{ partial "navbar.html" . }}
+
+<style>
+
+    .grid {
+        margin-top: 10px;
+
+    }
+    .deck {
+        width: 250px;
+        height: 300px;
+    }
+
+    .card {
+        width: 250px;
+        height: 300px;
+        position: absolute;
+
+        -webkit-transition: -webkit-transform .8s;
+        -moz-transition: -moz-transform .8s;
+        -o-transition: -o-transform .8s;
+        transition: transform .8s;
+
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        -o-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+    }
+
+    .card div {
+        display: block;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        position: absolute;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -o-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .card .back {
+        -webkit-transform: rotateY(180deg);
+        -moz-transform: rotateY(180deg);
+        -o-transform: rotateY(180deg);
+        transform: rotateY(180deg);
+        background: steelblue;
+    }
+
+    .card.flipped {
+        -webkit-transform: rotateY(180deg);
+        -moz-transform: rotateY(180deg);
+        -o-transform: rotateY(180deg);
+        transform: rotateY(180deg);
+    }
+
+    .card > .front > img {
+        width: 250px;
+        height: 150px;
+    }
+
+    .card > .front > p {
+        display: block;
+        text-align: left;
+        font-size: .9em;
+    }
+
+    .card > .back > h4 {
+        color: white;
+    }
+
+    .card > .back > p > strong {
+        font-size: 1em;
+        color: white;
+    }
+
+    .card > .back > p {
+        display: block;
+        text-align: left;
+        font-size: 1em;
+        color: #F2F1AB;
+        font-weight: lighter;
+    }
+
+    .card > .back > ul > li {
+        text-align: left;
+        font-size: 1em;
+        color: white;
+    }
+
+    .card > .back > ul > li > a {
+        text-align: left;
+        font-size: .9em;
+        color: #F2F1AB;
+        font-weight: lighter;
+    }
+</style>
+<div class="container">
+    <div>
+        {{ .Content }}
+    </div>
+</div>
+<script>
+  function flip(deck) {
+    $(deck).toggleClass('flipped');
+  }
+
+  $(document).ready(function () {
+    var $grid = $('.grid').isotope({
+      itemSelector: '.deck',
+      masonry: {
+        columnWidth: 250,
+        gutter: 5
+      },
+      sortBy: "category",
+      getSortData: {
+        category: '.card .front h4'
+      }
+    });
+
+    // filter items on button click
+
+    var ms = $('#filter-selector');
+
+    ms.multiselect({
+      disabledText: 'Disabled ...',
+      //enableClickableOptGroups: true,
+      //enableCollapsibleOptGroups: false,
+      enableFiltering: true,
+      includeSelectAllOption: true,
+      onSelectAll: filterCards,
+      onDeselectAll: filterCards,
+      onChange: filterCards
+    });
+
+    ms.multiselect('selectAll', false);
+    ms.multiselect('updateButtonText', false);
+
+    function filterCards() {
+      var selected = getSelectedValues(ms[0]);
+      var op = $("#operation .active input").val();
+      var separator = (op == "and") ? "" : ", ";
+      var filterValue = selected.length ? selected.join(separator) : 'none';
+      dex.console.log("FILTER-VALUE: '" + filterValue + "'");
+      dex.console.log("OPERATION: '" + $("#operation .active input").val() + "'");
+      $grid.isotope({ filter: filterValue });
+    }
+
+    $("#operation label").on('click', function() {
+      $(this).addClass("active").siblings().removeClass("active");
+      filterCards();
+    });
+
+    function getSelectedValues(select) {
+      var result = [];
+      var options = select && select.options;
+      var opt;
+
+      for (var i = 0, iLen = options.length; i < iLen; i++) {
+        opt = options[i];
+
+        if (opt.selected) {
+          result.push(opt.value || opt.text);
+        }
+      }
+      return result;
+    }
+  });
+</script>
+{{ partial "footer.html" . }}

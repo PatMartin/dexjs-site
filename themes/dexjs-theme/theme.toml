@@ -1,18 +1,17 @@
-name = "Hugo Bootswatch"
-license = "MIT"
-licenselink = "https://github.com/nilproductions/hugo-bootswatch/LICENSE.md"
-description = "Bootswatch Theme (Bootstrap 3) for Hugo"
-homepage = "https://github.com/nilproductions/hugo-bootswatch"
-tags = ["bootstrap", "bootswatch"]
+name = "dex.js Site"
+license = "APL 2.0"
+licenselink = "https://github.com/PatMartin/dexjs-site/LICENSE.md"
+description = "dex.js theme."
+homepage = "https://github.com/PatMartin/dexjs-site"
+tags = ["hugo"]
 features = []
-min_version= 0.13
+min_version= 0.9
 
 [author]
   name = "Patrick Martin"
-  homepage = "http://imperialwicket.com"
+  homepage = "http://dexjs.net"
 
 # If porting an existing theme
 [original]
-  name = "Thomas Park"
-  homepage = "http://bootswatch.com"
+  name = "Patrick Martin"
   repo = "https://github.com/PatMartin"

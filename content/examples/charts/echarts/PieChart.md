@@ -9,10 +9,21 @@ title = "dex.js ECharts Pie Chart Examples"
     "https://cdnjs.cloudflare.com/ajax/libs/echarts/3.6.1/echarts.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js",
     "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/mode-javascript.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js",
     "/js/ace-example.js",
   ]
   css = [ "/css/ace-example.css" ]
 +++
+
+<style>
+  #Chart {
+    display: inline-block !important;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+</style>
 
 # ECharts Pie Chart
 
@@ -23,15 +34,26 @@ Select from the interactive examples below:
   </button>
   <ul id="ex-dropdown" class="dropdown-menu">
     <li><a id="basic" href="#">Basic Example</a></li>
+    <li><a id="multiple_series" href="#">Multiple Series</a></li>
   </ul>
 </div>
 
 <div id="example-info"></div>
-<div id="PieChart" class="WideChart"></div>
+<div id="layout-container" class="WideChart">
+  <div class="ui-layout-center">
+    <div id="Chart"></div>
+  </div>
+  <div class="ui-layout-west">
+    <div id="ConfigurationPane"></div>
+  </div>
+</div>
+
 <div id="ace-editor"></div>
 <div id="ace-error"></div>
 
 <script>
+  var chart;
+
   var editor = createEditor({
     "parent"        : "ace-editor",
     "errorParent"   : "ace-error",
@@ -40,5 +62,17 @@ Select from the interactive examples below:
     "contentDir"    : "/examples/charts/echarts/piechart",
     "initialContent": "/examples/charts/echarts/piechart/basic.js",
     "initialInfo"   : "/examples/charts/echarts/piechart/basic.html"
+  });
+
+  $(document).ready(function () {
+    $('#layout-container').layout({
+      applyDemoStyles: false,
+      west: {
+        size: 335
+      },
+      onresize: function () {
+        chart.refresh();
+      }
+    });
   });
 </script>

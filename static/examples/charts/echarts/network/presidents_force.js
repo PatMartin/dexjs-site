@@ -1,7 +1,15 @@
 d3.json("/data/presidents.json", function(error, data) {
-  dex.charts.echarts.Network({
-    "parent": "#Network",
+  var csv = new dex.csv(data);
+
+  chart = dex.charts.echarts.Network({
+    "parent": "#Chart",
     categories: 1,
-    "csv": dex.csv.columnSlice(data, [2, 3, 1])
+    "csv": csv
+  }).render();
+
+  var configPane = dex.ui.ConfigurationPane({
+    parent: "#ConfigurationPane",
+    csv: csv,
+    components: [ chart ]
   }).render();
 });

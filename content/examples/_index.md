@@ -9,6 +9,32 @@ title = "dex.js Examples"
 
 Click on any of the images below to go to a series of examples of the depicted chart type.
 
+## UI Components
+
+These components work in tandem with charts to improve their capabilities.
+
+### Data Filter Pane
+
+The data filter pane allows data to be included, omitted, reordered and allows
+the user to quickly sift through items of interest.
+
+[![Data Filter Pane](/images/ui/column_filter.png)](/examples/ui/DataFilterPane.html)
+
+### Gui Pane
+
+The GUI Pane allows the user to exercise fine grained control over the
+appearance of a visual.
+
+[![Gui Pane](/images/ui/gui_pane.png)](/examples/ui/GuiPane.html)
+
+### Configuration Pane
+
+The Configuration Pane provides a Data Filter and GUI pane in one
+cohesive interface.  It also performs all the necessary wiring so that
+visuals respond interactively to any changes.
+
+[![Configuration Pane](/images/ui/config_pane.png)](/examples/ui/ConfigurationPane.html)
+
 ## C3 Charts
 
 These examples are based upon [C3js](https://c3js.org).
@@ -37,7 +63,7 @@ These examples are based upon [D3.js](http://d3js.org)
 [![Sunburst](/images/charts/d3_sunburst.png)](/examples/charts/d3/Sunburst.html)
 [![Treemap](/images/charts/d3_treemap.png)](/examples/charts/d3/Treemap.html)
 [![Treemap BarChart](/images/charts/d3_treemap_barchart.png)](/examples/charts/d3/TreemapBarChart.html)
-[![TopoJSON Map](/images/charts/d3_topojsonmap.png)](/examples/charts/d3/TopoJSONMap.html)
+[![TopoJSON Map](/images/charts/d3_map.png)](/examples/charts/d3/Map.html)
 
 ## D3 Plus Charts
 
@@ -49,6 +75,7 @@ These examples are based upon [D3 Plus](https://d3plus.org/)
 
 These examples are based upon [ECharts](https://ecomfe.github.io/)
 
+[![Line Chart](/images/charts/echarts_linechart.png)](/examples/charts/echarts/LineChart.html)
 [![Polar Line Chart](/images/charts/echarts_polar_linechart.png)](/examples/charts/echarts/PolarPlot.html)
 [![Polar Bar Chart](/images/charts/echarts_polar_barchart.png)](/examples/charts/echarts/PolarPlot.html)
 [![Polar Scatter Plot](/images/charts/echarts_polar_scatterplot.png)](/examples/charts/echarts/PolarPlot.html)
@@ -57,6 +84,9 @@ These examples are based upon [ECharts](https://ecomfe.github.io/)
 [![Circular Network](/images/charts/echarts_force_network.png)](/examples/charts/echarts/Network.html)
 [![Timeline](/images/charts/echarts_timeline.png)](/examples/charts/echarts/Timeline.html)
 [![Nested Pie Chart](/images/charts/echarts_piechart.png)](/examples/charts/echarts/PieChart.html)
+[![Steam Graph](/images/charts/echarts_steamgraph.png)](/examples/charts/echarts/SteamGraph.html)
+[![Heat Map](/images/charts/echarts_heatmap.png)](/examples/charts/echarts/HeatMap.html)
+
 
 ## Elegans 3D Charts
 
@@ -69,8 +99,13 @@ will not display on iOS devices such as iPhones and iPads.
 
 ## NVD3 Charts
 
-NVD provides a number of useful charts.
+The [NVD3 framework](https://nvd3.org/) provides a number of useful charts.
 
 [![BubbleChart](/images/charts/nvd3_bubble_chart.png)](/examples/charts/nvd3/BubbleChart.html)
 [![StackedAreaChart](/images/charts/nvd3_stacked_area_chart.png)](/examples/charts/nvd3/StackedAreaChart.html)
 
+## Vis.js
+
+These examples are based upon [vis.js](https://visjs.org/)
+
+[![Network](/images/charts/visjs_network.png)](/examples/charts/visjs/Network.html)

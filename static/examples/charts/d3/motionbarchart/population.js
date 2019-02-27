@@ -1,7 +1,7 @@
-d3.json("/data/WorldBirthsAndDeaths.json", function (error, world) {
+d3.json("/data/WorldBirthsAndDeaths.json", function (error, data) {
   dex.charts.d3.MotionBarChart({
     "parent": "#MotionBarChart",
-    "csv": world,
+    "csv": new dex.csv(data),
     "index": {
       "name": "Country",
       "color": "Country",

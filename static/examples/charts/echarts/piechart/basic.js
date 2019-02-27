@@ -1,7 +1,4 @@
-var csv = {
-  header: ["series", "name", "value"],
-  data: []
-};
+var csv = new dex.csv(["series", "name", "value"]);
 
 ["Q1", "Q2", "Q3", "Q4"].forEach(function (series) {
   ["Bob", "Jim", "Alice", "Mike", "Pam", "Pat"].forEach(function (name) {
@@ -9,7 +6,13 @@ var csv = {
   });
 });
 
-var chart = dex.charts.echarts.PieChart({
-  parent: '#PieChart',
+chart = dex.charts.echarts.PieChart({
+  parent: '#Chart',
   csv: csv
+}).render();
+
+var configPane = dex.ui.ConfigurationPane({
+  parent: "#ConfigurationPane",
+  csv: csv,
+  components: [ chart ]
 }).render();

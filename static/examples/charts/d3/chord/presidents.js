@@ -1,9 +1,13 @@
 d3.json("/data/presidents.json", function(error, data) {
-  dex.charts.d3.Chord({
-    "parent": "#Chord",
-    "csv": dex.csv.columnSlice(data, [2, 3]),
-    "margin" : { "top" : 200, "bottom" : 200 },
-    "outerRadius" : 150,
-    "innerRadius" : 140
+  var presidents = new dex.csv(data);
+  chart = dex.charts.d3.Chord({
+    "parent": "#Chart",
+    "csv": presidents
+  }).render();
+
+  var configPane = dex.ui.ConfigurationPane({
+    parent: "#ConfigurationPane",
+    csv: presidents,
+    components: [ chart ]
   }).render();
 });

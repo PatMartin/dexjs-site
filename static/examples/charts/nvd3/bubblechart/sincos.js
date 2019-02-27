@@ -1,7 +1,4 @@
-var sincos = {
-  "header" : [ "name", "angle", "value", "size" ],
-  "data" : []
-};
+var sincos = new dex.csv([ "name", "angle", "value", "size" ]);
 
 for (var angle = -360; angle<=360; angle += 5) {
   sincos.data.push(["sin", angle, Math.sin(angle * (Math.PI/180)).toFixed(2), 1]);

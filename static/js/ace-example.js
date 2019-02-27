@@ -15,7 +15,7 @@ function createEditor(options) {
   editor.setTheme(theme);
   editor.getSession().setMode(mode);
 
-  // Load documenation if available
+  // Load documentation if available
   if (options.initialInfo) {
     $.get(options.initialInfo, function(data) {
       info.innerHTML = data;
@@ -26,18 +26,26 @@ function createEditor(options) {
   if (options.initialContent) {
     $.get(options.initialContent, function (data) {
       editor.session.setValue(data);
-      eval(editor.getValue());
+      editor.update();
     });
   }
 
-  editor.on("change", function (e) {
+  // Respond to editor changes every 3 seconds.
+  editor.update = _.debounce(function() {
     try {
+      if (typeof(prepareUpdate) === "function") {
+        prepareUpdate();
+      }
       eval(editor.getValue());
-      error.innerHTML = '';
     }
     catch (e) {
       error.innerHTML = "<div class='bs-callout bs-callout-danger'><h4>Error:</h4>"  + e + "</div>";
     }
+  }, 1000);
+
+  editor.on("change", function (e) {
+      editor.update();
+      error.innerHTML = '';
   });
 
   $('#ex-dropdown a').on('click', function (evt) {
@@ -45,7 +53,7 @@ function createEditor(options) {
     $.get(contentDir + "/" + evt.currentTarget.id + ".js",
       function (data) {
         editor.session.setValue(data);
-        eval(editor.getValue());
+        editor.update();
         $(".btn:first-child").text(evt.currentTarget.innerHTML);
         $(".btn:first-child").val(evt.currentTarget.innerHTML);
       });

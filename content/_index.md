@@ -1,6 +1,6 @@
 +++
 title = "dex.js : javascript data visualization"
-date = "2016-12-29T03:56:37-05:00"
+date = "2017-07-04T12:00:00-05:00"
 
 [params]
   scripts = [
@@ -22,9 +22,9 @@ date = "2016-12-29T03:56:37-05:00"
 
 # dex.js
 
-dex.js is a visualization framework built for the modern web.  dex.js provides
-a common reusable framework for achieving effective interactive data
-visualizations using a simple and consistent interface.
+dex.js is a data visualization framework built for the modern web.
+dex.js provides a common reusable framework for achieving effective
+interactive data visualizations using a simple and consistent interface.
 
 dex.js unifies a number of charts from other frameworks and offers a few
 unique variants of it's own and allows them to safely interoperate within
@@ -73,17 +73,33 @@ create them all.
 
 ### Consistent Data Representation
 
-Data input is also consistent.  It's always a CSV in JSON form.  Here is
-an example:
+Data input is also consistent.  It's always a csv object.
+
+Here are some sample contructors.
+
+#### Construction from JSON
 
 ```javascript
-var csv = {
+var csv = new dex.csv({
   "header" : [ "Name", "Age", "Gender" ],
   "data"   : [
     [ "Bob", 53, "Male" ],
     [ "Alice", 22, "Female" ]
   ]
-};
+});
+```
+
+#### Construction from header and data
+
+```javascript
+var csv = new dex.csv([ "Name", "Age", "Gender" ],
+  [[ "Bob", 53, "Male" ], [ "Alice", 22, "Female" ]]);
+```
+
+#### Construction from another csv
+
+```javascript
+var newCsv = new dex.csv(oldCsv);
 ```
 
 ## Interactive
@@ -117,8 +133,7 @@ dex.js exposes the underlying configuration of charts in a number of ways:
 One unique feature of dex.js charts is that they are designed to be
 embedded into other tools; making it an ideal framework for data
 visualization for my Java based data visualization tool
-[Dex](https://dexvis.net).  This is actually **why** dex.js was written
-in the first place.
+[Dex](https://dexvis.net).  This is the main reason dex.js was created.
 
 ### GUI Specification
 

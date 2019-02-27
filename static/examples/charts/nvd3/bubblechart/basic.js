@@ -1,4 +1,4 @@
-var csv = {
+var csv = new dex.csv({
   "header" : [ "Category", "X", "Y", "Size" ],
   "data"   : [
     [ "Cat1", "1", "2", 100 ],
@@ -8,7 +8,7 @@ var csv = {
     [ "Cat1", "3", "8", 400 ],
     [ "Cat2", "3", "16", 800]
   ]
-}
+});
 
 dex.charts.nvd3.BubbleChart({
   "parent": "#BubbleChart",

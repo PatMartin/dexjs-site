@@ -1,5 +1,5 @@
 // Create categorical data
-var sales = {
+var sales = new dex.csv({
   "header" : [ "Month", "Bob", "Mike", "Jenny", "Susan" ],
   "data" : [
     [ "2016-01-01", 123000, 200000, 124342, 450000 ],
@@ -14,14 +14,20 @@ var sales = {
     [ "2016-10-01", 123000, 220000, 124342, 230000 ],
     [ "2016-11-01", 99000, 170000, 324342, 250000 ],
     [ "2016-12-01", 291000, 120000, 434342, 360000 ],
-]};
+]});
 
 // Configure and render the chart.
-dex.charts.c3.LineChart({
-  "parent" : "#LineChart",
+chart = dex.charts.c3.LineChart({
+  "parent" : "#Chart",
   "csv" : sales,
   "options.axis.y.tick.format" : d3.format("$,"),
   "options.padding.left" : 70,
   "options.subchart.show" : true,
   "stack" : true
+}).render();
+
+var configPane = dex.ui.ConfigurationPane({
+  parent: "#ConfigurationPane",
+  csv: sales,
+  components: [ chart ]
 }).render();

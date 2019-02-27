@@ -1,20 +1,20 @@
-var csv = {
-  'header': ["Angle", "Value", "Series" ],
-  'data': []
-};
+var csv = new dex.csv(["Series", "Angle", "Value" ]);
 
 dex.range(0, 360).forEach(function (angle) {
   var radians = angle / 180 * Math.PI;
-  csv.data.push([ angle, Math.sin(radians), "sin" ]);
-  csv.data.push([angle, Math.cos(radians), "cos" ]);
+  csv.data.push([ "sin", angle, Math.sin(radians) ]);
+  csv.data.push([ "cos", angle, Math.cos(radians) ]);
 });
 
-var chart = dex.charts.echarts.PolarPlot({
-  parent: '#PolarPlot',
+chart = dex.charts.echarts.PolarPlot({
+  parent: '#Chart',
   csv: csv,
-  angleIndex: "Angle",
-  seriesIndex: "Series",
-  valueIndex: "Value",
-  'series.type': "bar"
-});
-chart.render();
+  'series.type': "bar",
+  refreshType: "render"
+}).render();
+
+var configPane = dex.ui.ConfigurationPane({
+  parent: "#ConfigurationPane",
+  csv: csv,
+  components: [ chart ]
+}).render();

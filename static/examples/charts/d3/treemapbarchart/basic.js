@@ -1,4 +1,4 @@
-var csv = {
+var csv = new dex.csv({
   'header': ["Divider", "Color", "Category", "X", "Value"],
   'data': [
     ["Divider 1", "Color 1", "Category 1", "Time 1", "100"],
@@ -14,7 +14,7 @@ var csv = {
     ["Divider 3", "Color 3", "Category 2", "Time 3", "60"],
     ["Divider 4", "Color 3", "Category 2", "Time 3", "70"],
   ]
-};
+});
 
 dex.charts.d3.TreemapBarChart({
   "parent": "#TreemapBarChart",

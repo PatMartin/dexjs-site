@@ -9,10 +9,21 @@ title = "dex.js ECharts Network Examples"
     "https://cdnjs.cloudflare.com/ajax/libs/echarts/3.6.1/echarts.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js",
     "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/mode-javascript.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js",
     "/js/ace-example.js",
   ]
   css = [ "/css/ace-example.css" ]
 +++
+
+<style>
+  #Chart {
+    display: inline-block !important;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+</style>
 
 # ECharts Network
 
@@ -30,11 +41,33 @@ Select from the interactive examples below:
 </div>
 
 <div id="example-info"></div>
-<div id="Network" class="WideChart"></div>
+<div id="layout-container" class="WideChart">
+  <div class="ui-layout-center">
+    <div id="Chart"></div>
+  </div>
+  <div class="ui-layout-west">
+    <div id="ConfigurationPane"></div>
+  </div>
+</div>
+
 <div id="ace-editor"></div>
 <div id="ace-error"></div>
 
 <script>
+  var chart;
+
+  $(document).ready(function () {
+    $('#layout-container').layout({
+      applyDemoStyles: false,
+      west: {
+        size: 335
+      },
+      onresize: function () {
+        chart.resize();
+      }
+    });
+  });
+
   var editor = createEditor({
     "parent"        : "ace-editor",
     "errorParent"   : "ace-error",

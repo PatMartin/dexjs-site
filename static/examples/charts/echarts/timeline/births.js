@@ -1,7 +1,14 @@
 d3.json("/data/WorldBirthsAndDeaths.json", function (error, world) {
-  dex.console.log(world);
-  var chart = dex.charts.echarts.Timeline({
-    parent: '#Timeline',
-    csv: dex.csv.include(world, [3, 4, 5, 1, 2])
+  var csv = new dex.csv(world).include([1, 2, 3, 4, 5]);
+
+  chart = dex.charts.echarts.Timeline({
+    parent: '#Chart',
+    csv: csv
+  }).render();
+
+  var configPane = dex.ui.ConfigurationPane({
+    parent: "#ConfigurationPane",
+    csv: csv,
+    components: [ chart ]
   }).render();
 });

@@ -1,4 +1,4 @@
-var csv = { 'header': ['Name', 'Date', 'Y' ],'data': []};
+var csv = new dex.csv(['Name', 'Date', 'Y' ]);
 
 for (var nameIndex = 0; nameIndex < 10; nameIndex++) {
   var name = faker.name.firstName();

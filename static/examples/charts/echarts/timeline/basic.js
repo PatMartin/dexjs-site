@@ -1,16 +1,22 @@
-var csv = {
-  header: [ "X", "Y", "Size", "Category", "Sequence"],
+var csv = new dex.csv({
+  header: [ "Series", "Sequence", "X", "Y", "Size"],
   data: [
-    [ 1, 1, 10, "Category 1", 1 ],
-    [ 2, 2, 20, "Category 2",1 ],
-    [ 3, 3, 30, "Category 3",1 ],
-    [ 4, 4, 20, "Category 1",2 ],
-    [ 5, 5, 40, "Category 2",2 ],
-    [ 6, 6, 60, "Category 3",2 ]
-    ]
-};
+    [ "Series 1", 1, 1, 1, 10 ],
+    [ "Series 2", 1, 2, 2, 20 ],
+    [ "Series 1", 2, 3, 3, 30 ],
+    [ "Series 2", 2, 4, 4, 10 ],
+    [ "Series 1", 3, 5, 2, 15 ],
+    [ "Series 2", 3, 6, 3, 23 ]
+  ]
+});
 
-var chart = dex.charts.echarts.Timeline({
-  parent: '#Timeline',
+chart = dex.charts.echarts.Timeline({
+  parent: '#Chart',
   csv: csv
+}).render();
+
+var configPane = dex.ui.ConfigurationPane({
+  parent: "#ConfigurationPane",
+  csv: csv,
+  components: [ chart ]
 }).render();

@@ -46,10 +46,10 @@ googleAnalytics = "UA-89686420-1"
     url = "/docs.html"
     weight = 5
   [[menu.main]]
-    name = "Links"
+    name = "Lists"
     pre = ""
-    identifier = "links"
-    url = "/links.html"
+    identifier = "lists"
+    url = "/lists.html"
     weight = 6
   [[menu.main]]
     name = "About"

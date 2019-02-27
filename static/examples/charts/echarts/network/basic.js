@@ -1,4 +1,4 @@
-var csv = {
+var csv = new dex.csv({
   header: ["Name", "Gender", "Marital Status"],
   data: [
     ["Bob", "Male", "Single"],
@@ -6,9 +6,16 @@ var csv = {
     ["Jill", "Female", "Married"],
     ["Jack", "Male", "Married"]
   ]
-};
+});
 
-var chart = dex.charts.echarts.Network({
-  parent: '#Network',
-  csv: csv
+chart = dex.charts.echarts.Network({
+  parent: '#Chart',
+  csv: csv,
+  refreshType: "render"
+}).render();
+
+var configPane = dex.ui.ConfigurationPane({
+  parent: "#ConfigurationPane",
+  csv: csv,
+  components: [ chart ]
 }).render();
